@@ -4,34 +4,95 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Yusuke Ozaki</title>
+  <link rel="stylesheet" href="/assets/styles.css" />
 </head>
 <body>
-  <nav>
-    <a href="/">English</a> | <a href="/ja/">日本語</a> | <a href="/cv/">CV</a>
-  </nav>
+  <header class="site-header">
+    <a class="brand" href="/">Yusuke Ozaki</a>
+    <nav class="nav" aria-label="Main navigation">
+      <a class="active" href="/">Home</a>
+      <a href="#experience">Work Experience</a>
+      <a href="#education">Education</a>
+      <a href="#research">Research</a>
+      <a href="#projects">Projects</a>
+      <a href="#awards">Awards</a>
+      <a href="/cv/">CV</a>
+      <a href="/ja/">日本語</a>
+    </nav>
+  </header>
 
-  <h1>Yusuke Ozaki</h1>
+  <section class="hero">
+    <div>
+      <h1>Yusuke Ozaki</h1>
+      <div class="hero-line"></div>
+    </div>
+  </section>
 
-  <div style="display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap;">
-    <img src="/assets/headshot.jpg" alt="Headshot"
-         style="width:220px;height:220px;object-fit:cover;border-radius:12px;">
-    <div style="max-width:720px;">
+  <main class="content">
+    <section class="intro">
+      <img class="headshot" src="/assets/headshot.jpg" alt="Headshot of Yusuke Ozaki">
+      <div>
+        <p class="lead">
+          My name is Yusuke Ozaki. I am an undergraduate student in Computer Science at Kwansei Gakuin University and an exchange student in the Department of Computer Science at the University at Albany, SUNY.
+        </p>
+        <p>
+          My long-term goal is to create living organisms with arbitrary, desired functions. To pursue this vision, I am interested in laboratory automation, including automated experiment execution and automated experimental design/planning. My current research focuses on protocol-aware active learning and preference modeling using Bayesian optimization.
+        </p>
       <p><strong>Research interests:</strong>
         Bayesian Optimization, Active Learning, Graph Neural Networks (GNNs), AI for Science / Lab Automation, Single-cell omics & GRN inference
       </p>
-
-      <p>
-        My name is Yusuke Ozaki. I am an undergraduate student in Computer Science at Kwansei Gakuin University and an exchange student in the Department of Computer Science at the University at Albany, SUNY. My long-term goal is to create living organisms with arbitrary, desired functions. To pursue this vision, I am interested in laboratory automation, including automated experiment execution and automated experimental design/planning. My current research focuses on protocol-aware active learning and preference modeling using Bayesian optimization.
-      </p>
-
       <p><strong>Hobbies:</strong> Brazilian Jiu-Jitsu, reading books.</p>
+        <div class="button-row">
+          <a class="button" href="/cv/">View CV</a>
+          <a class="button secondary" href="https://github.com/ozatamago">GitHub</a>
+          <a class="button secondary" href="mailto:ozatamago40@gmail.com">Email</a>
+        </div>
+      </div>
+    </section>
 
-      <p>
-        <a href="/cv/">CV</a> |
-        <a href="https://github.com/ozatamago">GitHub</a> |
-        <a href="mailto:ozatamago40@gmail.com">Email</a>
-      </p>
-    </div>
-  </div>
+    <section id="education" class="section">
+      <h2>Education</h2>
+      <ul class="item-list">
+        <li><strong>Kwansei Gakuin University</strong>, Bachelor of Engineering in Computer Science, School of Engineering. <span class="meta">Apr. 2022 - Mar. 2027 expected, Sanda, Hyogo, Japan.</span></li>
+        <li><strong>University at Albany, SUNY</strong>, Exchange Student, Department of Computer Science. <span class="meta">Aug. 2025 - May 2026 expected, Albany, NY, USA.</span></li>
+      </ul>
+    </section>
+
+    <section id="research" class="section">
+      <h2>Research</h2>
+      <ul class="item-list">
+        <li><strong>AI for bioengineering and biology:</strong> Graph neural networks for molecular and cellular systems, gene regulatory network inference, and single-cell omics analysis.</li>
+        <li><strong>Protocol-aware active learning:</strong> Bayesian optimization frameworks that autonomously drive scientific experiments and support data-efficient exploration of experimental conditions.</li>
+        <li><strong>Presentations:</strong> Poster at AutoML 2025 on Object-Flow Machine Learning; oral presentation at the RIKEN BDR Student Symposium 2025; poster at the Spring School for Theoretical Biology 2025.</li>
+      </ul>
+    </section>
+
+    <section id="experience" class="section">
+      <h2>Work Experience</h2>
+      <ul class="item-list">
+        <li><strong>RIKEN Center for Biosystems Dynamics Research, Laboratory for Biologically Inspired Computing</strong>, Research Part-timer II. <span class="meta">Jun. 2024 - Aug. 2025, Kobe, Japan.</span> Developed machine-learning based experimental simulators and protocol-aware active learning workflows for automated wet-lab experiments.</li>
+        <li><strong>Yachie Laboratory</strong>, Research Assistant. <span class="meta">Feb. 2025 - Aug. 2025, Osaka, Japan.</span> Assisted computational projects on gene regulatory network inference from single-cell RNA-seq and ATAC-seq data.</li>
+        <li><strong>Metadata Incorporated</strong>, Software Engineer, Part-time. <span class="meta">Apr. 2024 - Jun. 2024, Remote, Japan.</span> Developed and maintained web applications for AI-driven enterprise services, including backend APIs and data-processing components.</li>
+      </ul>
+    </section>
+
+    <section id="projects" class="section">
+      <h2>Projects</h2>
+      <ul class="item-list">
+        <li><strong>Bayesian Optimization with Gaussian Process Panel Models:</strong> Studying preference-based Bayesian optimization with General Preference Embedding Models at the University at Albany, SUNY.</li>
+        <li><strong>Minimal-Edges Graph Neural Networks for Efficient Graph Learning:</strong> Designing graph neural network architectures that learn task-specific sparse adjacency structures layer by layer.</li>
+        <li><strong>Methodology for Asset Operation LLM Agents:</strong> Developing a software framework that combines large language models, structured task planning, tool calling, and evaluation pipelines.</li>
+        <li><strong>Campus Activity Recommender:</strong> Technical lead for a HackRPI 2025 team project that built a campus club and event recommender web application with a LinUCB bandit engine and Flask APIs.</li>
+      </ul>
+    </section>
+
+    <section id="awards" class="section">
+      <h2>Awards</h2>
+      <ul class="item-list">
+        <li><strong>Keyence Foundation Student Scholarship</strong>. <span class="meta">Jul. 2024.</span></li>
+        <li><strong>Gyomu Super Japan Dream Foundation Study Abroad Scholarship</strong>. <span class="meta">Aug. 2025 - Present.</span></li>
+      </ul>
+    </section>
+  </main>
 </body>
 </html>
