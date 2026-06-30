@@ -8,6 +8,16 @@
       "mime": "text/html",
       "date": "2026",
       "summary": "Visual summary of the SPIN paper: method and results."
+    },
+    {
+      "id": "cx-active-learning",
+      "title": "Bayesian Active Learning — C(X) consistency (draft)",
+      "kind": "web",
+      "locked": true,
+      "listed": true,
+      "file": "data/cx-active-learning.enc",
+      "date": "2026",
+      "summary": "Password-protected research overview."
     }
   ]
 }
