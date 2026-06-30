@@ -3,8 +3,47 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>尾崎 勇介</title>
+  <title>尾崎 勇介 (Yusuke Ozaki) — 個人サイト | コンピュータサイエンス研究</title>
+  <meta name="description" content="尾崎勇介（Yusuke Ozaki）の個人サイト。関西学院大学のコンピュータサイエンス学部生で、University at Albany, SUNY の交換留学生。ベイズ最適化、能動学習、グラフニューラルネットワーク、AI for Science / ラボオートメーションを研究。" />
+  <meta name="author" content="Yusuke Ozaki" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://ozatamago.github.io/ja/" />
+  <link rel="alternate" hreflang="en" href="https://ozatamago.github.io/" />
+  <link rel="alternate" hreflang="ja" href="https://ozatamago.github.io/ja/" />
+  <link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/" />
+  <link rel="icon" href="/assets/headshot.jpg" />
+  <meta property="og:type" content="profile" />
+  <meta property="og:title" content="尾崎 勇介 (Yusuke Ozaki) — 個人サイト" />
+  <meta property="og:description" content="関西学院大学のCS学部生、University at Albany 交換留学生。ベイズ最適化・能動学習・GNN・AI for Science。" />
+  <meta property="og:url" content="https://ozatamago.github.io/ja/" />
+  <meta property="og:image" content="https://ozatamago.github.io/assets/headshot.jpg" />
+  <meta property="og:locale" content="ja_JP" />
+  <meta property="og:locale:alternate" content="en_US" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="尾崎 勇介 (Yusuke Ozaki)" />
+  <meta name="twitter:description" content="関西学院大学のCS学部生。ベイズ最適化・能動学習・GNN・AI for Science。" />
+  <meta name="twitter:image" content="https://ozatamago.github.io/assets/headshot.jpg" />
   <link rel="stylesheet" href="/assets/styles.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Yusuke Ozaki",
+    "alternateName": "尾崎 勇介",
+    "url": "https://ozatamago.github.io/",
+    "image": "https://ozatamago.github.io/assets/headshot.jpg",
+    "jobTitle": "Computer Science Researcher",
+    "knowsAbout": ["Bayesian Optimization", "Active Learning", "Graph Neural Networks", "AI for Science", "Laboratory Automation", "Single-cell omics"],
+    "alumniOf": [
+      { "@type": "CollegeOrUniversity", "name": "Kwansei Gakuin University" },
+      { "@type": "CollegeOrUniversity", "name": "University at Albany, SUNY" }
+    ],
+    "sameAs": [
+      "https://github.com/ozatamago",
+      "https://jp.linkedin.com/in/yusuke-ozaki-6643882a6"
+    ]
+  }
+  </script>
 </head>
 <body>
   <header class="site-header">
@@ -15,8 +54,10 @@
       <a href="#experience">職歴</a>
       <a href="#education">学歴</a>
       <a href="#research">研究</a>
+      <a href="#publications">論文</a>
       <a href="#projects">Projects</a>
       <a href="#awards">受賞</a>
+      <a href="/slides/">発表資料</a>
       <a href="/cv/">CV</a>
     </nav>
   </header>
@@ -65,6 +106,16 @@
       </ul>
     </section>
 
+    <section id="publications" class="section">
+      <h2>論文</h2>
+      <ul class="item-list">
+        <li><strong>SPIN: Structural LLM Planning via Iterative Navigation for Industrial Tasks.</strong>
+          <span class="meta"><strong>尾崎 勇介</strong>, Dhaval Patel. arXiv preprint arXiv:2605.14051 [cs.AI], 2026年.</span>
+          <span class="meta"><a href="https://arxiv.org/abs/2605.14051">arXiv</a> &middot; <a href="https://arxiv.org/pdf/2605.14051">PDF</a> &middot; <a href="/slides/viewer.html?id=spin-showcase">ビジュアル要約</a></span>
+        </li>
+      </ul>
+    </section>
+
     <section id="experience" class="section">
       <h2>Work Experience</h2>
       <ul class="item-list">
@@ -79,7 +130,7 @@
       <ul class="item-list">
         <li><strong>Bayesian Optimization with Gaussian Process Panel Models:</strong> University at Albany, SUNY で、General Preference Embedding Models を用いた preference-based Bayesian optimization を研究しています。</li>
         <li><strong>Minimal-Edges Graph Neural Networks for Efficient Graph Learning:</strong> タスクに応じた sparse adjacency structure を層ごとに学習する graph neural network architecture を設計しています。</li>
-        <li><strong>Methodology for Asset Operation LLM Agents:</strong> 大規模言語モデル、structured task planning、tool calling、evaluation pipelines を組み合わせた software framework を開発しています。</li>
+        <li><strong>Methodology for Asset Operation LLM Agents:</strong> 大規模言語モデル、structured task planning、tool calling、evaluation pipelines を組み合わせた software framework を開発しています。<span class="meta">関連論文: <a href="#publications">SPIN (arXiv:2605.14051)</a>。</span></li>
         <li><strong>Campus Activity Recommender:</strong> HackRPI 2025 にて、LinUCB bandit engine と Flask APIs を用いた campus club / event recommender web application の technical lead を担当しました。</li>
       </ul>
     </section>

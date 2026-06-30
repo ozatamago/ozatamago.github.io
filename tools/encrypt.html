@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Seal artifact (local tool)</title>
+  <style>
+    body { font: 16px/1.6 Arial, Helvetica, sans-serif; color: #171717; max-width: 720px; margin: 40px auto; padding: 0 20px; }
+    h1 { font-size: 26px; }
+    .note { background: #fff6f6; border: 1px solid #ffd6d9; padding: 12px 16px; font-size: 14px; }
+    label { display: block; font-weight: bold; margin: 16px 0 4px; }
+    input[type=text], input[type=password], textarea { width: 100%; font: inherit; padding: 8px 10px; box-sizing: border-box; border: 1px solid #ddd; }
+    .drop { border: 2px dashed #ccc; padding: 26px; text-align: center; color: #5f6368; margin: 8px 0; }
+    .drop.over { border-color: #ff5a66; background: #fff6f6; }
+    .row { display: flex; gap: 18px; flex-wrap: wrap; align-items: center; }
+    .row label { margin: 0; font-weight: normal; }
+    button { font: inherit; padding: 10px 18px; background: #171717; color: #fff; border: none; cursor: pointer; }
+    button:disabled { opacity: 0.4; cursor: default; }
+    .out { margin-top: 24px; padding: 16px; background: #f6f6f6; border: 1px solid #e6e6e6; display: none; }
+    .out.show { display: block; }
+    code, pre { background: #fff; border: 1px solid #e6e6e6; padding: 2px 5px; }
+    pre { padding: 12px; overflow: auto; white-space: pre-wrap; word-break: break-all; }
+    .files { font-size: 13px; color: #5f6368; }
+  </style>
+</head>
+<body>
+  <h1>Seal an artifact</h1>
+  <p class="note">Local tool — runs entirely in your browser; files never leave your machine, and it is not linked from the public site.
+  Open it via a local server (it uses JS modules, so <code>file://</code> won't work):
+  run <code>python3 -m http.server</code> in the repo root, then visit
+  <code>http://localhost:8000/tools/encrypt.html</code>.
+  Encryption matches <code>slides/viewer.html</code> exactly, so anything sealed here opens in the viewer (and vice-versa with <code>tools/seal.py</code>).</p>
+
+  <label>Files</label>
+  <div class="drop" id="drop">Drop files here, or pick:
+    <div class="row" style="justify-content:center;margin-top:8px">
+      <input type="file" id="files" multiple />
+      <input type="file" id="dir" webkitdirectory directory />
+    </div>
+    <div class="files" id="filelist"></div>
+  </div>
+
+  <label for="title">Title</label>
+  <input type="text" id="title" placeholder="e.g. AutoML 2025 — Object-Flow ML" />
+
+  <div class="row">
+    <label><input type="radio" name="mode" value="lock" checked /> 🔒 Locked (password, hidden from gallery)</label>
+    <label><input type="radio" name="mode" value="public" /> 🌐 Public (listed in gallery)</label>
+  </div>
+
+  <div id="lockfields">
+    <label for="pw">Password</label>
+    <input type="password" id="pw" autocomplete="new-password" />
+    <label for="hint">Password hint (optional, stored encrypted)</label>
+    <input type="text" id="hint" />
+  </div>
+  <div id="pubfields" style="display:none">
+    <label for="pubid">Gallery id (optional)</label>
+    <input type="text" id="pubid" placeholder="auto from title" />
+    <label for="summary">Summary (optional)</label>
+    <input type="text" id="summary" />
+  </div>
+
+  <label for="base">Site origin (for share links)</label>
+  <input type="text" id="base" value="https://ozatamago.github.io" />
+
+  <p><button id="go" disabled>Seal &amp; download</button></p>
+
+  <div class="out" id="out"></div>
+
+  <script type="module">
+    import { seal, guessMime } from "../assets/seal.js";
+
+    let entries = []; // {path, mime, bytes}
+    const $ = (id) => document.getElementById(id);
+
+    function setMode() {
+      const m = document.querySelector('input[name=mode]:checked').value;
+      $("lockfields").style.display = m === "lock" ? "" : "none";
+      $("pubfields").style.display = m === "public" ? "" : "none";
+    }
+    document.querySelectorAll('input[name=mode]').forEach((r) => (r.onchange = setMode));
+
+    function refresh() {
+      $("filelist").textContent = entries.length ? entries.map((e) => e.path).join(", ") : "";
+      $("go").disabled = entries.length === 0;
+    }
+
+    async function addFiles(fileList, useRelative) {
+      const arr = [...fileList];
+      // strip the common top-level folder name from webkitRelativePath
+      let strip = "";
+      if (useRelative && arr.length && arr[0].webkitRelativePath) {
+        strip = arr[0].webkitRelativePath.split("/")[0] + "/";
+      }
+      for (const f of arr) {
+        let path = useRelative && f.webkitRelativePath ? f.webkitRelativePath : f.name;
+        if (strip && path.startsWith(strip)) path = path.slice(strip.length);
+        const bytes = new Uint8Array(await f.arrayBuffer());
+        entries.push({ path, mime: f.type || guessMime(path), bytes });
+      }
+      refresh();
+    }
+
+    $("files").onchange = (e) => { entries = []; addFiles(e.target.files, false); };
+    $("dir").onchange = (e) => { entries = []; addFiles(e.target.files, true); };
+
+    const drop = $("drop");
+    drop.ondragover = (e) => { e.preventDefault(); drop.classList.add("over"); };
+    drop.ondragleave = () => drop.classList.remove("over");
+    drop.ondrop = (e) => { e.preventDefault(); drop.classList.remove("over"); entries = []; addFiles(e.dataTransfer.files, false); };
+
+    function detectMain() {
+      const paths = entries.map((e) => e.path);
+      if (paths.includes("index.html")) return "index.html";
+      const idx = paths.find((p) => p.split("/").pop() === "index.html");
+      if (idx) return idx;
+      if (paths.length === 1 && /\.html?$/i.test(paths[0])) return paths[0];
+      return null;
+    }
+
+    function download(bytes, name) {
+      const url = URL.createObjectURL(new Blob([bytes], { type: "application/octet-stream" }));
+      const a = document.createElement("a");
+      a.href = url; a.download = name; a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+    }
+    function randHex(n) { return Array.from(crypto.getRandomValues(new Uint8Array(n)), (b) => b.toString(16).padStart(2, "0")).join(""); }
+    function slug(s) { return (s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "artifact"; }
+    function esc(s){return (s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
+    $("go").onclick = async () => {
+      const mode = document.querySelector('input[name=mode]:checked').value;
+      const title = $("title").value.trim();
+      const main = detectMain();
+      const base = $("base").value.replace(/\/$/, "");
+      const out = $("out");
+
+      if (mode === "lock") {
+        const pw = $("pw").value;
+        if (!pw) { alert("Enter a password."); return; }
+        const bytes = await seal({ entries, title, hint: $("hint").value.trim(), main, password: pw });
+        const fname = randHex(12) + ".enc";
+        download(bytes, fname);
+        const link = `${base}/slides/viewer.html?k=data/${fname}`;
+        out.className = "out show";
+        out.innerHTML = `
+          <strong>🔒 Locked bundle downloaded: <code>${fname}</code></strong>
+          <ol>
+            <li>Move <code>${fname}</code> into <code>slides/data/</code> and commit.</li>
+            <li>Share this link <em>and</em> the password privately:</li>
+          </ol>
+          <pre>${esc(link)}</pre>
+          <p class="files">Not listed in the gallery. Title/hint are stored encrypted.</p>`;
+      } else {
+        const id = slug($("pubid").value.trim() || title);
+        const fname = id + ".bundle";
+        const bytes = await seal({ entries, title, main }); // no password = public bundle
+        download(bytes, fname);
+        const mani = {
+          id, title, kind: main ? "web" : (entries.length === 1 ? kindOf(entries[0].mime) : "file"),
+          file: `data/${fname}`, mime: entries.length === 1 ? entries[0].mime : "text/html",
+        };
+        if ($("summary").value.trim()) mani.summary = $("summary").value.trim();
+        out.className = "out show";
+        out.innerHTML = `
+          <strong>🌐 Public bundle downloaded: <code>${fname}</code></strong>
+          <ol>
+            <li>Move <code>${fname}</code> into <code>slides/data/</code>.</li>
+            <li>Add this entry to the <code>"artifacts"</code> array in <code>slides/manifest.json</code>:</li>
+          </ol>
+          <pre>${esc(JSON.stringify(mani, null, 2))}</pre>
+          <p class="files">Commit both. It will appear in the gallery at <code>${esc(base)}/slides/</code>.</p>`;
+      }
+    };
+
+    function kindOf(mime) {
+      if (mime === "application/pdf") return "slides";
+      if (mime.startsWith("image/")) return "image";
+      if (mime.startsWith("video/")) return "video";
+      if (mime.startsWith("audio/")) return "audio";
+      return "file";
+    }
+
+    setMode();
+  </script>
+</body>
+</html>

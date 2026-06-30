@@ -1,0 +1,13 @@
+{
+  "artifacts": [
+    {
+      "id": "spin-showcase",
+      "title": "SPIN — Visual Results",
+      "kind": "web",
+      "file": "data/spin-visual-results.bundle",
+      "mime": "text/html",
+      "date": "2026",
+      "summary": "Visual summary of the SPIN paper: method and results."
+    }
+  ]
+}

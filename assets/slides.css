@@ -1,0 +1,270 @@
+/* slides.css — gallery + viewer styling, built on the tokens in styles.css */
+
+.page {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 40px 28px 88px;
+}
+
+.page-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.page-head h1 {
+  margin: 0;
+  font-family: Impact, "Arial Narrow", Arial, sans-serif;
+  font-size: 40px;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.page-head .sub {
+  color: var(--muted);
+  font-size: 15px;
+}
+
+/* ---- gallery grid ---- */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 22px;
+  margin-top: 30px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  text-decoration: none;
+  color: inherit;
+  background: #fff;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+.card:hover {
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* a card can be an <a> (gallery) or a <button> (project item grid) */
+button.card {
+  font: inherit;
+  text-align: left;
+  padding: 0;
+  width: 100%;
+  cursor: pointer;
+}
+
+.card .thumb {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  display: grid;
+  place-items: center;
+  background: #f4f4f5;
+  color: var(--muted);
+  font-size: 40px;
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+}
+.card .thumb .lock {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 18px;
+  line-height: 1;
+}
+.card .thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card .body {
+  padding: 14px 16px 18px;
+}
+.card .body h3 {
+  margin: 0 0 6px;
+  font-size: 17px;
+  line-height: 1.35;
+}
+.card .body .summary {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.badge {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 2px 8px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--ink);
+}
+.badge.kind-slides { background: var(--accent); }
+.badge.kind-web { background: #2563eb; }
+.badge.kind-image { background: #16a34a; }
+.badge.kind-video, .badge.kind-audio { background: #9333ea; }
+.badge.kind-project { background: #0d9488; }
+
+.empty {
+  margin-top: 40px;
+  padding: 40px;
+  text-align: center;
+  color: var(--muted);
+  border: 1px dashed var(--line);
+}
+
+/* ---- viewer ---- */
+.viewer-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 28px;
+  border-bottom: 1px solid var(--line);
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+.viewer-bar .title {
+  font-weight: bold;
+  margin-right: auto;
+}
+.viewer-bar button,
+.viewer-bar a.btn {
+  font: inherit;
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  cursor: pointer;
+  text-decoration: none;
+}
+.viewer-bar button:hover { background: #f2f2f2; }
+.viewer-bar .page-ind { color: var(--muted); min-width: 70px; text-align: center; }
+
+.stage {
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  min-height: 70vh;
+  background: #fafafa;
+}
+.stage canvas {
+  max-width: 100%;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.18);
+  background: #fff;
+}
+
+/* continuous vertical-scroll PDF view with zoom */
+.stage.pdf-scroll {
+  display: block;
+  height: 82vh;
+  min-height: 0;
+  overflow: auto;
+  padding: 20px 14px;
+}
+.stage.pdf-scroll:fullscreen { height: 100vh; background: #fafafa; }
+.pdf-pages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  min-width: min-content;
+}
+.pdf-page {
+  position: relative;
+  background: #fff;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.18);
+  flex: none;
+}
+.pdf-page canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  box-shadow: none;
+}
+.stage img { max-width: 100%; max-height: 82vh; box-shadow: 0 2px 16px rgba(0,0,0,0.18); }
+.stage video { max-width: 100%; max-height: 82vh; }
+.stage iframe {
+  width: 100%;
+  height: 82vh;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+.stage pre {
+  width: 100%;
+  max-width: 900px;
+  text-align: left;
+  background: #fff;
+  border: 1px solid var(--line);
+  padding: 18px;
+  overflow: auto;
+  font-size: 14px;
+}
+.stage .filelist {
+  width: 100%;
+  max-width: 720px;
+  text-align: left;
+  background: #fff;
+  border: 1px solid var(--line);
+  padding: 14px 18px;
+}
+.stage .filelist a {
+  display: block;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+.stage .filelist a:last-child { border-bottom: none; }
+.stage .md-body {
+  width: 100%;
+  max-width: 820px;
+  text-align: left;
+  background: #fff;
+  border: 1px solid var(--line);
+  padding: 28px 34px;
+}
+
+/* ---- password / message gate ---- */
+.gate {
+  max-width: 420px;
+  margin: 12vh auto;
+  padding: 32px;
+  border: 1px solid var(--line);
+  text-align: center;
+}
+.gate h2 { margin: 0 0 6px; font-size: 22px; }
+.gate p { color: var(--muted); margin: 0 0 18px; }
+.gate input[type="password"] {
+  width: 100%;
+  font: inherit;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  margin-bottom: 12px;
+}
+.gate .button { width: 100%; border: none; cursor: pointer; font: inherit; }
+.gate .err { color: var(--accent); min-height: 1.4em; font-size: 14px; }
+.gate .hint { font-size: 13px; color: var(--muted); margin-top: 10px; }
+.gate .remember {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+}
+.gate .remember input { margin: 0; }
+
+.notice { text-align: center; padding: 18vh 24px; color: var(--muted); }

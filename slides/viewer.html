@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Viewer</title>
+  <link rel="stylesheet" href="/assets/styles.css" />
+  <link rel="stylesheet" href="/assets/slides.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/">Yusuke Ozaki</a>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/slides/">Slides</a>
+      <a href="/cv/">CV</a>
+    </nav>
+  </header>
+
+  <div id="root">
+    <div class="notice">Loading…</div>
+  </div>
+
+  <script type="module">
+    import { open, inspect, wrapRaw, guessMime } from "/assets/seal.js";
+
+    const root = document.getElementById("root");
+    const params = new URLSearchParams(location.search);
+
+    function show(html) { root.innerHTML = html; }
+    function esc(s) { return (s || "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+
+    async function fetchBytes(url) {
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return new Uint8Array(await res.arrayBuffer());
+    }
+
+    // ---- remembered passwords (per artifact, in the browser) -----------
+    // So a visitor who entered the password once isn't asked again. Stored
+    // keyed by the artifact's file path. localStorage = persists across visits
+    // on this device; sessionStorage = only until the tab closes.
+    const PW_NS = "seal:pw:";
+    function pwGet(id) {
+      try { return localStorage.getItem(PW_NS + id) || sessionStorage.getItem(PW_NS + id); } catch (_) { return null; }
+    }
+    function pwSet(id, pw, persist) {
+      try { (persist ? localStorage : sessionStorage).setItem(PW_NS + id, pw); } catch (_) {}
+    }
+    function pwClear(id) {
+      try { localStorage.removeItem(PW_NS + id); sessionStorage.removeItem(PW_NS + id); } catch (_) {}
+    }
+    function pwClearAll() {
+      try {
+        for (const store of [localStorage, sessionStorage]) {
+          for (const k of Object.keys(store)) if (k.startsWith(PW_NS)) store.removeItem(k);
+        }
+      } catch (_) {}
+    }
+
+    // ---- password gate -------------------------------------------------
+    function passwordGate(prelabel) {
+      return new Promise((resolve) => {
+        show(`
+          <div class="gate">
+            <h2>${esc(prelabel || "Protected artifact")}</h2>
+            <p>Enter the password to view.</p>
+            <input type="password" id="pw" autocomplete="off" autofocus />
+            <div class="err" id="err"></div>
+            <button class="button" id="go">Unlock</button>
+            <label class="remember"><input type="checkbox" id="remember" checked /> Remember on this device</label>
+          </div>`);
+        const input = document.getElementById("pw");
+        const submit = () => resolve({ pw: input.value, remember: document.getElementById("remember").checked });
+        document.getElementById("go").onclick = submit;
+        input.onkeydown = (e) => { if (e.key === "Enter") submit(); };
+      });
+    }
+    function gateError(msg) {
+      const el = document.getElementById("err");
+      if (el) el.textContent = msg;
+    }
+
+    // ---- per-item listener lifecycle -----------------------------------
+    // The project flow renders many items in one page load (grid -> item -> back -> item).
+    // Each rendered item gets a fresh AbortController so its window listeners are torn
+    // down before the next item, instead of accumulating.
+    let itemAC = null;
+    function freshItemSignal() {
+      if (itemAC) itemAC.abort();
+      itemAC = new AbortController();
+      return itemAC.signal;
+    }
+
+    // ---- service worker (for HTML / multi-file artifacts) --------------
+    let swReg = null;
+    async function ensureSW() {
+      if (!("serviceWorker" in navigator)) return null;
+      if (swReg && navigator.serviceWorker.controller) return swReg;
+      swReg = await navigator.serviceWorker.register("/slides/sw.js", { scope: "/slides/" });
+      await navigator.serviceWorker.ready;
+      // Don't resolve until a controller actually exists (or we truly time out).
+      const start = Date.now();
+      while (!navigator.serviceWorker.controller && Date.now() - start < 8000) {
+        await new Promise((res) => {
+          const t = setTimeout(res, 250);
+          navigator.serviceWorker.addEventListener("controllerchange", () => { clearTimeout(t); res(); }, { once: true });
+        });
+      }
+      return swReg;
+    }
+    let activeToken = null; // SW mount currently held (one at a time across item switches)
+    function unmountActive() {
+      const ctrl = navigator.serviceWorker && navigator.serviceWorker.controller;
+      if (activeToken && ctrl) ctrl.postMessage({ type: "unmount", token: activeToken });
+      activeToken = null;
+    }
+    // One stable handler frees whatever mount is held when the page goes away.
+    window.addEventListener("pagehide", unmountActive);
+
+    async function mountFiles(files) {
+      await ensureSW();
+      const token = Array.from(crypto.getRandomValues(new Uint8Array(8)), (b) => b.toString(16).padStart(2, "0")).join("");
+      const payload = [];
+      const transfer = [];
+      for (const [path, f] of files) {
+        const buf = f.bytes.slice().buffer; // own ArrayBuffer
+        payload.push([path, { buf, mime: f.mime || guessMime(path) }]);
+        transfer.push(buf);
+      }
+      let ctrl = navigator.serviceWorker.controller;
+      if (!ctrl) { await ensureSW(); ctrl = navigator.serviceWorker.controller; } // self-heal a near-miss
+      if (!ctrl) throw new Error("NO_SW");
+      await new Promise((resolve) => {
+        const timer = setTimeout(() => { navigator.serviceWorker.removeEventListener("message", onMsg); resolve(); }, 1200);
+        function onMsg(e) {
+          if (e.data && e.data.type === "mounted" && e.data.token === token) {
+            clearTimeout(timer);
+            navigator.serviceWorker.removeEventListener("message", onMsg);
+            resolve();
+          }
+        }
+        navigator.serviceWorker.addEventListener("message", onMsg);
+        ctrl.postMessage({ type: "mount", token, files: payload }, transfer);
+      });
+      if (activeToken) ctrl.postMessage({ type: "unmount", token: activeToken }); // free the previous item
+      activeToken = token;
+      return token;
+    }
+
+    // ---- renderers -----------------------------------------------------
+    function viewerShell(title, extraControls) {
+      show(`
+        <div class="viewer-bar">
+          <span class="title">${esc(title || "Artifact")}</span>
+          ${extraControls || ""}
+          <a class="btn" id="dl" href="#" download>Download</a>
+        </div>
+        <div class="stage" id="stage"></div>`);
+    }
+
+    function offerDownload(name, bytes, mime) {
+      const a = document.getElementById("dl");
+      if (!a) return;
+      const url = URL.createObjectURL(new Blob([bytes], { type: mime || "application/octet-stream" }));
+      a.href = url;
+      a.download = name;
+    }
+
+    async function renderPDF(name, bytes, title) {
+      viewerShell(title || name, `
+        <button id="zoomout" title="Zoom out (−)">−</button>
+        <span class="page-ind" id="zoom">100%</span>
+        <button id="zoomin" title="Zoom in (+)">+</button>
+        <button id="fit">Fit</button>
+        <span class="page-ind" id="ind">– / –</span>
+        <button id="fs">Fullscreen</button>`);
+      offerDownload(name, bytes, "application/pdf");
+      const stage = document.getElementById("stage");
+      stage.classList.add("pdf-scroll");
+      const sig = itemAC ? itemAC.signal : undefined;
+
+      const pdfjs = await import("https://cdn.jsdelivr.net/npm/pdfjs-dist@4.7.76/build/pdf.min.mjs");
+      if (sig && sig.aborted) return; // navigated away during load
+      pdfjs.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.7.76/build/pdf.worker.min.mjs";
+      const pdf = await pdfjs.getDocument({ data: bytes.slice() }).promise;
+      if (sig && sig.aborted) { try { pdf.destroy(); } catch (_) {} return; }
+
+      const dpr = window.devicePixelRatio || 1;
+      const MAX_CANVAS_W = 3000; // cap backing store so deep zoom can't blow up memory
+      const PAD = 28;
+
+      // Pre-read each page's intrinsic size (scale 1) so we can lay out before rendering.
+      const pages = [];
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const pg = await pdf.getPage(i);
+        const vp = pg.getViewport({ scale: 1 });
+        pages.push({ idx: i - 1, page: pg, baseW: vp.width, baseH: vp.height, wrapper: null, canvas: null, renderedBack: 0, task: null });
+      }
+      if (sig && sig.aborted) { try { pdf.destroy(); } catch (_) {} return; }
+      const maxBaseW = Math.max(...pages.map((p) => p.baseW));
+
+      const container = document.createElement("div");
+      container.className = "pdf-pages";
+      stage.innerHTML = "";
+      stage.appendChild(container);
+      for (const p of pages) {
+        p.wrapper = document.createElement("div");
+        p.wrapper.className = "pdf-page";
+        p.wrapper.dataset.idx = p.idx;
+        p.canvas = document.createElement("canvas");
+        p.wrapper.appendChild(p.canvas);
+        container.appendChild(p.wrapper);
+      }
+
+      let fitScale = Math.max(0.1, (stage.clientWidth - PAD) / maxBaseW);
+      let zoom = 1; // multiplier relative to fit-width
+      const scale = () => fitScale * zoom;
+      const zoomLabel = document.getElementById("zoom");
+      const ind = document.getElementById("ind");
+
+      function applySizes() {
+        const s = scale();
+        for (const p of pages) {
+          p.wrapper.style.width = (p.baseW * s) + "px";
+          p.wrapper.style.height = (p.baseH * s) + "px";
+        }
+        zoomLabel.textContent = Math.round(zoom * 100) + "%";
+      }
+
+      async function renderPage(p) {
+        // Key the cache on the actual backing scale: when deep zoom is clamped by
+        // MAX_CANVAS_W the backing store doesn't change, so we skip a needless re-render
+        // (CSS upscales the existing bitmap instead).
+        const backScale = Math.min(scale() * dpr, MAX_CANVAS_W / p.baseW);
+        if (p.renderedBack === backScale) return;
+        if (p.task) { try { p.task.cancel(); } catch (_) {} }
+        const vp = p.page.getViewport({ scale: backScale });
+        p.canvas.width = vp.width;
+        p.canvas.height = vp.height;
+        const task = p.page.render({ canvasContext: p.canvas.getContext("2d"), viewport: vp });
+        p.task = task;
+        p.renderedBack = backScale;
+        // Only a still-current task may reset state — a superseded/cancelled render
+        // must not clobber the render that replaced it (avoids zoom churn / blanking).
+        try { await task.promise; } catch (_) { if (p.task === task) p.renderedBack = 0; }
+      }
+
+      function clearPage(p) {
+        // free the bitmap of an off-screen page so memory stays bounded (the
+        // wrapper keeps its CSS size, so scroll position is unaffected)
+        if (p.task) { try { p.task.cancel(); } catch (_) {} p.task = null; }
+        p.canvas.width = 0;
+        p.canvas.height = 0;
+        p.renderedBack = 0;
+      }
+
+      function renderVisible() {
+        const sr = stage.getBoundingClientRect();
+        for (const p of pages) {
+          const r = p.wrapper.getBoundingClientRect();
+          if (r.bottom >= sr.top - 300 && r.top <= sr.bottom + 300) renderPage(p);
+        }
+      }
+
+      const io = new IntersectionObserver((entries) => {
+        const sr = stage.getBoundingClientRect();
+        for (const e of entries) {
+          const p = pages[+e.target.dataset.idx];
+          if (e.isIntersecting) { renderPage(p); continue; }
+          // Clear only pages well outside the render band (>600px), so we never
+          // blank a page that renderVisible() just started near the 300px edge.
+          const r = e.target.getBoundingClientRect();
+          if (r.bottom < sr.top - 600 || r.top > sr.bottom + 600) clearPage(p);
+        }
+      }, { root: stage, rootMargin: "300px 0px" });
+      pages.forEach((p) => io.observe(p.wrapper));
+      if (sig) sig.addEventListener("abort", () => { io.disconnect(); try { pdf.destroy(); } catch (_) {} }, { once: true });
+
+      function currentPage() {
+        const sr = stage.getBoundingClientRect();
+        let cur = 1;
+        for (const p of pages) {
+          if (p.wrapper.getBoundingClientRect().top - sr.top <= sr.height * 0.5) cur = p.idx + 1; else break;
+        }
+        return cur;
+      }
+      function updateInd() { ind.textContent = `${currentPage()} / ${pdf.numPages}`; }
+
+      function setZoom(z) {
+        const sh = stage.scrollHeight || 1;
+        const centerRatio = (stage.scrollTop + stage.clientHeight / 2) / sh;
+        zoom = Math.min(6, Math.max(0.25, z));
+        applySizes();
+        stage.scrollTop = centerRatio * stage.scrollHeight - stage.clientHeight / 2;
+        renderVisible();
+        updateInd();
+      }
+      function scrollToPage(i) {
+        const t = Math.min(pages.length - 1, Math.max(0, i));
+        stage.scrollTop += pages[t].wrapper.getBoundingClientRect().top - stage.getBoundingClientRect().top;
+      }
+
+      document.getElementById("zoomin").onclick = () => setZoom(zoom * 1.25);
+      document.getElementById("zoomout").onclick = () => setZoom(zoom / 1.25);
+      document.getElementById("fit").onclick = () => setZoom(1);
+      document.getElementById("fs").onclick = () => (document.fullscreenElement ? document.exitFullscreen() : stage.requestFullscreen());
+
+      stage.addEventListener("scroll", updateInd, { signal: sig, passive: true });
+      stage.addEventListener("wheel", (e) => {
+        if (e.ctrlKey || e.metaKey) { e.preventDefault(); setZoom(zoom * (e.deltaY < 0 ? 1.1 : 0.9)); }
+      }, { signal: sig, passive: false });
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "+" || e.key === "=") { e.preventDefault(); setZoom(zoom * 1.25); }
+        else if (e.key === "-" || e.key === "_") { e.preventDefault(); setZoom(zoom / 1.25); }
+        else if (e.key === "ArrowRight" || e.key === "PageDown") { e.preventDefault(); scrollToPage(currentPage()); }
+        else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); scrollToPage(currentPage() - 2); }
+      }, { signal: sig });
+      window.addEventListener("resize", () => {
+        fitScale = Math.max(0.1, (stage.clientWidth - PAD) / maxBaseW);
+        applySizes();
+        renderVisible();
+      }, { signal: sig });
+
+      applySizes();
+      renderVisible();
+      updateInd();
+    }
+
+    function renderMedia(kind, name, bytes, mime, title) {
+      viewerShell(title || name, "");
+      offerDownload(name, bytes, mime);
+      const stage = document.getElementById("stage");
+      const url = URL.createObjectURL(new Blob([bytes], { type: mime }));
+      let el;
+      if (kind === "image") { el = document.createElement("img"); el.src = url; el.alt = name; }
+      else { el = document.createElement(kind); el.src = url; el.controls = true; }
+      stage.appendChild(el);
+    }
+
+    async function renderText(name, bytes, mime, title, asMarkdown) {
+      viewerShell(title || name, "");
+      offerDownload(name, bytes, mime);
+      const stage = document.getElementById("stage");
+      const text = new TextDecoder().decode(bytes);
+      if (asMarkdown) {
+        try {
+          const { marked } = await import("https://cdn.jsdelivr.net/npm/marked@13/lib/marked.esm.js");
+          const div = document.createElement("div");
+          div.className = "md-body";
+          div.innerHTML = marked.parse(text);
+          stage.appendChild(div);
+          return;
+        } catch (_) { /* fall through to plain text */ }
+      }
+      const pre = document.createElement("pre");
+      pre.textContent = text;
+      stage.appendChild(pre);
+    }
+
+    async function renderWeb(art, name) {
+      const token = await mountFiles(art.files);
+      const main = art.main || "index.html";
+      viewerShell(art.title || name || "Interactive artifact", "");
+      // No single-file download for multi-file web bundles; hide the button.
+      const dl = document.getElementById("dl");
+      if (art.files.size === 1) { const [p, f] = [...art.files][0]; offerDownload(p, f.bytes, f.mime); }
+      else if (dl) dl.remove();
+      const stage = document.getElementById("stage");
+      const iframe = document.createElement("iframe");
+      iframe.setAttribute("sandbox", "allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads allow-presentation");
+      iframe.src = `/slides/_a/${token}/${main}`;
+      stage.appendChild(iframe);
+    }
+
+    function downloadCard(name, bytes, mime, title) {
+      viewerShell(title || name, "");
+      offerDownload(name, bytes, mime);
+      document.getElementById("stage").innerHTML =
+        `<div class="notice">This file type can't be previewed inline.<br>Use the <strong>Download</strong> button above to save <code>${esc(name)}</code>.</div>`;
+    }
+
+    // ---- dispatch ------------------------------------------------------
+    async function render(art) {
+      freshItemSignal(); // tear down the previous item's window listeners
+      document.title = art.title || "Viewer";
+      if (art.main) return renderWeb(art, art.main);
+      if (art.files.size === 1) {
+        const [name, f] = [...art.files][0];
+        const mime = f.mime || guessMime(name);
+        if (mime === "application/pdf") return renderPDF(name, f.bytes, art.title);
+        if (mime.startsWith("image/")) return renderMedia("image", name, f.bytes, mime, art.title);
+        if (mime.startsWith("video/")) return renderMedia("video", name, f.bytes, mime, art.title);
+        if (mime.startsWith("audio/")) return renderMedia("audio", name, f.bytes, mime, art.title);
+        if (mime === "text/markdown" || /\.md$/i.test(name)) return renderText(name, f.bytes, mime, art.title, true);
+        if (mime.startsWith("text/") || mime === "application/json" || mime === "application/xml")
+          return renderText(name, f.bytes, mime, art.title, false);
+        return downloadCard(name, f.bytes, mime, art.title);
+      }
+      // multiple non-web files: list them as download links
+      viewerShell(art.title || "Files", "");
+      const dl = document.getElementById("dl"); if (dl) dl.remove();
+      const stage = document.getElementById("stage");
+      const wrap = document.createElement("div");
+      wrap.className = "filelist";
+      for (const [name, f] of art.files) {
+        const mime = f.mime || guessMime(name);
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(new Blob([f.bytes], { type: mime || "application/octet-stream" }));
+        a.download = name;
+        a.textContent = name;
+        wrap.appendChild(a);
+      }
+      stage.appendChild(wrap);
+    }
+
+    // ---- project (collection of artifacts) -----------------------------
+    const ICON = { slides: "📑", web: "🖥️", image: "🖼️", video: "🎬", audio: "🎧", file: "📦", project: "📁" };
+
+    function renderProjectGrid(art) {
+      unmountActive();
+      if (itemAC) itemAC.abort(); // tear down the previous item's window listeners
+      document.title = art.title || "Project";
+      const items = art.project && Array.isArray(art.project.items) ? art.project.items : [];
+      if (!items.length) { show(`<div class="notice">This project has no items.</div>`); return; }
+      const cards = items.map((it, i) => {
+        const kind = it.kind || "file";
+        return `<button class="card" data-i="${i}">
+            <div class="thumb"><span>${ICON[kind] || "📦"}</span></div>
+            <div class="body">
+              <span class="badge kind-${esc(kind)}">${esc(kind)}</span>
+              <h3>${esc(it.title || "Item " + (i + 1))}</h3>
+            </div>
+          </button>`;
+      }).join("");
+      show(`
+        <main class="page">
+          <div class="page-head">
+            <h1>${esc(art.title || "Project")}</h1>
+            <span class="sub">${items.length} item${items.length > 1 ? "s" : ""} · unlocked</span>
+          </div>
+          <div class="gallery">${cards}</div>
+        </main>`);
+      document.querySelectorAll(".gallery .card").forEach((btn) => {
+        btn.onclick = () => {
+          const it = items[+btn.dataset.i];
+          openItem(art, it).catch((e) => show(`<div class="notice">Could not open this item.<br><small>${esc(e.message || String(e))}</small></div>`));
+        };
+      });
+    }
+
+    function dirPrefix(p) { const i = p.lastIndexOf("/"); return i < 0 ? "" : p.slice(0, i + 1); }
+
+    async function openItem(art, item) {
+      const paths = Array.isArray(item.files) ? item.files : [];
+      let sub;
+      if (item.main) {
+        // re-root so the item's main sits at the SW mount root and relative refs resolve
+        const base = dirPrefix(item.main);
+        const files = new Map();
+        for (const p of paths) {
+          const f = art.files.get(p);
+          if (!f) continue;
+          const key = base && p.startsWith(base) ? p.slice(base.length) : p;
+          files.set(key, f);
+        }
+        const mainKey = base && item.main.startsWith(base) ? item.main.slice(base.length) : item.main;
+        sub = { title: item.title || art.title, main: mainKey, files };
+      } else {
+        const files = new Map();
+        for (const p of paths) { const f = art.files.get(p); if (f) files.set(p, f); }
+        sub = { title: item.title || art.title, main: null, files };
+      }
+      if (!sub.files.size) throw new Error("item files missing from bundle");
+      await render(sub);
+      addBackControl(art);
+    }
+
+    function addBackControl(art) {
+      const bar = document.querySelector(".viewer-bar");
+      if (!bar || bar.querySelector(".back-proj")) return;
+      const b = document.createElement("button");
+      b.className = "back-proj";
+      b.textContent = "‹ Project";
+      b.onclick = () => renderProjectGrid(art);
+      bar.insertBefore(b, bar.firstChild);
+    }
+
+    async function dispatch(art, fallbackTitle) {
+      if (!art.title && fallbackTitle) art.title = fallbackTitle;
+      if (art.kind === "project") {
+        ensureSW().catch(() => {}); // pre-register so the first web item avoids a controllerchange race
+        const itemId = params.get("item");
+        if (itemId) {
+          const it = (art.project && art.project.items || []).find((x) => x.id === itemId);
+          if (it) {
+            renderProjectGrid(art);
+            return openItem(art, it).catch((e) => show(`<div class="notice">Could not open this item.<br><small>${esc(e.message || String(e))}</small></div>`));
+          }
+        }
+        return renderProjectGrid(art);
+      }
+      return render(art);
+    }
+
+    // ---- load ----------------------------------------------------------
+    async function openSealed(bytes, prelabel, storageId) {
+      const meta = inspect(bytes);
+      if (meta.public) return open(bytes, null);
+      if (!window.isSecureContext || !(window.crypto && crypto.subtle)) throw new Error("SECURE_CONTEXT");
+      // Try a remembered password silently; if it's stale (password changed) drop it and prompt.
+      if (storageId) {
+        const saved = pwGet(storageId);
+        if (saved) {
+          try { return await open(bytes, saved); }
+          catch (_) { pwClear(storageId); }
+        }
+      }
+      while (true) {
+        const { pw, remember } = await passwordGate(prelabel);
+        try {
+          const art = await open(bytes, pw);
+          if (storageId) { if (remember) pwSet(storageId, pw, true); else pwClear(storageId); }
+          return art;
+        } catch (e) {
+          if (e.message === "BAD_PASSWORD") { gateError("Incorrect password. Try again."); continue; }
+          if (e.message === "PASSWORD_REQUIRED") { gateError("Please enter a password."); continue; }
+          throw e;
+        }
+      }
+    }
+
+    async function main() {
+      try {
+        if (params.get("forget") != null) { pwClearAll(); show(`<div class="notice">Saved passwords cleared from this browser.</div>`); return; }
+        const k = params.get("k");   // locked artifact, direct share link
+        const id = params.get("id"); // public artifact, via manifest
+        if (k) {
+          const bytes = await fetchBytes(new URL(k, location.href));
+          const art = await openSealed(bytes, params.get("t"), k);
+          await dispatch(art);
+        } else if (id) {
+          const manifest = await (await fetch("/slides/manifest.json", { cache: "no-store" })).json();
+          const entry = (manifest.artifacts || []).find((a) => a.id === id);
+          if (!entry) { show(`<div class="notice">Artifact not found.</div>`); return; }
+          const bytes = await fetchBytes(new URL(entry.file, new URL("/slides/", location.href)));
+          if (inspect(bytes).isBundle) {
+            const art = await openSealed(bytes, entry.title, entry.file);
+            await dispatch(art, entry.title);
+          } else {
+            await render(wrapRaw(bytes, entry.file.split("/").pop(), entry.mime));
+          }
+        } else {
+          show(`<div class="notice">No artifact specified.</div>`);
+        }
+      } catch (e) {
+        console.error(e);
+        if (e.message === "SECURE_CONTEXT") {
+          show(`<div class="notice">Encrypted artifacts need a secure context.<br>
+            Open this page over <code>https://</code> or <code>http://localhost</code> /
+            <code>http://127.0.0.1</code> — not an IP address or hostname.</div>`);
+        } else {
+          show(`<div class="notice">Could not load this artifact.<br><small>${esc(e.message || String(e))}</small></div>`);
+        }
+      }
+    }
+    main();
+  </script>
+</body>
+</html>

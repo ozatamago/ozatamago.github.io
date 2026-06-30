@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Slides & Artifacts · Yusuke Ozaki</title>
+  <link rel="stylesheet" href="/assets/styles.css" />
+  <link rel="stylesheet" href="/assets/slides.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/">Yusuke Ozaki</a>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a class="active" href="/slides/">Slides</a>
+      <a href="/cv/">CV</a>
+      <a href="/ja/">日本語</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <div class="page-head">
+      <h1>Slides &amp; Artifacts</h1>
+      <span class="sub">Public materials. Private items are shared by direct link.</span>
+    </div>
+    <div id="gallery" class="gallery"></div>
+  </main>
+
+  <script type="module">
+    const ICON = { slides: "📑", web: "🖥️", image: "🖼️", video: "🎬", audio: "🎧", file: "📦", project: "📁" };
+    function esc(s) { return (s || "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+
+    async function load() {
+      const gallery = document.getElementById("gallery");
+      let data;
+      try {
+        data = await (await fetch("manifest.json", { cache: "no-store" })).json();
+      } catch (_) {
+        data = { artifacts: [] };
+      }
+      const items = (data.artifacts || []).filter((a) => a.listed !== false);
+      if (!items.length) {
+        gallery.outerHTML = `<div class="empty">No public materials yet.</div>`;
+        return;
+      }
+      gallery.innerHTML = items.map((a) => {
+        const kind = a.kind || "file";
+        const thumb = a.thumb
+          ? `<img src="${esc(a.thumb)}" alt="">`
+          : `<span>${ICON[kind] || "📦"}</span>`;
+        const lock = a.locked ? `<span class="lock" title="Password required">🔒</span>` : "";
+        return `
+          <a class="card" href="viewer.html?id=${encodeURIComponent(a.id)}">
+            <div class="thumb">${lock}${thumb}</div>
+            <div class="body">
+              <span class="badge kind-${esc(kind)}">${esc(kind)}</span>
+              <h3>${esc(a.title || a.id)}</h3>
+              ${a.summary ? `<p class="summary">${esc(a.summary)}</p>` : ""}
+              ${a.date ? `<p class="summary">${esc(a.date)}</p>` : ""}
+            </div>
+          </a>`;
+      }).join("");
+    }
+    load();
+  </script>
+</body>
+</html>
