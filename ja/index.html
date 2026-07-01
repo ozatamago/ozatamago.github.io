@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>尾崎 勇介 (Yusuke Ozaki) — 個人サイト | コンピュータサイエンス研究</title>
-  <meta name="description" content="尾崎勇介（Yusuke Ozaki）の個人サイト。関西学院大学のコンピュータサイエンス学部生で、University at Albany, SUNY の交換留学生。ベイズ最適化、能動学習、グラフニューラルネットワーク、AI for Science / ラボオートメーションを研究。" />
+  <meta name="description" content="尾崎勇介の個人サイト。関西学院大学のCS学部生、University at Albany, SUNY 交換留学生。ベイズ最適化・能動学習・GNN・AI for Science。" />
   <meta name="author" content="Yusuke Ozaki" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://ozatamago.github.io/ja/" />
@@ -13,17 +13,14 @@
   <link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/" />
   <link rel="icon" href="/assets/headshot.jpg" />
   <meta property="og:type" content="profile" />
-  <meta property="og:title" content="尾崎 勇介 (Yusuke Ozaki) — 個人サイト" />
-  <meta property="og:description" content="関西学院大学のCS学部生、University at Albany 交換留学生。ベイズ最適化・能動学習・GNN・AI for Science。" />
+  <meta property="og:title" content="尾崎 勇介 (Yusuke Ozaki) — 個人サイト | コンピュータサイエンス研究" />
+  <meta property="og:description" content="尾崎勇介の個人サイト。関西学院大学のCS学部生、University at Albany, SUNY 交換留学生。ベイズ最適化・能動学習・GNN・AI for Science。" />
   <meta property="og:url" content="https://ozatamago.github.io/ja/" />
   <meta property="og:image" content="https://ozatamago.github.io/assets/headshot.jpg" />
   <meta property="og:locale" content="ja_JP" />
   <meta property="og:locale:alternate" content="en_US" />
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="尾崎 勇介 (Yusuke Ozaki)" />
-  <meta name="twitter:description" content="関西学院大学のCS学部生。ベイズ最適化・能動学習・GNN・AI for Science。" />
-  <meta name="twitter:image" content="https://ozatamago.github.io/assets/headshot.jpg" />
-  <link rel="stylesheet" href="/assets/styles.css" />
+  <link rel="stylesheet" href="/assets/styles.css?v=11" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -45,20 +42,23 @@
   }
   </script>
 </head>
-<body>
+<body data-interaction="boids">
   <header class="site-header">
     <a class="brand" href="/ja/">尾崎 勇介</a>
     <nav class="nav" aria-label="メインナビゲーション">
-      <a href="/">English</a>
       <a class="active" href="/ja/">Home</a>
-      <a href="#experience">職歴</a>
-      <a href="#education">学歴</a>
-      <a href="#research">研究</a>
-      <a href="#publications">論文</a>
-      <a href="#projects">Projects</a>
-      <a href="#awards">受賞</a>
+      <a href="/ja/experience/">職歴</a>
+      <a href="/ja/education/">学歴</a>
+      <a href="/ja/research/">研究</a>
+      <a href="/ja/publications/">論文</a>
+      <a href="/ja/projects/">Projects</a>
+      <a href="/ja/awards/">受賞</a>
       <a href="/slides/">発表資料</a>
       <a href="/cv/">CV</a>
+      <span class="lang-switch" role="group" aria-label="Language / 言語">
+        <a href="/">EN</a>
+        <a class="active" aria-current="page" href="/ja/">日本語</a>
+      </span>
     </nav>
   </header>
 
@@ -73,75 +73,37 @@
     <section class="intro">
       <img class="headshot" src="/assets/headshot.jpg" alt="尾崎勇介の顔写真">
       <div>
-        <p class="lead">
-          尾崎勇介です。関西学院大学 工学部 情報工学課程の学部生で、現在は University at Albany, SUNY の Department of Computer Science に交換留学しています。
-        </p>
-        <p>
-          長期的には、任意の望ましい機能を持つ生物を設計・創出できる技術に関心があります。そのために、実験の自動実行や実験計画の自動化を含むラボオートメーション、そしてベイズ最適化を用いた protocol-aware active learning と preference modeling を研究しています。
-        </p>
-        <p><strong>研究関心：</strong>ベイズ最適化、能動学習、グラフニューラルネットワーク、AI for Science、ラボオートメーション、シングルセルオミクス、遺伝子制御ネットワーク推定</p>
-        <p><strong>趣味：</strong>ブラジリアン柔術、読書。</p>
+        <p class="lead">尾崎勇介です。関西学院大学 工学部 情報工学課程の学部生で、現在は University at Albany, SUNY の Department of Computer Science に交換留学しています。</p>
+        <p>長期的には、任意の望ましい機能を持つ生物を設計・創出できる技術に関心があります。そのために、実験の自動実行や実験計画の自動化を含むラボオートメーション、そしてベイズ最適化を用いた protocol-aware active learning と preference modeling を研究しています。</p>
+        <p><strong>研究関心：</strong> ベイズ最適化、能動学習、グラフニューラルネットワーク、AI for Science、ラボオートメーション、シングルセルオミクス、遺伝子制御ネットワーク推定</p>
+        <p><strong>趣味：</strong> ブラジリアン柔術、読書。</p>
         <div class="button-row">
           <a class="button" href="/cv/">CVを見る</a>
           <a class="button secondary" href="https://github.com/ozatamago">GitHub</a>
           <a class="button secondary" href="mailto:ozatamago40@gmail.com">Email</a>
+          <a class="button secondary" href="https://jp.linkedin.com/in/yusuke-ozaki-6643882a6">LinkedIn</a>
         </div>
       </div>
     </section>
 
-    <section id="education" class="section">
-      <h2>Education</h2>
-      <ul class="item-list">
-        <li><strong>関西学院大学</strong> 工学部 情報工学課程、Bachelor of Engineering in Computer Science。<span class="meta">2022年4月 - 2027年3月修了予定、兵庫県三田市。</span></li>
-        <li><strong>University at Albany, SUNY</strong> Department of Computer Science、交換留学生。<span class="meta">2025年8月 - 2026年5月予定、Albany, NY, USA。</span></li>
+    <section class="section">
+      <h2>News</h2>
+      <ul class="news-list">
+        <li><span class="when">2026年</span>プレプリント: <em>SPIN — Structural LLM Planning via Iterative Navigation</em>（<a href="https://arxiv.org/abs/2605.14051">arXiv:2605.14051</a>）を公開。</li>
+        <li><span class="when">2025年8月</span>University at Albany, SUNY への交換留学を開始。</li>
+        <li><span class="when">2025年</span>AutoML 2025 でポスター発表（Object-Flow Machine Learning）、RIKEN BDR Student Symposium 2025 で口頭発表。</li>
+        <li><span class="when">2024年7月</span>キーエンス財団 奨学生に採択。</li>
       </ul>
     </section>
 
-    <section id="research" class="section">
-      <h2>Research</h2>
+    <section class="section">
+      <h2>主要論文</h2>
       <ul class="item-list">
-        <li><strong>AI for bioengineering and biology:</strong> 分子・細胞システムに対するグラフニューラルネットワーク、遺伝子制御ネットワーク推定、シングルセルオミクス解析に関心があります。</li>
-        <li><strong>Protocol-aware active learning:</strong> 科学実験を自律的に進めるベイズ最適化フレームワークと、実験条件を効率よく探索するためのラボオートメーション指向の機械学習を研究しています。</li>
-        <li><strong>発表:</strong> AutoML 2025 での Object-Flow Machine Learning に関するポスター発表、RIKEN BDR Student Symposium 2025 での口頭発表、Spring School for Theoretical Biology 2025 でのポスター発表。</li>
-      </ul>
-    </section>
-
-    <section id="publications" class="section">
-      <h2>論文</h2>
-      <ul class="item-list">
-        <li><strong>SPIN: Structural LLM Planning via Iterative Navigation for Industrial Tasks.</strong>
-          <span class="meta"><strong>尾崎 勇介</strong>, Dhaval Patel. arXiv preprint arXiv:2605.14051 [cs.AI], 2026年.</span>
-          <span class="meta"><a href="https://arxiv.org/abs/2605.14051">arXiv</a> &middot; <a href="https://arxiv.org/pdf/2605.14051">PDF</a> &middot; <a href="/slides/viewer.html?id=spin-showcase">ビジュアル要約</a></span>
-        </li>
-      </ul>
-    </section>
-
-    <section id="experience" class="section">
-      <h2>Work Experience</h2>
-      <ul class="item-list">
-        <li><strong>RIKEN Center for Biosystems Dynamics Research, Laboratory for Biologically Inspired Computing</strong> Research Part-timer II。<span class="meta">2024年6月 - 2025年8月、神戸。</span> AI・ロボティクス駆動の wet-lab automation に関する研究で、実験シミュレータや protocol-aware active learning workflow を開発しました。</li>
-        <li><strong>Yachie Laboratory</strong> Research Assistant。<span class="meta">2025年2月 - 2025年8月、大阪。</span> single-cell RNA-seq と ATAC-seq を用いた遺伝子制御ネットワーク推定の計算プロジェクトを支援しました。</li>
-        <li><strong>Metadata Incorporated</strong> Software Engineer, Part-time。<span class="meta">2024年4月 - 2024年6月、Remote。</span> AI-driven enterprise services の Web application、backend API、data-processing components の開発・保守に携わりました。</li>
-      </ul>
-    </section>
-
-    <section id="projects" class="section">
-      <h2>Projects</h2>
-      <ul class="item-list">
-        <li><strong>Bayesian Optimization with Gaussian Process Panel Models:</strong> University at Albany, SUNY で、General Preference Embedding Models を用いた preference-based Bayesian optimization を研究しています。</li>
-        <li><strong>Minimal-Edges Graph Neural Networks for Efficient Graph Learning:</strong> タスクに応じた sparse adjacency structure を層ごとに学習する graph neural network architecture を設計しています。</li>
-        <li><strong>Methodology for Asset Operation LLM Agents:</strong> 大規模言語モデル、structured task planning、tool calling、evaluation pipelines を組み合わせた software framework を開発しています。<span class="meta">関連論文: <a href="#publications">SPIN (arXiv:2605.14051)</a>。</span></li>
-        <li><strong>Campus Activity Recommender:</strong> HackRPI 2025 にて、LinUCB bandit engine と Flask APIs を用いた campus club / event recommender web application の technical lead を担当しました。</li>
-      </ul>
-    </section>
-
-    <section id="awards" class="section">
-      <h2>Awards</h2>
-      <ul class="item-list">
-        <li><strong>キーエンス財団 奨学生</strong>。<span class="meta">2024年7月。</span></li>
-        <li><strong>業務スーパージャパンドリーム財団 派遣留学奨学生</strong>。<span class="meta">2025年8月 - 現在。</span></li>
+        <li><strong>SPIN: Structural LLM Planning via Iterative Navigation for Industrial Tasks.</strong> <span class="meta"><strong>尾崎 勇介</strong>, Dhaval Patel. arXiv preprint arXiv:2605.14051 [cs.AI], 2026年.</span> <span class="meta"><a href="https://arxiv.org/abs/2605.14051">arXiv</a> &middot; <a href="https://arxiv.org/pdf/2605.14051">PDF</a> &middot; <a href="/slides/viewer.html?id=spin-showcase">ビジュアル要約</a></span></li>
       </ul>
     </section>
   </main>
+
+  <script src="/assets/interactions.js?v=11" defer></script>
 </body>
 </html>

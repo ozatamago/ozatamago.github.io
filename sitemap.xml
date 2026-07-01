@@ -1,28 +1,93 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://ozatamago.github.io/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://ozatamago.github.io/"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://ozatamago.github.io/ja/"/>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/"/>
   </url>
   <url>
     <loc>https://ozatamago.github.io/ja/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://ozatamago.github.io/"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://ozatamago.github.io/ja/"/>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/"/>
+  </url>
+  <url>
+    <loc>https://ozatamago.github.io/experience/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ozatamago.github.io/experience/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://ozatamago.github.io/ja/experience/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/experience/"/>
+  </url>
+  <url>
+    <loc>https://ozatamago.github.io/ja/experience/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ozatamago.github.io/experience/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://ozatamago.github.io/ja/experience/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/experience/"/>
+  </url>
+  <url>
+    <loc>https://ozatamago.github.io/education/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ozatamago.github.io/education/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://ozatamago.github.io/ja/education/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/education/"/>
+  </url>
+  <url>
+    <loc>https://ozatamago.github.io/ja/education/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ozatamago.github.io/education/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://ozatamago.github.io/ja/education/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/education/"/>
+  </url>
+  <url>
+    <loc>https://ozatamago.github.io/research/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ozatamago.github.io/research/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://ozatamago.github.io/ja/research/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/research/"/>
+  </url>
+  <url>
+    <loc>https://ozatamago.github.io/ja/research/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ozatamago.github.io/research/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://ozatamago.github.io/ja/research/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/research/"/>
+  </url>
+  <url>
+    <loc>https://ozatamago.github.io/publications/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ozatamago.github.io/publications/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://ozatamago.github.io/ja/publications/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/publications/"/>
+  </url>
+  <url>
+    <loc>https://ozatamago.github.io/ja/publications/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ozatamago.github.io/publications/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://ozatamago.github.io/ja/publications/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/publications/"/>
+  </url>
+  <url>
+    <loc>https://ozatamago.github.io/projects/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ozatamago.github.io/projects/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://ozatamago.github.io/ja/projects/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/projects/"/>
+  </url>
+  <url>
+    <loc>https://ozatamago.github.io/ja/projects/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ozatamago.github.io/projects/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://ozatamago.github.io/ja/projects/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/projects/"/>
+  </url>
+  <url>
+    <loc>https://ozatamago.github.io/awards/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ozatamago.github.io/awards/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://ozatamago.github.io/ja/awards/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/awards/"/>
+  </url>
+  <url>
+    <loc>https://ozatamago.github.io/ja/awards/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ozatamago.github.io/awards/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://ozatamago.github.io/ja/awards/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/awards/"/>
   </url>
   <url>
     <loc>https://ozatamago.github.io/cv/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://ozatamago.github.io/slides/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
   </url>
 </urlset>

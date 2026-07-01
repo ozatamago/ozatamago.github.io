@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="google-site-verification" content="Sbo6Nd1grieFwSqdgQMoZZsaIiLJxnaERxbTDKaRBXU" />
   <title>Yusuke Ozaki — Personal Website | Computer Science Researcher</title>
-  <meta name="description" content="Personal website of Yusuke Ozaki, a Computer Science researcher and undergraduate at Kwansei Gakuin University (exchange student at the University at Albany, SUNY). Research in Bayesian optimization, active learning, graph neural networks, and AI for science and lab automation." />
+  <meta name="description" content="Personal website of Yusuke Ozaki, a Computer Science researcher at Kwansei Gakuin University (exchange student at the University at Albany, SUNY). Bayesian optimization, active learning, graph neural networks, and AI for science." />
   <meta name="author" content="Yusuke Ozaki" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://ozatamago.github.io/" />
@@ -14,19 +14,14 @@
   <link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/" />
   <link rel="icon" href="/assets/headshot.jpg" />
   <meta property="og:type" content="profile" />
-  <meta property="og:title" content="Yusuke Ozaki — Personal Website" />
-  <meta property="og:description" content="CS researcher at Kwansei Gakuin University (exchange at University at Albany, SUNY). Bayesian optimization, active learning, GNNs, and AI for science." />
+  <meta property="og:title" content="Yusuke Ozaki — Personal Website | Computer Science Researcher" />
+  <meta property="og:description" content="Personal website of Yusuke Ozaki, a Computer Science researcher at Kwansei Gakuin University (exchange student at the University at Albany, SUNY). Bayesian optimization, active learning, graph neural networks, and AI for science." />
   <meta property="og:url" content="https://ozatamago.github.io/" />
   <meta property="og:image" content="https://ozatamago.github.io/assets/headshot.jpg" />
   <meta property="og:locale" content="en_US" />
   <meta property="og:locale:alternate" content="ja_JP" />
-  <meta property="profile:first_name" content="Yusuke" />
-  <meta property="profile:last_name" content="Ozaki" />
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Yusuke Ozaki — Personal Website" />
-  <meta name="twitter:description" content="CS researcher at Kwansei Gakuin University. Bayesian optimization, active learning, GNNs, AI for science." />
-  <meta name="twitter:image" content="https://ozatamago.github.io/assets/headshot.jpg" />
-  <link rel="stylesheet" href="/assets/styles.css" />
+  <link rel="stylesheet" href="/assets/styles.css?v=11" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -36,7 +31,6 @@
     "url": "https://ozatamago.github.io/",
     "image": "https://ozatamago.github.io/assets/headshot.jpg",
     "jobTitle": "Computer Science Researcher",
-    "description": "Undergraduate Computer Science researcher at Kwansei Gakuin University; exchange student at the University at Albany, SUNY.",
     "knowsAbout": ["Bayesian Optimization", "Active Learning", "Graph Neural Networks", "AI for Science", "Laboratory Automation", "Single-cell omics"],
     "alumniOf": [
       { "@type": "CollegeOrUniversity", "name": "Kwansei Gakuin University" },
@@ -49,20 +43,23 @@
   }
   </script>
 </head>
-<body>
+<body data-interaction="boids">
   <header class="site-header">
     <a class="brand" href="/">Yusuke Ozaki</a>
     <nav class="nav" aria-label="Main navigation">
       <a class="active" href="/">Home</a>
-      <a href="#experience">Work Experience</a>
-      <a href="#education">Education</a>
-      <a href="#research">Research</a>
-      <a href="#publications">Publications</a>
-      <a href="#projects">Projects</a>
-      <a href="#awards">Awards</a>
+      <a href="/experience/">Work Experience</a>
+      <a href="/education/">Education</a>
+      <a href="/research/">Research</a>
+      <a href="/publications/">Publications</a>
+      <a href="/projects/">Projects</a>
+      <a href="/awards/">Awards</a>
       <a href="/slides/">Slides</a>
       <a href="/cv/">CV</a>
-      <a href="/ja/">日本語</a>
+      <span class="lang-switch" role="group" aria-label="Language / 言語">
+        <a class="active" aria-current="page" href="/">EN</a>
+        <a href="/ja/">日本語</a>
+      </span>
     </nav>
   </header>
 
@@ -77,77 +74,37 @@
     <section class="intro">
       <img class="headshot" src="/assets/headshot.jpg" alt="Headshot of Yusuke Ozaki">
       <div>
-        <p class="lead">
-          My name is Yusuke Ozaki. I am an undergraduate student in Computer Science at Kwansei Gakuin University and an exchange student in the Department of Computer Science at the University at Albany, SUNY.
-        </p>
-        <p>
-          My long-term goal is to create living organisms with arbitrary, desired functions. To pursue this vision, I am interested in laboratory automation, including automated experiment execution and automated experimental design/planning. My current research focuses on protocol-aware active learning and preference modeling using Bayesian optimization.
-        </p>
-      <p><strong>Research interests:</strong>
-        Bayesian Optimization, Active Learning, Graph Neural Networks (GNNs), AI for Science / Lab Automation, Single-cell omics & GRN inference
-      </p>
-      <p><strong>Hobbies:</strong> Brazilian Jiu-Jitsu, reading books.</p>
+        <p class="lead">My name is Yusuke Ozaki. I am an undergraduate student in Computer Science at Kwansei Gakuin University and an exchange student in the Department of Computer Science at the University at Albany, SUNY.</p>
+        <p>My long-term goal is to create living organisms with arbitrary, desired functions. To pursue this vision, I am interested in laboratory automation, including automated experiment execution and automated experimental design/planning. My current research focuses on protocol-aware active learning and preference modeling using Bayesian optimization.</p>
+        <p><strong>Research interests:</strong> Bayesian Optimization, Active Learning, Graph Neural Networks (GNNs), AI for Science / Lab Automation, Single-cell omics &amp; GRN inference</p>
+        <p><strong>Hobbies:</strong> Brazilian Jiu-Jitsu, reading books.</p>
         <div class="button-row">
           <a class="button" href="/cv/">View CV</a>
           <a class="button secondary" href="https://github.com/ozatamago">GitHub</a>
           <a class="button secondary" href="mailto:ozatamago40@gmail.com">Email</a>
+          <a class="button secondary" href="https://jp.linkedin.com/in/yusuke-ozaki-6643882a6">LinkedIn</a>
         </div>
       </div>
     </section>
 
-    <section id="education" class="section">
-      <h2>Education</h2>
-      <ul class="item-list">
-        <li><strong>Kwansei Gakuin University</strong>, Bachelor of Engineering in Computer Science, School of Engineering. <span class="meta">Apr. 2022 - Mar. 2027 expected, Sanda, Hyogo, Japan.</span></li>
-        <li><strong>University at Albany, SUNY</strong>, Exchange Student, Department of Computer Science. <span class="meta">Aug. 2025 - May 2026 expected, Albany, NY, USA.</span></li>
+    <section class="section">
+      <h2>News</h2>
+      <ul class="news-list">
+        <li><span class="when">2026</span>Preprint: <em>SPIN — Structural LLM Planning via Iterative Navigation</em> (<a href="https://arxiv.org/abs/2605.14051">arXiv:2605.14051</a>).</li>
+        <li><span class="when">Aug. 2025</span>Began an exchange at the University at Albany, SUNY.</li>
+        <li><span class="when">2025</span>Poster at AutoML 2025 (Object-Flow Machine Learning) and an oral talk at the RIKEN BDR Student Symposium 2025.</li>
+        <li><span class="when">Jul. 2024</span>Awarded the Keyence Foundation Student Scholarship.</li>
       </ul>
     </section>
 
-    <section id="research" class="section">
-      <h2>Research</h2>
+    <section class="section">
+      <h2>Featured</h2>
       <ul class="item-list">
-        <li><strong>AI for bioengineering and biology:</strong> Graph neural networks for molecular and cellular systems, gene regulatory network inference, and single-cell omics analysis.</li>
-        <li><strong>Protocol-aware active learning:</strong> Bayesian optimization frameworks that autonomously drive scientific experiments and support data-efficient exploration of experimental conditions.</li>
-        <li><strong>Presentations:</strong> Poster at AutoML 2025 on Object-Flow Machine Learning; oral presentation at the RIKEN BDR Student Symposium 2025; poster at the Spring School for Theoretical Biology 2025.</li>
-      </ul>
-    </section>
-
-    <section id="publications" class="section">
-      <h2>Publications</h2>
-      <ul class="item-list">
-        <li><strong>SPIN: Structural LLM Planning via Iterative Navigation for Industrial Tasks.</strong>
-          <span class="meta"><strong>Yusuke Ozaki</strong>, Dhaval Patel. arXiv preprint arXiv:2605.14051 [cs.AI], 2026.</span>
-          <span class="meta"><a href="https://arxiv.org/abs/2605.14051">arXiv</a> &middot; <a href="https://arxiv.org/pdf/2605.14051">PDF</a> &middot; <a href="/slides/viewer.html?id=spin-showcase">Visual summary</a></span>
-        </li>
-      </ul>
-    </section>
-
-    <section id="experience" class="section">
-      <h2>Work Experience</h2>
-      <ul class="item-list">
-        <li><strong>RIKEN Center for Biosystems Dynamics Research, Laboratory for Biologically Inspired Computing</strong>, Research Part-timer II. <span class="meta">Jun. 2024 - Aug. 2025, Kobe, Japan.</span> Developed machine-learning based experimental simulators and protocol-aware active learning workflows for automated wet-lab experiments.</li>
-        <li><strong>Yachie Laboratory</strong>, Research Assistant. <span class="meta">Feb. 2025 - Aug. 2025, Osaka, Japan.</span> Assisted computational projects on gene regulatory network inference from single-cell RNA-seq and ATAC-seq data.</li>
-        <li><strong>Metadata Incorporated</strong>, Software Engineer, Part-time. <span class="meta">Apr. 2024 - Jun. 2024, Remote, Japan.</span> Developed and maintained web applications for AI-driven enterprise services, including backend APIs and data-processing components.</li>
-      </ul>
-    </section>
-
-    <section id="projects" class="section">
-      <h2>Projects</h2>
-      <ul class="item-list">
-        <li><strong>Bayesian Optimization with Gaussian Process Panel Models:</strong> Studying preference-based Bayesian optimization with General Preference Embedding Models at the University at Albany, SUNY.</li>
-        <li><strong>Minimal-Edges Graph Neural Networks for Efficient Graph Learning:</strong> Designing graph neural network architectures that learn task-specific sparse adjacency structures layer by layer.</li>
-        <li><strong>Methodology for Asset Operation LLM Agents:</strong> Developing a software framework that combines large language models, structured task planning, tool calling, and evaluation pipelines. <span class="meta">See <a href="#publications">SPIN (arXiv:2605.14051)</a>.</span></li>
-        <li><strong>Campus Activity Recommender:</strong> Technical lead for a HackRPI 2025 team project that built a campus club and event recommender web application with a LinUCB bandit engine and Flask APIs.</li>
-      </ul>
-    </section>
-
-    <section id="awards" class="section">
-      <h2>Awards</h2>
-      <ul class="item-list">
-        <li><strong>Keyence Foundation Student Scholarship</strong>. <span class="meta">Jul. 2024.</span></li>
-        <li><strong>Gyomu Super Japan Dream Foundation Study Abroad Scholarship</strong>. <span class="meta">Aug. 2025 - Present.</span></li>
+        <li><strong>SPIN: Structural LLM Planning via Iterative Navigation for Industrial Tasks.</strong> <span class="meta"><strong>Yusuke Ozaki</strong>, Dhaval Patel. arXiv preprint arXiv:2605.14051 [cs.AI], 2026.</span> <span class="meta"><a href="https://arxiv.org/abs/2605.14051">arXiv</a> &middot; <a href="https://arxiv.org/pdf/2605.14051">PDF</a> &middot; <a href="/slides/viewer.html?id=spin-showcase">Visual summary</a></span></li>
       </ul>
     </section>
   </main>
+
+  <script src="/assets/interactions.js?v=11" defer></script>
 </body>
 </html>

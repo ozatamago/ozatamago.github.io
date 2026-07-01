@@ -10,13 +10,17 @@
   box-sizing: border-box;
 }
 
+html {
+  background: #fff;
+}
+
 body {
   margin: 0;
   color: var(--ink);
   font-family: Arial, Helvetica, sans-serif;
   font-size: 17px;
   line-height: 1.65;
-  background: #fff;
+  background: transparent;
 }
 
 a {
@@ -181,6 +185,10 @@ a {
 
   .nav {
     width: 100%;
+    flex-wrap: wrap;
+    overflow-x: visible;
+    white-space: normal;
+    row-gap: 4px;
   }
 
   .hero {
@@ -201,3 +209,233 @@ a {
     padding: 36px 20px 64px;
   }
 }
+
+/* ---- language toggle (segmented, right end of the nav) ---- */
+.lang-switch {
+  display: inline-flex;
+  margin-left: 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.lang-switch a {
+  padding: 5px 12px;
+  font-size: 13px;
+  color: var(--ink);
+  text-decoration: none;
+  background: #fff;
+}
+.lang-switch a + a { border-left: 1px solid var(--line); }
+.lang-switch a.active { background: var(--ink); color: #fff; }
+.lang-switch a:not(.active):hover { background: #f2f2f2; }
+
+/* ---- section-page heading ---- */
+.page-title {
+  margin: 0 0 8px;
+  font-family: Impact, "Arial Narrow", Arial, sans-serif;
+  font-size: 44px;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  line-height: 1.05;
+}
+.page-title + .page-line {
+  width: min(360px, 60%);
+  height: 8px;
+  margin: 0 0 26px;
+  background: var(--accent);
+}
+
+/* ---- news list (Home) ---- */
+.news-list { list-style: none; margin: 0; padding: 0; }
+.news-list li {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.news-list li:last-child { border-bottom: none; }
+.news-list .when {
+  display: inline-block;
+  min-width: 96px;
+  color: var(--accent);
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* ==== background interaction layer (assets/interactions.js) ==== */
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* the hero reveals the living background; a faint white scrim keeps the name crisp */
+.bg-active .hero {
+  color: var(--ink);
+  background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.18));
+}
+.bg-active .hero h1 {
+  text-shadow: 0 2px 20px rgba(255, 255, 255, 0.92), 0 0 2px rgba(255, 255, 255, 0.9);
+}
+
+/* content floats as a near-opaque card so text stays readable over the animation */
+.bg-active .content {
+  margin: 22px auto 44px;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 16px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02), 0 0 0 1px var(--line);
+}
+
+/* the Slides page uses .page-head (not .content); give it a readable backdrop */
+.bg-active .page-head {
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom: none;
+  border-radius: 12px;
+  padding: 12px 16px;
+}
+
+/* ---- control panel ---- */
+.bg-panel {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.bg-fab {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: #fff;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  padding: 0;
+}
+.bg-fab:hover { border-color: var(--accent); }
+.bg-fab-glyph { font-size: 22px; line-height: 1; }
+.bg-fab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.bg-body {
+  width: 264px;
+  padding: 14px 16px 16px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.16);
+}
+.bg-panel.collapsed .bg-body { display: none; }
+
+.bg-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.bg-title { font-weight: bold; font-size: 14px; }
+.bg-desc { margin: 0 0 6px; color: var(--muted); font-size: 12.5px; line-height: 1.45; }
+.bg-readout { margin: 12px 0 0; color: var(--muted); font-size: 13px; font-family: "Courier New", monospace; }
+.bg-close {
+  border: none;
+  background: none;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 0 2px;
+}
+.bg-close:hover { color: var(--ink); }
+
+.bg-row { margin-top: 10px; }
+.bg-switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+  cursor: pointer;
+}
+.bg-label { display: block; margin-bottom: 5px; color: var(--muted); font-size: 13px; }
+
+.bg-switch {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  width: 40px;
+  height: 22px;
+  border-radius: 22px;
+  background: #d9d9d9;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  flex: none;
+  margin: 0;
+}
+.bg-switch:checked { background: var(--accent); }
+.bg-switch::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  transition: left 0.15s ease;
+}
+.bg-switch:checked::after { left: 20px; }
+.bg-switch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.bg-range { display: flex; align-items: center; gap: 8px; }
+.bg-range input[type="range"] { flex: 1; }
+.bg-out { min-width: 40px; text-align: right; font-size: 13px; font-variant-numeric: tabular-nums; }
+
+.bg-body select,
+.bg-body input[type="text"] {
+  width: 100%;
+  font: inherit;
+  font-size: 14px;
+  padding: 7px 9px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+}
+.bg-textbox { display: flex; gap: 8px; }
+.bg-mono { font-family: "Courier New", monospace; letter-spacing: 0.05em; }
+
+.bg-body select:focus-visible,
+.bg-body input:focus-visible,
+.bg-btn:focus-visible,
+.bg-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.bg-btn {
+  font: inherit;
+  font-size: 13px;
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f2f2f2;
+  color: var(--ink);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.bg-btn:hover { background: #e7e7e7; }
+.bg-wide { width: 100%; }
+
+@media (max-width: 760px) {
+  .bg-panel { right: 12px; bottom: 12px; }
+  .bg-active .content { border-radius: 12px; }
+  .page-title { font-size: 34px; }
+  /* nav wraps on mobile (see media query above), so the toggle is always visible;
+     push it to its own trailing line, flush right */
+  .lang-switch { margin-left: auto; }
+}
+
