@@ -11,7 +11,7 @@
     },
     {
       "id": "cx-active-learning",
-      "title": "Bayesian Active Learning — C(X) consistency (draft)",
+      "title": "Bayesian Active Learning on C(X) (draft)",
       "kind": "web",
       "locked": true,
       "listed": true,
