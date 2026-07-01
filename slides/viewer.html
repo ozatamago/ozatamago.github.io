@@ -119,6 +119,7 @@
     window.addEventListener("pagehide", unmountActive);
 
     async function mountFiles(files) {
+      if (!("serviceWorker" in navigator)) throw new Error("NO_SW_SUPPORT");
       await ensureSW();
       const token = Array.from(crypto.getRandomValues(new Uint8Array(8)), (b) => b.toString(16).padStart(2, "0")).join("");
       const payload = [];
@@ -359,13 +360,25 @@
     }
 
     async function renderWeb(art, name) {
+      // A single self-contained HTML file renders via srcdoc — no Service Worker needed,
+      // so it works even in in-app browsers (Instagram/Facebook/LINE) that lack SW support.
+      if (art.files.size === 1) {
+        const [p, f] = [...art.files][0];
+        viewerShell(art.title || name || "Interactive artifact", "");
+        offerDownload(p, f.bytes, f.mime);
+        const stage = document.getElementById("stage");
+        const iframe = document.createElement("iframe");
+        iframe.setAttribute("sandbox", "allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads allow-presentation");
+        iframe.srcdoc = new TextDecoder().decode(f.bytes);
+        stage.appendChild(iframe);
+        return;
+      }
+      // A multi-file bundle needs the Service Worker to serve relative paths + subpages.
+      if (!("serviceWorker" in navigator)) throw new Error("NO_SW_SUPPORT");
       const token = await mountFiles(art.files);
       const main = art.main || "index.html";
       viewerShell(art.title || name || "Interactive artifact", "");
-      // No single-file download for multi-file web bundles; hide the button.
-      const dl = document.getElementById("dl");
-      if (art.files.size === 1) { const [p, f] = [...art.files][0]; offerDownload(p, f.bytes, f.mime); }
-      else if (dl) dl.remove();
+      const dl = document.getElementById("dl"); if (dl) dl.remove();
       const stage = document.getElementById("stage");
       const iframe = document.createElement("iframe");
       iframe.setAttribute("sandbox", "allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads allow-presentation");
@@ -559,6 +572,11 @@
           show(`<div class="notice">Encrypted artifacts need a secure context.<br>
             Open this page over <code>https://</code> or <code>http://localhost</code> /
             <code>http://127.0.0.1</code> — not an IP address or hostname.</div>`);
+        } else if (e.message === "NO_SW_SUPPORT") {
+          show(`<div class="notice">This interactive item needs a full browser.<br>
+            You appear to be in an in-app browser (Instagram, Facebook, LINE, …), which doesn't support the technology this multi-page viewer uses.<br><br>
+            Tap the <strong>•••</strong> (or share) menu and choose <strong>“Open in browser”</strong> (Safari / Chrome), then reload.<br>
+            <small>${esc(location.href)}</small></div>`);
         } else {
           show(`<div class="notice">Could not load this artifact.<br><small>${esc(e.message || String(e))}</small></div>`);
         }
