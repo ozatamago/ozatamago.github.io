@@ -1,0 +1,221 @@
+/* blog.css — long-form article + blog index styling.
+   Layered on top of styles.css; loaded only by /blog/ pages.
+   Reuses the shared tokens (--accent, --ink, --muted, --line). */
+
+/* ---- blog index listing ---- */
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.post-list li {
+  padding: 20px 0;
+  border-top: 1px solid var(--line);
+}
+.post-list li:first-child {
+  border-top: none;
+}
+.post-list .when {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--accent);
+  font-weight: bold;
+  font-size: 14px;
+}
+.post-list h2 {
+  margin: 0 0 8px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 22px;
+  line-height: 1.35;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.post-list h2 a {
+  color: var(--ink);
+  text-decoration: none;
+}
+.post-list h2 a:hover {
+  color: var(--accent);
+}
+.post-list .excerpt {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* ---- article ---- */
+.post {
+  max-width: 760px;
+}
+.post-subtitle {
+  margin: 0 0 6px;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 1.45;
+}
+.post-meta {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 15px;
+}
+.post-lead {
+  font-size: 18px;
+  line-height: 1.8;
+}
+.post h2 {
+  margin: 48px 0 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  font-family: Impact, "Arial Narrow", Arial, sans-serif;
+  font-size: 27px;
+  letter-spacing: 0.01em;
+  line-height: 1.25;
+}
+.post h3 {
+  margin: 32px 0 12px;
+  font-size: 19px;
+}
+.post p {
+  line-height: 1.85;
+  text-align: justify;
+}
+.post ul {
+  padding-left: 22px;
+}
+.post li {
+  margin: 10px 0;
+  line-height: 1.7;
+}
+.post li ul {
+  margin: 8px 0;
+}
+.post cite {
+  font-style: italic;
+}
+
+/* ---- figures ---- */
+.post figure {
+  margin: 28px 0;
+  text-align: center;
+}
+.post figure img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+.post figcaption {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ---- table (horizontal scroll on narrow screens) ---- */
+.table-wrap {
+  margin: 28px 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.post table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 720px;
+  font-size: 14.5px;
+  background: #fff;
+}
+.post th,
+.post td {
+  padding: 10px 13px;
+  border: 1px solid var(--line);
+  vertical-align: top;
+  text-align: left;
+  line-height: 1.55;
+}
+.post thead th {
+  background: #faf1f2;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.post tbody th {
+  background: #fafafa;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+/* ---- lock: index badge + article gate ---- */
+.post-lock {
+  font-size: 15px;
+  vertical-align: middle;
+}
+.lock-loading {
+  margin: 40px 0;
+  padding: 32px 20px;
+  text-align: center;
+  color: var(--muted);
+}
+.lock-gate {
+  margin: 40px 0;
+  padding: 32px 20px;
+  text-align: center;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fafafa;
+}
+.lock-gate .lock-icon {
+  margin: 0 0 6px;
+  font-size: 40px;
+  line-height: 1;
+}
+.lock-gate form {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 16px 0 6px;
+}
+.lock-gate input[type="password"] {
+  font: inherit;
+  padding: 9px 12px;
+  min-width: 200px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+}
+.lock-gate .button {
+  cursor: pointer;
+  border: none;
+}
+.lock-err {
+  margin: 6px 0 0;
+  color: var(--accent);
+  font-size: 14px;
+}
+.lock-remember {
+  display: inline-block;
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* ---- empty blog index ---- */
+.blog-empty {
+  color: var(--muted);
+}
+
+/* ---- back link ---- */
+.post-back {
+  display: inline-block;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  font-size: 15px;
+}
+
+@media (max-width: 760px) {
+  .post h2 { font-size: 23px; }
+  .post-lead { font-size: 17px; }
+}

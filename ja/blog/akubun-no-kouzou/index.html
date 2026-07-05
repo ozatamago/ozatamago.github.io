@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>『悪文の構造』と工学の原則――千早耿一郎は何を応用したのか — 尾崎 勇介</title>
+  <meta name="description" content="千早耿一郎『悪文の構造』が宣言する「工学の理論」の応用とは何だったのか。機能主義・構造の一義性・必要十分・使用者基準・失敗からの学びという工学の五つの柱と本書の各章を対応づけて読み解くエッセイ。パスワード保護。" />
+  <meta name="author" content="Yusuke Ozaki" />
+  <meta name="robots" content="noindex, follow" />
+  <link rel="canonical" href="https://ozatamago.github.io/ja/blog/akubun-no-kouzou/" />
+  <link rel="icon" href="/assets/headshot.jpg" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="『悪文の構造』と工学の原則――千早耿一郎は何を応用したのか" />
+  <meta property="og:description" content="千早耿一郎『悪文の構造』が宣言する「工学の理論」の応用を、工学の五つの根幹原則と対応づけて読み解く（パスワード保護）。" />
+  <meta property="og:url" content="https://ozatamago.github.io/ja/blog/akubun-no-kouzou/" />
+  <meta property="og:image" content="https://ozatamago.github.io/assets/headshot.jpg" />
+  <meta property="og:locale" content="ja_JP" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="stylesheet" href="/assets/styles.css?v=11" />
+  <link rel="stylesheet" href="/assets/blog.css" />
+</head>
+<body data-interaction="voronoi">
+  <header class="site-header">
+    <a class="brand" href="/ja/">尾崎 勇介</a>
+    <nav class="nav" aria-label="メインナビゲーション">
+      <a href="/ja/">Home</a>
+      <a href="/ja/experience/">職歴</a>
+      <a href="/ja/education/">学歴</a>
+      <a href="/ja/research/">研究</a>
+      <a href="/ja/publications/">論文</a>
+      <a href="/ja/projects/">Projects</a>
+      <a href="/ja/awards/">受賞</a>
+      <a href="/ja/slides/">発表資料</a>
+      <a href="/ja/cv/">CV</a>
+      <a class="active" href="/ja/blog/">ブログ</a>
+      <span class="lang-switch" role="group" aria-label="Language / 言語">
+        <a href="/blog/">EN</a>
+        <a class="active" aria-current="page" href="/ja/blog/">日本語</a>
+      </span>
+    </nav>
+  </header>
+
+  <main class="content">
+    <article class="post">
+      <h1 class="page-title">『悪文の構造』と工学の原則</h1>
+      <div class="page-line"></div>
+      <p class="post-subtitle">千早耿一郎は何を応用したのか</p>
+      <p class="post-meta">尾崎 勇介 &middot; 2026年7月5日 &middot; 🔒 パスワード保護</p>
+
+      <div id="article-body" hidden></div>
+
+      <div id="lock-loading" class="lock-loading" hidden aria-live="polite">
+        <p>🔓 解除しています…</p>
+      </div>
+
+      <div id="lock-gate" class="lock-gate" hidden>
+        <p class="lock-icon" aria-hidden="true">🔒</p>
+        <p>この記事はパスワードで保護されています。</p>
+        <form id="lock-form">
+          <input type="password" id="lock-pw" autocomplete="off" inputmode="numeric" placeholder="パスワード" aria-label="パスワード" />
+          <button type="submit" class="button">解除</button>
+        </form>
+        <p class="lock-err" id="lock-err" role="alert" hidden></p>
+        <label class="lock-remember"><input type="checkbox" id="lock-remember" checked /> この端末で記憶する</label>
+      </div>
+
+      <script>
+        // Decide the initial view synchronously, before the crypto module loads —
+        // a visitor who saved the password never sees the password form flash.
+        (function () {
+          try {
+            var remembered = localStorage.getItem("seal:pw:/ja/blog/akubun-no-kouzou/");
+            document.getElementById(remembered ? "lock-loading" : "lock-gate").hidden = false;
+          } catch (e) {
+            document.getElementById("lock-gate").hidden = false;
+          }
+        })();
+      </script>
+    </article>
+  </main>
+
+  <script type="module">
+    import { open } from "/assets/seal.js";
+
+    const ENC_URL = "content.enc";
+    const PW_KEY = "seal:pw:/ja/blog/akubun-no-kouzou/";
+    const gate = document.getElementById("lock-gate");
+    const loading = document.getElementById("lock-loading");
+    const bodyEl = document.getElementById("article-body");
+    const errEl = document.getElementById("lock-err");
+    const td = new TextDecoder();
+
+    async function fetchBytes(url) {
+      const r = await fetch(url, { cache: "no-store" });
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return new Uint8Array(await r.arrayBuffer());
+    }
+
+    // Swap the "unlocking…" placeholder for the password form (cache miss / bad saved password).
+    function showGate() {
+      loading.hidden = true;
+      gate.hidden = false;
+      const i = document.getElementById("lock-pw");
+      if (i) i.focus();
+    }
+
+    async function reveal(pw, persist) {
+      const bundle = await open(await fetchBytes(ENC_URL), pw); // throws BAD_PASSWORD / PASSWORD_REQUIRED
+      const f = bundle.files.get("content.html");
+      if (!f) throw new Error("MISSING_CONTENT");
+      bodyEl.innerHTML = td.decode(f.bytes);
+      bodyEl.hidden = false;
+      gate.hidden = true;
+      loading.hidden = true;
+      if (persist) { try { localStorage.setItem(PW_KEY, pw); } catch (e) {} }
+    }
+
+    function showErr(err) {
+      errEl.textContent =
+        err && err.message === "BAD_PASSWORD" ? "パスワードが違います。" :
+        err && err.message === "SECURE_CONTEXT" ? "復号には https もしくは localhost での閲覧が必要です。" :
+        "読み込みに失敗しました（" + (err && err.message) + "）。";
+      errEl.hidden = false;
+    }
+
+    if (!(window.isSecureContext && window.crypto && crypto.subtle)) {
+      // Encrypted content needs Web Crypto (https / localhost). Fail clearly instead of silently.
+      showGate();
+      gate.querySelector("form").hidden = true;
+      showErr(new Error("SECURE_CONTEXT"));
+    } else {
+      // The inline pre-check already chose the initial view from localStorage; here we act on it.
+      let cached = null;
+      try { cached = localStorage.getItem(PW_KEY); } catch (e) {}
+      if (cached) {
+        // Remembered on this device: unlock silently behind the "unlocking…" placeholder;
+        // fall back to the password form only if the saved password no longer works.
+        reveal(cached, false).catch(() => { try { localStorage.removeItem(PW_KEY); } catch (e) {} showGate(); });
+      } else {
+        showGate();
+      }
+      document.getElementById("lock-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        errEl.hidden = true;
+        const pw = document.getElementById("lock-pw").value;
+        const persist = document.getElementById("lock-remember").checked;
+        try { await reveal(pw, persist); } catch (err) { showErr(err); }
+      });
+    }
+  </script>
+  <script src="/assets/interactions.js?v=11" defer></script>
+</body>
+</html>

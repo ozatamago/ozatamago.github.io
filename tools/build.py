@@ -29,8 +29,9 @@ SECTIONS = [
     ("awards",       "Awards",          "受賞",     "/awards/",       "/ja/awards/",       "life"),
 ]
 EXTRA_NAV = [
-    ("slides", "Slides", "発表資料", "/slides/", "/slides/"),
-    ("cv",     "CV",     "CV",       "/cv/",     "/cv/"),
+    ("slides", "Slides", "発表資料", "/slides/", "/ja/slides/"),
+    ("cv",     "CV",     "CV",       "/cv/",     "/ja/cv/"),
+    ("blog",   "Blog",   "ブログ",   "/blog/",   "/ja/blog/"),
 ]
 
 META = {key: (en, ja, en_h, ja_h, act) for (key, en, ja, en_h, ja_h, act) in SECTIONS}
@@ -208,7 +209,8 @@ def nav_links(lang, active):
         out.append('      <a{cls} href="{href}">{label}</a>'.format(cls=cls, href=href, label=label))
     for (key, en, ja, en_h, ja_h) in EXTRA_NAV:
         label = en if lang == "en" else ja
-        out.append('      <a href="{href}">{label}</a>'.format(href=en_h, label=label))
+        href = en_h if lang == "en" else ja_h
+        out.append('      <a href="{href}">{label}</a>'.format(href=href, label=label))
     return "\n".join(out)
 
 
@@ -379,7 +381,7 @@ def sitemap():
                 '    <xhtml:link rel="alternate" hreflang="x-default" href="{en}"/>\n'
                 '  </url>'.format(loc=BASE + href, en=BASE + en_h, ja=BASE + ja_h)
             )
-    for href in ("/cv/", "/slides/"):
+    for href in ("/cv/", "/slides/", "/blog/", "/ja/cv/", "/ja/slides/", "/ja/blog/"):
         urls.append('  <url>\n    <loc>{}</loc>\n  </url>'.format(BASE + href))
     return (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
