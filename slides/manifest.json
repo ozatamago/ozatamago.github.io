@@ -18,6 +18,16 @@
       "file": "data/cx-active-learning.enc",
       "date": "2026",
       "summary": "Password-protected research overview."
+    },
+    {
+      "id": "ofml-active-learning",
+      "title": "Object-Flow Machine Learning: Active learning framework utilizing protocols information (AAAI'27)",
+      "kind": "web",
+      "locked": true,
+      "listed": true,
+      "file": "data/ofml-active-learning.enc",
+      "date": "AAAI 2027",
+      "summary": "Interactive Japanese overview of an AAAI 2027 submission: protocol-structured surrogate modeling, zero-shot cross-protocol transfer, and closed-loop active correction."
     }
   ]
 }

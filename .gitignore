@@ -1,3 +1,8 @@
 __pycache__/
 *.pyc
 .DS_Store
+
+# Local source material for the OFML slides artifact (raw figures / markdown /
+# scripts). NOT deployed — the published artifact is the encrypted bundle
+# slides/data/ofml-active-learning.enc, which contains its own figure copies.
+slides/data/OFML_AAAI'27_FIGURES/
