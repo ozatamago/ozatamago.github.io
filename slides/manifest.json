@@ -21,13 +21,25 @@
     },
     {
       "id": "ofml-active-learning",
-      "title": "Object-Flow Machine Learning: Active learning framework utilizing protocols information (AAAI'27)",
+      "title": "Object-Flow Machine Learning: Operation-Level Surrogate Modeling for Laboratory Workflows",
       "kind": "web",
       "locked": true,
       "listed": true,
+      "lang": "ja",
       "file": "data/ofml-active-learning.enc",
       "date": "AAAI 2027",
-      "summary": "Interactive Japanese overview of an AAAI 2027 submission: protocol-structured surrogate modeling, zero-shot cross-protocol transfer, and closed-loop active correction."
+      "summary": "実験ワークフローの操作レベル代理モデリング：構造化されたプロトコルと終端観測から、ゼロショットのプロトコル間転移と閉ループ能動補正を学ぶ（AAAI 2027・日本語版）。"
+    },
+    {
+      "id": "ofml-active-learning-en",
+      "title": "Object-Flow Machine Learning: Operation-Level Surrogate Modeling for Laboratory Workflows",
+      "kind": "web",
+      "locked": true,
+      "listed": true,
+      "lang": "en",
+      "file": "data/ofml-active-learning-en.enc",
+      "date": "AAAI 2027",
+      "summary": "Operation-level surrogate modeling for laboratory workflows: zero-shot cross-protocol transfer and closed-loop active correction, learned from structured protocols and terminal observations (AAAI 2027)."
     }
   ]
 }
