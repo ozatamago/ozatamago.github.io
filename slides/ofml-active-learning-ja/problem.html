@@ -1,0 +1,59 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Problem setting — OFML</title><link rel="stylesheet" href="style.css"/>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],macros:{Mcal:"\\mathcal{M}",Pcal:"\\mathcal{P}",Xcal:"\\mathcal{X}",Ycal:"\\mathcal{Y}",Zcal:"\\mathcal{Z}",Scal:"\\mathcal{S}",Qcal:"\\mathcal{Q}",Ccal:"\\mathcal{C}",Ucal:"\\mathcal{U}",Acal:"\\mathcal{A}",Dcal:"\\mathcal{D}",Hcal:"\\mathcal{H}",Gcal:"\\mathcal{G}",Tcal:"\\mathcal{T}",Rcal:"\\mathcal{R}",E:"\\mathbb{E}",R:"\\mathbb{R}",N:"\\mathbb{N}",Eval:"\\operatorname{Eval}",Pa:"\\operatorname{Pa}",Anc:"\\operatorname{Anc}",Obs:"\\operatorname{Obs}",Var:"\\operatorname{Var}",Cov:"\\operatorname{Cov}",RMSE:"\\operatorname{RMSE}",AUC:"\\operatorname{AUC}",argmax:"\\operatorname*{arg\\,max}",norm:["\\left\\lVert #1\\right\\rVert",1],abs:["\\left\\lvert #1\\right\\rvert",1]},packages:{'[+]':['ams']}},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script src="refs.js"></script><script src="protoviz.js"></script><script src="hovercard.js"></script><script src="obsviz.js"></script></head><body>
+<nav class="sitenav"><div class="wrap"><a href="index.html">Overview</a><a href="background.html">Background</a><a class="on" href="problem.html">Problem setting</a><a href="method.html">Object-Flow Machine Learning</a><a href="theory.html">Theoretical statement and proofs</a><a href="experiments.html">Experiments</a><a href="references.html">References</a></div></nav>
+
+<div class="wrap page">
+<p class="kicker">Problem setting</p>
+<h2>終端観測付きプロトコル構造化代理モデリング問題</h2>
+<p class="lead">OFML が解く対象を定義する。実験プロトコルの構造、真の潜在過程、測定器を通じた観測、および source から target への転移目的を、要点ごとに箱で示す（背景の地の文は補足のみ）。学習される代理モデルは <a class="xref" href="method.html">Object-Flow Machine Learning</a> で導入する。</p>
+
+<h3 class="sub">プロトコル集合と操作語彙</h3>
+<div class="callout"><span class="lab">操作語彙とプロトコル集合</span>
+<p>共通する操作語彙を \(\Mcal=\{M_1,\ldots,M_m\}\) とする。各 \(M_j\) は分注・混合・加熱・培養・反応・読み出し準備など、再利用される操作型を表す。プロトコル集合を \(\Pcal\)、観測済みの source を \(\Pcal_{\mathrm{src}}\subseteq\Pcal\)、転移先の target を \(\Pcal_{\mathrm{tar}}\subseteq\Pcal\) とする。</p></div>
+<div class="callout"><span class="lab">型付き有向非巡回グラフ（DAG）と入力構成写像</span>
+<p>各プロトコル \(p\in\Pcal\) は型付き DAG \(p=(V_p,E_p,\tau_p,\iota_p)\)。\(V_p\) はノード集合、\(E_p\) は依存関係、\(\tau_p:V_p\to\{1,\ldots,m\}\) は操作型を割り当てる。ノード \(v\) の親集合を \(\Pa_p(v)\)、外部設計変数を \(x\in\Xcal_p\) とする。各ノードの局所入力は入力構成写像で構成される：</p>
+\[ \iota_{p,v}:\left(\prod_{u\in\Pa_p(v)}\Scal_{\tau_p(u)}\right)\times \Xcal_p \to \Zcal_{\tau_p(v)}. \]
+<p>ここで \(\Zcal_j\) は操作型 \(M_j\) の局所入力空間、\(\Scal_j\) はその操作後の潜在状態空間である。</p></div>
+
+<h3 class="sub">プロトコル実行過程</h3>
+<div class="callout"><span class="lab">各操作型の真の写像</span>
+<p>各モジュール型 \(M_j\) に未知の真の写像 \(F_j^\dagger:\Zcal_j\to\Scal_j\) が対応する。同じモジュール型が異なるプロトコルに現れる場合、そのモジュールは<b>同じ操作的意味論</b>、すなわち同じ \(F_j^\dagger\) に従うと仮定する。</p></div>
+<div class="callout"><span class="lab">外部入力と再帰実行</span>
+<p>設計変数 \(x\) が与えられると、各ノードに外部入力 \(u_{p,v}(x)\in\Ucal_{\tau_p(v)}\) が対応する（外部入力を持たなければ一点集合）。DAG の位相順序に従い真の出力は</p>
+\[ z_v^\dagger(x) = \iota_{p,v}\!\left((s_u^\dagger(x))_{u\in\Pa_p(v)},\, u_{p,v}(x)\right),\qquad s_v^\dagger(x) = F_{\tau_p(v)}^\dagger\!\left(z_v^\dagger(x)\right). \]</div>
+<div class="callout"><span class="lab">測定器と観測可能ノード</span>
+<p>測定器として登録された操作型の添字集合を \(\Qcal\subseteq\{1,\ldots,m\}\) とする。観測可能ノード集合は</p>
+\[ \Obs(p)=\{v\in V_p:\tau_p(v)\in\Qcal\}. \]
+<p>任意の中間ノード出力が直接観測できるとは仮定しない。観測できるのはプロトコル中に明示的に含まれる測定器モジュールの出力のみである。</p></div>
+<div class="callout"><span class="lab">観測空間と観測データ</span>
+<p>観測空間を \(\Ycal_p^{\mathrm{obs}}=\prod_{q\in\Obs(p)}\Scal_{\tau_p(q)}\)、真の観測出力を \(\Eval^\dagger(p;x)=\left(s_q^\dagger(x)\right)_{q\in\Obs(p)}\) とする。観測データは</p>
+\[ \Dcal_n=\{(p_i,x_i,y_i)\}_{i=1}^n,\qquad y_i = \Eval^\dagger(p_i;x_i)+\xi_i, \]
+<p>\(\xi_i\) は観測空間 \(\Ycal_{p_i}^{\mathrm{obs}}\) 上の観測ノイズ。</p></div>
+<div class="callout" style="--ca:#f59e0b"><span class="lab">主設定：terminal-only observation</span>
+<p>本研究の主設定では各プロトコルで \(\Obs(p)=\{q_p^{\mathrm{term}}\}\)、観測データは<b>終端測定器ノードの出力のみ</b>を含む。途中段階で観測を追加する場合も、中間状態そのものではなく、その位置に置いた測定器モジュールの出力を観測するものとして表す。この点で OFML は、中間ノード出力を直接利用する function network 型ベイズ最適化<a class="cite" data-cite="astudillo2021bofn">[bofn]</a>や、ノード単位の部分評価を前提とする pKGFN<a class="cite" data-cite="buathong2024pkgfn">[pKGFN]</a>とは異なる。</p></div>
+
+<h3 class="sub">Source-to-target protocol transfer</h3>
+<div class="callout"><span class="lab">source と target</span>
+<p>初期データ \(\Dcal_n\) は主に source \(\Pcal_{\mathrm{src}}\) から得られる。転移・予測・追加実験の対象を target \(\Pcal_{\mathrm{tar}}\subseteq\Pcal\) と書く（一つに限らない — 観測に応じて次に試すプロトコルが変わりうるため）。典型的な zero-shot transfer では \(\Pcal_{\mathrm{tar}}\cap\Pcal_{\mathrm{src}}=\emptyset\)。</p></div>
+<div class="callout"><span class="lab">target 関数と転移目的</span>
+<p>各 \(p\in\Pcal_{\mathrm{tar}}\) の真の target 関数を \(f_p^\dagger(x)=\Eval^\dagger(p;x)\) とする。目的は source の観測と（必要に応じて）少数の target 観測から \(\{f_p^\dagger:p\in\Pcal_{\mathrm{tar}}\}\) を予測すること。データは \(\Dcal_n=\Dcal_{\mathrm{src}}\cup \Dcal_{\mathrm{tar},n}\) と分け、zero-shot では \(\Dcal_{\mathrm{tar},n}=\emptyset\)、few-shot / active correction では逐次増える。</p></div>
+
+<h3 class="sub">Closed-loop target correction</h3>
+<div class="callout"><span class="lab">候補実験と観測更新</span>
+<p>追加実験が許されるとき、候補集合 \(\Ccal_n\subseteq\{(p,x):p\in\Pcal_{\mathrm{tar}}\}\) から \(c_n=(p_n,x_n)\) を選び、観測 \(y_n=\Eval^\dagger(p_n;x_n)+\xi_n\) を得て \(\Dcal_{n+1}=\Dcal_n\cup\{(p_n,x_n,y_n)\}\) と更新する。本論文の実験では主張を明確にするため、各エピソードで単一の target \(\Pcal_{\mathrm{tar}}=\{p_\star\}\) を固定して評価する。</p></div>
+
+<h3 class="sub">学習目的</h3>
+<div class="callout"><span class="lab">第一の目的：target 上の予測誤差</span>
+<p>任意の予測器 \(\widehat f_n\) に対し、target 上の予測誤差を</p>
+\[ \mathcal E_{\mathrm{tar}}(\widehat f_n) = \left( \frac{1}{|\Pcal_{\mathrm{tar}}|}\sum_{p\in\Pcal_{\mathrm{tar}}} \E_{x\sim\nu_p}\!\left[\,\norm{\widehat f_n(p,x)-f_p^\dagger(x)}^2\right] \right)^{1/2} \]
+<p>と定義する（\(\nu_p\) は target \(p\) 上の評価分布）。\(\Pcal_{\mathrm{tar}}=\{p_\star\}\) なら単一 target 上の予測誤差に帰着する。</p></div>
+<div class="callout"><span class="lab">第二の目的：予算内で誤差を効率よく下げる</span>
+<p>限られた追加実験予算のもとで \(\mathcal E_{\mathrm{tar}}(\widehat f_n)\) を効率よく下げること。これが <a class="xref" href="experiments.html#c2">能動学習</a>の評価軸となる。</p></div>
+
+<p style="margin-top:24px"><a class="back" href="method.html">Object-Flow Machine Learning へ →</a></p>
+</div>
+
+<script>
+
+</script><script src="lib/tex-svg.js" id="MathJax-script" async></script></body></html>

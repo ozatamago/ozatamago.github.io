@@ -1,0 +1,62 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Φ/Ψ 識別可能性監査 — OFML Experiments</title><link rel="stylesheet" href="../style.css"/>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],macros:{Mcal:"\\mathcal{M}",Pcal:"\\mathcal{P}",Xcal:"\\mathcal{X}",Zcal:"\\mathcal{Z}",Scal:"\\mathcal{S}",Obs:"\\operatorname{Obs}",E:"\\mathbb{E}",RMSE:"\\operatorname{RMSE}",NRMSE:"\\operatorname{NRMSE}",rank:"\\operatorname{rank}",row:"\\operatorname{row}",norm:["\\left\\lVert #1\\right\\rVert",1]},packages:{'[+]':['ams']}},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script src="../refs.js"></script><script src="../protoviz.js"></script><script src="../hovercard.js"></script><script src="../obsviz.js"></script></head><body>
+<nav class="sitenav"><div class="wrap"><a href="../index.html">Overview</a><a href="../background.html">Background</a><a href="../problem.html">Problem setting</a><a href="../method.html">Object-Flow Machine Learning</a><a href="../theory.html">Theoretical statement and proofs</a><a href="../experiments.html">Experiments</a><a href="../references.html">References</a></div></nav>
+<div class="topbar"><div class="wrap"><a class="back" href="../experiments.html">‹ Experiments</a><span class="crumb">主張 1 › Φ/Ψ 識別可能性監査（理論–実験ブリッジ）</span></div></div>
+
+<div class="wrap page">
+<p class="kicker"><span class="pill" style="--c:#0ea5a4">主張 1 · 合成は転移を助ける（識別可能性の監査）</span></p>
+<h2>Φ/Ψ 識別可能性監査 — いつ合成が転移するか</h2>
+<p class="lead">理論の <b>rank 条件</b>を実データで直接測る監査。合成アフィン線形族の<b>真のパラメータ</b> \(\theta\)（23 次元：5 個の \(2\times2\) 操作行列＋読み出し）で、source 行に積んだパラメータ Jacobian を \(\Phi\)、target \((p_\star,q)\) の感度を \(\Psi\) とし、<b>目標関連識別残差</b> \(r^{\mathrm{id}}=\norm{\Psi(I-P_{\mathrm{row}}(\Phi))}_F/\norm{\Psi}_F\) を計算する。\(r^{\mathrm{id}}=0\iff \ker\Phi\subseteq\ker\Psi\iff\) target が source から識別可能、で、<b>条件数</b> \(K=\sigma_{\max}(\Psi)/\sigma_{\min}^{+}(\Phi)\)。これは主定理の <a class="xref" href="../theory.html#prop:ofml-linear" data-ref="prop:ofml-linear">命題 4</a> の rank 条件・条件数を、そのまま数値化したものである。</p>
+
+<figure class="figbox"><svg viewBox="0 0 640 250" xmlns="http://www.w3.org/2000/svg" style="max-width:640px;width:100%;font-family:inherit" role="img" aria-label="シナリオ別の識別残差 r_id と順方向転移 NRMSE">
+<style>.ax{stroke:#cbd5e1;stroke-width:1}.bl{font-size:11px;fill:#5a6573;text-anchor:middle}.bv{font-size:11px;font-weight:800;text-anchor:middle}.tt{font-size:12px;font-weight:800;fill:#10151c;text-anchor:middle}.lg{font-size:10.5px;fill:#5a6573}</style>
+<text x="320" y="18" class="tt">識別残差 r_id（棒）と順方向転移 NRMSE（◆）はシナリオ間で連動する</text>
+<line class="ax" x1="70" y1="200" x2="600" y2="200"/><line class="ax" x1="70" y1="40" x2="70" y2="200"/>
+<text x="46" y="204" class="lg">0</text><text x="40" y="124" class="lg">1.0</text><text x="34" y="44" class="lg">2.0</text>
+<rect x="120" y="199" width="60" height="1" fill="#0ea5a4"/>
+<text x="150" y="216" class="bl">s0 success</text><text x="150" y="192" class="bv" fill="#0f766e">r_id 0.000</text>
+<text x="150" y="197" class="bv" fill="#dc2626" font-size="13">◆</text><text x="150" y="234" class="lg" text-anchor="middle">NRMSE 0.04</text>
+<rect x="300" y="134" width="60" height="66" fill="#f59e0b"/>
+<text x="330" y="216" class="bl">s1 unknown-op</text><text x="330" y="128" class="bv" fill="#b45309">r_id 0.414</text>
+<text x="330" y="79" class="bv" fill="#dc2626" font-size="13">◆</text><text x="330" y="234" class="lg" text-anchor="middle">NRMSE 1.51</text>
+<rect x="480" y="173" width="60" height="27" fill="#6366f1"/>
+<text x="510" y="216" class="bl">s4 missing-probe</text><text x="510" y="167" class="bv" fill="#4338ca">r_id 0.167 · K 178</text>
+<text x="510" y="55" class="bv" fill="#dc2626" font-size="13">◆</text><text x="510" y="234" class="lg" text-anchor="middle">NRMSE 1.81</text>
+</svg><figcaption>識別残差 \(r^{\mathrm{id}}\)（棒）とそのシナリオの順方向転移 NRMSE（◆、OFML-linear）。\(r^{\mathrm{id}}=0\) の s0 は近完全に転移、\(r^{\mathrm{id}}>0\) の s1・s4 は失敗する。s4 は残差が小さくても条件数 \(K=178\) が大きく誤差が増幅される。</figcaption></figure>
+
+<div class="qa">
+<div class="blk goal"><div class="h">実験目的（主張の要約）</div>
+<p>「識別可能な操作の再結合 \(\Rightarrow\) 順方向転移が成功する」という主張 1 の条件を、<b>真の \(\theta\) における \(\Phi/\Psi\) の階数関係で直接検証</b>する。\(r^{\mathrm{id}}\) が 0 かどうか（＝ \(\ker\Phi\subseteq\ker\Psi\) か）で、その target が source だけから識別できるかが決まり、これが <a class="xref" href="c1-fig1.html">図 1a</a> の順方向転移 NRMSE をそのまま予言することを示す。決定論的（seed なし）な理論–実験ブリッジ。</p></div>
+
+<div class="blk setup"><div class="h">実験設定</div>
+<p>合成アフィン線形族 <code>_lin_truth</code>（非可換操作 A/B/C/D/M ＋線形読み出し、パラメータ 23 次元）。各シナリオ（source/target の組）で、真の \(\theta\) におけるパラメータ Jacobian を source 行にわたって積んで \(\Phi\)、target 終端 \((p_\star,q)\) にわたって積んで \(\Psi\) とする。指標は \(r^{\mathrm{id}}=\norm{\Psi(I-P_{\mathrm{row}}(\Phi))}_F/\norm{\Psi}_F\)（\(P_{\mathrm{row}}(\Phi)\) は \(\Phi\) の行空間への射影）と \(K=\sigma_{\max}(\Psi)/\sigma_{\min}^{+}(\Phi)\)（\(\sigma_{\min}^{+}\) は \((\ker\Phi)^\perp\) 上の最小特異値）。さらに<b>操作型ごとの source 階数</b> \(\{A,B,C,D,M\}\) を記録し、どの操作方向が source で励起されていないかを見る。純粋に線形代数的な計算で、乱数・学習を含まない。</p>
+<p class="annot">※ この監査は <a class="xref" href="../theory.html#prop:ofml-linear" data-ref="prop:ofml-linear">命題 4</a>（\(r^{\mathrm{id}}=0\iff\ker\Phi\subseteq\ker\Psi\iff\row(\Psi)\subseteq\row(\Phi)\)、\(K\le\norm{\Psi}_2/\sigma_{\min}^{+}(\Phi)\)）の直接実装。旧「識別可能性↔容量トレードオフ」図は、識別性を階数で厳密に測るこの監査に置き換えた。</p></div>
+
+<div class="blk result"><div class="h">実験結果</div>
+<p><b>\(r^{\mathrm{id}}\) は順方向転移 NRMSE を予言する。</b> 完全に識別可能な s0（\(r^{\mathrm{id}}=0\)）は OFML-linear が近完全に再結合（NRMSE ≈0.04）。source に存在しない操作 D を使う s1 は D 方向が \(\ker\Phi\setminus\ker\Psi\) に入り \(r^{\mathrm{id}}=0.414\)（操作 D の source 階数 = 0）。source probe を減らした s4 は B・C が励起不足になり階数が 15→11 に落ち、残差 \(r^{\mathrm{id}}=0.167\) は小さいものの<b>条件数 \(K=178.5\)</b> が誤差を増幅する。</p>
+<div class="tblwrap"><table class="data"><caption>表 S — 線形族の \(\Phi/\Psi\) 識別可能性監査（真の \(\theta\)、決定論的）。対応する順方向転移 NRMSE（OFML-linear）を併記。</caption>
+<thead><tr><th>シナリオ</th><th>\(r^{\mathrm{id}}\)</th><th>\(K\)</th><th>rank(\(\Phi\))</th><th>操作別 source 階数 {A,B,C,D,M}</th><th>NRMSE</th></tr></thead>
+<tbody>
+<tr><td>s0 success</td><td class="best">0.000</td><td>34.78</td><td>15/23</td><td>4, 4, 4, <b>0</b>, 2</td><td class="best">0.04</td></tr>
+<tr><td>s1 unknown-op</td><td>0.414</td><td>28.32</td><td>15/23</td><td>4, 4, 4, <b>0</b>, 2</td><td>1.51</td></tr>
+<tr><td>s4 missing-probe</td><td>0.167</td><td>178.51</td><td>11/23</td><td>4, <b>2</b>, <b>2</b>, 0, 2</td><td>1.81</td></tr>
+</tbody></table></div>
+<p class="annot">※ s0 と s1 は同じ操作別階数（D=0）だが、s0 は D を使わない target なので D 欠落が無害（\(\ker\Phi\subseteq\ker\Psi\) が成立）。s1 は target が D を使うため同じ欠落が \(r^{\mathrm{id}}>0\) を生む — 「どの方向が target に効くか」で識別性が決まる。</p></div>
+
+<div class="blk disc"><div class="h">考察 — 主張をどう支えるか</div>
+<p>この監査は主張 1 の適用範囲（転移が成功する条件と失敗する条件の境界）を階数で厳密に画定する。<b>\(r^{\mathrm{id}}=0\)（識別可能）</b>なら合成は転移し（主張 1、s0）、<b>\(r^{\mathrm{id}}>0\)</b>なら terminal-only ではゼロショットで消せない（<a class="xref" href="../experiments.html#c1">主張 1</a>、s1）。失敗は<b>probe 設計の核</b>から生じる：s1 は操作 D が全 source に不在（\(\ker\Phi\setminus\ker\Psi\)）、s7 の三体相互作用も単色・二色 probe の核から同様に \(r^{\mathrm{id}}>0\) を生む。s4 は残差が小さくても \(K\) が大きく、識別が逼迫する領域で余剰容量が同定を不安定化するという直感を定量化する。</p>
+<p>順方向転移そのものの結果は <a class="xref" href="c1-fig1.html">図 1a（線形 s0 パリティ）</a>・<a class="xref" href="c1-order.html">図 4（order）</a>・<a class="xref" href="c1-count.html">図 5（count）</a>、失敗集合の全体像は <a class="xref" href="c2-failures.html">表 1（C1–C6）</a>、コスト指標での位置づけは <a class="xref" href="cost-indexed.html">図 2</a>を参照。</p></div>
+</div>
+
+<div class="callout"><span class="lab">理論との対応</span>
+<p>本監査は <a class="xref" href="../theory.html#prop:ofml-linear" data-ref="prop:ofml-linear">命題 4</a> の忠実な実装である：\(r^{\mathrm{id}}=0\iff\ker\Phi\subseteq\ker\Psi\iff\row(\Psi)\subseteq\row(\Phi)\)（命題 4(i)）、条件数 \(K=\sigma_{\max}(\Psi)/\sigma_{\min}^{+}(\Phi)\le\norm{\Psi}_2/\sigma_{\min}^{+}(\Phi)\)（命題 4(ii)）。識別が破れる（\(r^{\mathrm{id}}>0\)）ケースでも、target 終端を直接能動観測すれば終端応答一致性を回復できる（<a class="xref" href="../theory.html#thm:ofml-active" data-ref="thm:ofml-active">定理 3</a>・<a class="xref" href="../theory.html#prop:ofml-rescue" data-ref="prop:ofml-rescue">命題 5</a>）。</p></div>
+
+<div class="qa" style="margin-top:16px"><div class="blk"><div class="h">この実験が支える主張</div><div><a class="claimcard" href="../experiments.html#c1" style="--c:#0ea5a4;display:block;border-top-width:4px"><span class="cn">1</span><div class="ct" style="margin-top:8px">適切な条件（識別可能性）が揃うとき OFML は順方向転移を助ける</div><p>合成表現に加え、再利用する操作の識別可能性とモデル特定が揃うとき、terminal-only でも未知 target へゼロショット転移する。</p></a></div></div></div>
+
+<p style="margin-top:22px"><a class="back" href="../experiments.html">‹ Experiments へ戻る</a></p>
+</div>
+
+<script>
+(function(){var lb=document.createElement('div');lb.className='lightbox';lb.innerHTML='<div class="hint">クリック / Esc で閉じる</div><img alt=""/>';document.body.appendChild(lb);var im=lb.querySelector('img');document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.figbox img');if(t){im.src=t.currentSrc||t.src;lb.classList.add('open');document.body.style.overflow='hidden';return;}if(e.target.closest&&e.target.closest('.lightbox')){lb.classList.remove('open');document.body.style.overflow='';}});document.addEventListener('keydown',function(e){if(e.key==='Escape'){lb.classList.remove('open');document.body.style.overflow='';}});})();
+</script><script src="../lib/tex-svg.js" id="MathJax-script" async></script></body></html>

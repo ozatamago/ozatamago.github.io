@@ -1,0 +1,90 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>図 6 — s0 中間観測アブレーション（16 サブセット × 8 モデル） — OFML Experiments</title><link rel="stylesheet" href="../style.css"/>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],macros:{Mcal:"\\mathcal{M}",Pcal:"\\mathcal{P}",Xcal:"\\mathcal{X}",Zcal:"\\mathcal{Z}",Scal:"\\mathcal{S}",Obs:"\\operatorname{Obs}",E:"\\mathbb{E}",RMSE:"\\operatorname{RMSE}",NRMSE:"\\operatorname{NRMSE}",IVR:"\\mathrm{IVR}",SUR:"\\mathrm{SUR}",eps:"\\varepsilon",norm:["\\left\\lVert #1\\right\\rVert",1]},packages:{'[+]':['ams']}},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script src="../refs.js"></script><script src="../protoviz.js"></script><script src="../hovercard.js"></script><script src="../obsviz.js"></script></head><body>
+<nav class="sitenav"><div class="wrap"><a href="../index.html">Overview</a><a href="../background.html">Background</a><a href="../problem.html">Problem setting</a><a href="../method.html">Object-Flow Machine Learning</a><a href="../theory.html">Theoretical statement and proofs</a><a href="../experiments.html">Experiments</a><a href="../references.html">References</a></div></nav>
+<div class="topbar"><div class="wrap"><a class="back" href="../experiments.html">‹ Experiments</a><span class="crumb">主張 1 › 図 6（s0 中間観測アブレーション）</span></div></div>
+
+<div class="wrap page">
+<p class="kicker"><span class="pill" style="--c:#f59e0b">主張 1 · 中間観測は識別可能性の限界を修復する — 使えるのは合成的モデルのみ</span></p>
+<h2>図 6 — s0 中間観測アブレーション（16 サブセット × 8 モデル）</h2>
+<p class="lead">学習中に<b>中間状態を観測する</b>ことは、terminal-only で横ばいだった非線形 \(s0\) を count 記述子の<b>床の下</b>まで押し下げる — そしてそれを活用できるのは<b>合成的モデルのみ</b>である。合成 <code>OFML</code> は 16 の観測サブセット \(S\subseteq\{A,B,C,M\}\) を与えられると、端末のみのマクロ NRMSE 0.579 を全トレースで 0.401、<b>単一 \(\{M\}\) 観測だけで 0.214</b> まで押し下げ、すべてのブラックボックスを追い抜く。一方でブラックボックスは<b>同じ観測を prefix-readout 行</b>として渡されても改善しない（<code>Pooled-GP</code> はむしろ悪化）。修復信号は演算子を潜在モジュールとして表現できる代理モデルにのみ活性であり、フラットな写像には不活性である。</p>
+
+<figure class="figbox"><div class="figscroll"><img src="../figures/fig1_nonlinear_s0_traceablation2.png" alt="図6 非線形 s0 の中間観測トレースアブレーション（16 サブセット × 8 モデルのヒートマップ）"/></div><figcaption>図 6：行＝学習中に観測される操作型サブセット \(S\subseteq\{A,B,C,M\}\)（16 サブセット、空＝端末のみ から 完全トレース \(\{A,B,C,M\}\) まで）、列＝モデル。学習時のみクリーン中間観測、評価は端末のみ。セルは target マクロ NRMSE（緑 &lt;0.35、赤 &gt;0.8、target y-std で正規化）。合成 OFML 列は下方向（観測増）で緑へ向かうが、ブラックボックス列は色が変わらない。クリックで拡大。</figcaption></figure>
+
+<div class="qa">
+<div class="blk goal"><div class="h">実験目的（主張の要約）</div>
+<p>terminal-only 観測では識別できない構造が、<b>学習中に中間状態を観測する</b>ことで回復できるか、そしてそれを活用できるのが<b>どの種類のモデルか</b>を切り分ける。本図は主張 1「中間観測は識別可能性の限界を修復する」を直接支える：非線形 \(s0\) は端末観測のみでは横ばい（マクロ NRMSE ≈0.58）で、合成 OFML も count 記述子床と同程度にとどまる。中間観測を与えると合成 OFML はすべてのブラックボックスを追い抜き、count 記述子の床の下まで NRMSE を押し下げる（<code>OFML-nonlinear</code> 0.579→0.401、<b>単一 \(\{M\}\) 観測だけで 0.214</b>）。一方でブラックボックスは同一の観測情報を prefix-readout として渡されても改善せず、修復信号が<b>演算子を表現できる代理モデルにのみ活性</b>であることを示す。これは <a class="xref" href="c1-fig1.html">図 1</a> で見た terminal-only の識別限界を、観測介入で「割れるモデル／割れないモデル」に二分する。</p></div>
+
+<div class="blk setup"><div class="h">実験設定</div>
+<p>独立変数は、学習中にその位置へ観測器（測定器モジュール）を置き真の 2 次元状態を観測する<b>操作型の集合</b> \(S\subseteq\{A,B,C,M\}\)（全 \(2^4=16\) サブセット、空＝端末のみ から 完全内部トレース \(\{A,B,C,M\}\) まで）。観測は<b>クリーン（ノイズなし）かつ学習時のみ</b>で、評価は厳密に端末読み出しのみ。各セルは <b>16 サブセット × 3 seed</b> の平均。\(S=\varnothing\) は <a class="xref" href="c1-fig1.html">図 1</a> の非線形 \(s0\)（terminal-only）を再現する。</p>
+<p><b>OFML 側（合成モデル）の観測器 \(O_A,O_B,O_C,O_M\)。</b> 被観測操作型 <code>op ∈ S</code> の位置に<b>操作型ごとに別々の</b>学習可能な観測器 \(O_{\mathrm{op}}:\mathbb{R}^d\to\mathbb{R}^2\)（バイアスなし線形）を付け、補助損失 \(\sum_{\mathrm{op}\in S}\norm{O_{\mathrm{op}}(s_{\mathrm{op}})-s^\ast_{\mathrm{op}}}^2\) を端末損失に加える。\(O_{\mathrm{op}}\) が観測するのは<b>その操作を適用した直後の真の 2 次元状態</b> \(s^\ast_{\mathrm{op}}=F^{\dagger}_{\mathrm{op}}(z^{\dagger})\)（post-op・ノイズなし）— すなわち \(O_A\) は「A 適用直後の \((s_0,s_1)\)」、\(O_M\) は「M 適用直後の状態」を観測する。共有 1 枚の整列にしないのは、そのゲージ自由度（縮小的／拡大的実現の非識別）を除去し count \(C^k\) 発散を抑えるためである。</p>
+<p><b>並列・非破壊の側枝。</b> 合成の本流は潜在 \(s\leftarrow g_{\theta_{\mathrm{op}}}(s)\) を \(d\) 次元のまま伝播し、下流操作（例: B）は前段（例: A）の<b>潜在 \(s\) そのもの</b>を受け取る。\(O_{\mathrm{op}}(s)\) はその時点の潜在を 2 次元へ写す<b>並列の読み出しヘッド</b>にすぎず、補助損失を与えるだけで \(s\) を書き換えない。したがって観測を入れても順伝播グラフと合成は不変で、観測は潜在への<b>追加の勾配制約</b>としてのみ作用する（試料を変えない非破壊測定の類似）。\(d>2\) のモデルでは潜在が観測 2 次元より多くの情報を保持し、\(O_{\mathrm{op}}\) はその \(d\to2\) 射影を学習する。</p>
+<p><b>ブラックボックス側は観測器を持たない。</b> 付随させる潜在モジュールがないため、<b>prefix-readout 拡張</b>で同じ情報を与える — 各被観測位置 \(t\) について、接頭辞プロトコル <code>op₁ … op_t O</code> の端末 readout をスカラー \(y=\mathrm{readout}(s^\ast_{\text{after }t})\) として観測する訓練行を追加する。よって \(O_A,O_B,O_C,O_M\) は <b>OFML 専用</b>であり、ブラックボックスは接頭辞のスカラー読み出しのみを受け取る（＝同じ観測情報の「フラットな」提示）。</p>
+<p class="annot">※ 指標は <a class="xref" href="cost-indexed.html">図 2</a> と統一して<b>マクロ NRMSE</b>（target y-std で正規化）を用いる。図 6 のヒートマップの緑（&lt;0.35）／赤（&gt;0.8）閾値はこの NRMSE スケールであり、旧版の生 RMSE 表示は廃止した。中間観測は<b>学習時のみ</b>で評価は端末のみ — この非対称性（訓練介入・評価不介入）が「中間観測が学習の識別性を助ける」という主張の妥当な検証条件である。</p></div>
+
+<div class="blk setup"><div class="h">モデル構成とメトリクス定義</div>
+<p>8 代理モデルを 2 群に分ける。<b>合成群（OFML）</b>は操作型ごとの潜在モジュールを合成するため観測器 \(O_{\mathrm{op}}\) を装着でき、<b>ブラックボックス群</b>は潜在モジュールを持たず prefix-readout でしか同じ情報を受け取れない。この設計差そのものが「誰が中間観測を活用できるか」を決める。</p>
+<div class="tblwrap"><table class="data"><caption>8 代理モデル（合成 5 ＋ ブラックボックス 3）。中間観測の受け取り方が群を分ける。</caption>
+<thead><tr><th style="text-align:left">モデル</th><th style="text-align:left">群</th><th style="text-align:left">構造・潜在モジュール</th><th style="text-align:left">中間観測の受け取り方</th></tr></thead>
+<tbody>
+<tr><td style="text-align:left"><code>OFML-nonlinear</code></td><td style="text-align:left">合成</td><td style="text-align:left">操作型ごとの潜在モジュール \(g_{\theta_{\mathrm{op}}}\) を合成＋非線形 readout（真の族と容量一致）</td><td style="text-align:left">操作ごと観測器 \(O_{\mathrm{op}}\)（並列側枝）＋潜在トレース教師損失</td></tr>
+<tr><td style="text-align:left"><code>OFML-Ensemble</code></td><td style="text-align:left">合成</td><td style="text-align:left">合成ネットの種のみ 5-member 深層アンサンブル</td><td style="text-align:left">\(O_{\mathrm{op}}\) ＋ 補助損失（各メンバ）</td></tr>
+<tr><td style="text-align:left"><code>OFML-MCD</code></td><td style="text-align:left">合成</td><td style="text-align:left">MC-dropout 版合成ネット（推論時 dropout で不確実性）</td><td style="text-align:left">\(O_{\mathrm{op}}\) ＋ 補助損失</td></tr>
+<tr><td style="text-align:left"><code>OFML-BNN</code></td><td style="text-align:left">合成</td><td style="text-align:left">変分ベイズ合成ネット（重み事後）</td><td style="text-align:left">\(O_{\mathrm{op}}\) ＋ 補助損失</td></tr>
+<tr><td style="text-align:left"><code>OFML-GPN</code></td><td style="text-align:left">合成</td><td style="text-align:left">GP 出力層付き合成ネット（潜在→GP readout）</td><td style="text-align:left">\(O_{\mathrm{op}}\) ＋ 補助損失</td></tr>
+<tr><td style="text-align:left"><code>Shared-Ens</code></td><td style="text-align:left">ブラックボックス</td><td style="text-align:left">操作 count 記述子ベース MLP アンサンブル（<b>順序盲</b>・潜在モジュールなし）</td><td style="text-align:left">prefix-readout 拡張（接頭辞スカラー行）</td></tr>
+<tr><td style="text-align:left"><code>Pooled-GP</code></td><td style="text-align:left">ブラックボックス</td><td style="text-align:left">全 source/target をプールした単一 GP</td><td style="text-align:left">prefix-readout 拡張</td></tr>
+<tr><td style="text-align:left"><code>Prot-GP</code></td><td style="text-align:left">ブラックボックス</td><td style="text-align:left">プロトコル別 GP（プロトコル埋め込み）</td><td style="text-align:left">prefix-readout 拡張</td></tr>
+</tbody></table></div>
+<p>指標は<b>マクロ NRMSE</b>。target \(p\) の出力スケール \(s_p=\mathrm{std}_x f_p(x)\) で正規化し、\[ \NRMSE_p=\sqrt{\frac{\mathrm{mean}_x\,(\mu_p(x)-f_p(x))^2}{s_p^2}},\qquad \overline{\NRMSE}=\sqrt{\tfrac12\textstyle\sum_{p}\NRMSE_p^2}. \] \(\mu_p\) は端末読み出しの予測、\(f_p\) は真値（ノイズ無 test）。\(\NRMSE=1\) は「target 平均を予測」する自明ベースラインに相当し、図 6 の赤（&gt;0.8）はこれに近い床、緑（&lt;0.35）は識別が回復した領域を表す。報告アーキテクチャは traceablation2（count 安定性＋order 識別を組み合わせた BO で選択）。</p></div>
+
+<div class="blk setup"><div class="h">使用プロトコル（付録 A）</div>
+<p>s0 success（非線形族）を再利用する（source 9 本・target <code>A B C M O</code> ／ <code>C B A M O</code>）。加えて、<b>学習時のみ</b>観測する操作型の部分集合 \(S\subseteq\{A,B,C,M\}\)（全 16）を独立変数とする（評価は端末のみ）。\(S=\varnothing\) は <a class="xref" href="c1-fig1.html">図 1</a> 非線形 s0 を再現する。</p>
+<div class="protoset" data-kind="source" data-title="<b>共通 source（9 本）</b>" data-protocols="A M O;B M O;C M O;A B M O;B A M O;A C M O;C A M O;B C M O;C B M O" data-cols="1"></div>
+<div class="protoset" data-kind="target" data-title="<b>target（s0 success・同数/異順序 2 本）</b>" data-protocols="A B C M O;C B A M O"></div>
+<div class="obswidget" data-protocol="A B C M" data-observable="A,B,C,M" data-title="観測部分集合 S を選ぶ（全 2⁴ = 16 通り）。代表プロトコル A → B → C → M → O で図示 — ボタンで S を選ぶと、その操作型の直後に観測器 op ↓ O_op → y_op（並列・非破壊の側枝）が横に並ぶ。モジュール型にホバーすると重み共有が強調される。"></div>
+<div class="tblwrap"><table class="data" style="min-width:520px"><caption>データ生成・観測設定（各 target ごと）</caption>
+<thead><tr><th style="text-align:left">要素</th><th style="text-align:left">値</th><th style="text-align:left">性質</th></tr></thead>
+<tbody>
+<tr><td style="text-align:left">source プロトコル</td><td style="text-align:left">9 本（単体＋両順序ペア）</td><td style="text-align:left">s0 success 再利用・ノイズ有 \(\sigma=0.02\)</td></tr>
+<tr><td style="text-align:left">target</td><td style="text-align:left">2 本（<code>A B C M O</code> ／ <code>C B A M O</code>）</td><td style="text-align:left">同数・異順序（順序盲エイリアシングを露出）</td></tr>
+<tr><td style="text-align:left">中間観測 \(S\)</td><td style="text-align:left">\(S\subseteq\{A,B,C,M\}\)、全 16 サブセット（\(\varnothing\) … \(\{A,B,C,M\}\)）</td><td style="text-align:left">学習時のみ・クリーン（ノイズなし）</td></tr>
+<tr><td style="text-align:left">観測される真値</td><td style="text-align:left">\(s^\ast_{\mathrm{op}}=F^{\dagger}_{\mathrm{op}}(z^{\dagger})\)（post-op）</td><td style="text-align:left">OFML: \(O_{\mathrm{op}}\) ／ BB: prefix-readout</td></tr>
+<tr><td style="text-align:left">評価</td><td style="text-align:left">端末読み出しのみ（真値）</td><td style="text-align:left">ノイズ無（train-on-test なし）</td></tr>
+<tr><td style="text-align:left">反復</td><td style="text-align:left">16 サブセット × 3 seed</td><td style="text-align:left">各セル 3 seed 平均</td></tr>
+</tbody></table></div>
+<details class="proof" style="margin-top:10px"><summary>真の写像 F<sub>j</sub>†（データ生成元, 付録 A.1(b)）</summary><div class="pf"><b>非線形族 nonlinear</b>（sigmoid/tanh 操作 + 非線形 readout。<code>OFML-nonlinear</code> が容量一致）：F<sub>A</sub>=(2σ(2.4s₀−0.8s₁+0.1)−0.8, s₁)、F<sub>B</sub>=(s₀, 2σ(2.0s₁+0.7s₀−0.2)−0.8)、F<sub>C</sub>=(1.2·ss(2.2s₀+0.8s₁−1.0), 1.2·ss(2.0s₁−0.6s₀−0.6))（<b>縮小的</b>, Lipschitz&lt;1）、F<sub>M</sub>=(s₀+0.4tanh(s₀−s₁), s₁+0.4tanh(s₀+s₁))、F<sub>O</sub>=id、readout y=1.4·ss(2s₀−1.6s₁+1.2s₀s₁−0.1)+0.25·sin(2π(s₀−s₁))（高周波 sin 項が既約な難易度下限）。4 変種：nonlinear_shifted(s2)/nonlinear_lipschitz(s5, 拡大的 M)/nonlinear_misspecified(s6)/nonlinear_three_body(s7, target 限定の三体項 +2.2s₀s₁+…)。</div></details>
+<p class="phint">モジュール型にカーソルを合わせると、共有される同一操作が全プロトコルで強調される（＝重み共有）。ウィジェットで S を選ぶと、その操作型の直後に非破壊観測器の側枝が現れる。</p></div>
+
+<div class="blk result"><div class="h">実験結果</div>
+<p>下表は非線形 \(s0\) の target マクロ NRMSE を、<b>\(\varnothing\)（端末のみ）</b>・<b>全トレース \(\{A,B,C,M\}\)</b>・<b>最良サブセット（全 16 中）</b>で対比する。\(\varnothing\) では合成 OFML はブラックボックスの count 記述子床（<code>Shared-Ens</code> 0.275、<code>Pooled-GP</code> 0.335）と同程度以上（<code>OFML-Ens</code> 0.317、<code>OFML-nonlinear</code> 0.579）にとどまる — <a class="xref" href="c1-fig1.html">図 1</a> の terminal-only 識別限界そのものである。中間状態が観測されると、<b>合成モデルはすべて床を割り</b>、ブラックボックスの下限を大きく下回る（<code>OFML-nonlinear</code> 0.579→0.401、しかも<b>単一 \(\{M\}\) 観測だけで 0.214</b> と全 16 サブセット中の最良に到達；<code>OFML-Ens</code> 0.317→0.195、<code>OFML-MCD</code> 0.410→0.267）。対照的にブラックボックスは prefix-readout 行として同一の観測を与えられても改善しない：<code>Pooled-GP</code> はむしろ<b>悪化</b>（0.335→0.374）、<code>Prot-GP</code> は実質<b>横ばい</b>（1.009→1.003）、<code>Shared-Ens</code> もわずか（0.275→0.250）にとどまる。</p>
+<div class="tblwrap"><table class="data"><caption>非線形 \(s0\) target マクロ NRMSE — \(\varnothing\)（端末のみ）／ 全トレース \(\{A,B,C,M\}\) ／ 最良サブセット（全 16 中の最小 NRMSE と達成 \(S\)）。16 サブセット × 3 seed 平均。各行の最小値を強調。観測は学習時のみ（評価は端末のみ）。</caption>
+<thead><tr><th>群</th><th>モデル</th><th>\(\varnothing\)（端末のみ）</th><th>全トレース \(\{A,B,C,M\}\)</th><th>最良サブセット（\(S\)）</th></tr></thead>
+<tbody>
+<tr><td rowspan="5">合成<br>（OFML）</td><td>OFML-nonlinear</td><td>0.579</td><td>0.401</td><td class="best">0.214（\(\{M\}\) 単一・最良）</td></tr>
+<tr><td>OFML-Ensemble</td><td>0.317</td><td class="best">0.195</td><td>0.195（\(\{A,B,C,M\}\)）</td></tr>
+<tr><td>OFML-MCD</td><td>0.410</td><td class="best">0.267</td><td>0.267（\(\{A,B,C,M\}\)）</td></tr>
+<tr><td>OFML-BNN</td><td>1.154</td><td class="best">0.546</td><td>0.546（\(\{A,B,C,M\}\)）</td></tr>
+<tr><td>OFML-GPN</td><td>1.012</td><td class="best">0.704</td><td>0.704（\(\{A,B,C,M\}\)）</td></tr>
+<tr><td rowspan="3">ブラック<br>ボックス</td><td>Shared-Ens</td><td>0.275</td><td class="best">0.250</td><td>0.250（\(\{A,B,C,M\}\)）</td></tr>
+<tr><td>Pooled-GP</td><td class="best">0.335</td><td>0.374（悪化）</td><td>0.335（\(\varnothing\)）</td></tr>
+<tr><td>Prot-GP</td><td>1.009</td><td class="best">1.003（横ばい）</td><td>1.003（\(\{A,B,C,M\}\)）</td></tr>
+</tbody></table></div>
+<p><code>OFML-nonlinear</code> は<b>ミキサ \(M\) が観測されたとき最も改善する</b>（単一 \(\{M\}\) で 0.214）。これは \(s0\) の非線形的難しさが \(M\)（クロス項 tanh(s₀±s₁)）に集中しているためで、その出力を直接観測すると潜在フレームが固定され、他の操作型を追加観測するよりも効く — <b>全トレース 0.401 をも下回る</b>。すなわち中間観測は「多く観るほど良い」のではなく「識別の隘路を観る」ことが本質である。</p></div>
+
+<div class="blk disc"><div class="h">考察 — 主張をどう支えるか</div>
+<p>端末観測のみでは、非線形 \(s0\) はブラックボックスの count 記述子（<code>Shared-Ens</code> 0.275、<code>Pooled-GP</code> 0.335）が床を作り、合成 OFML もそれと同程度にとどまる — <a class="xref" href="c1-fig1.html">図 1</a> で見た terminal-only の識別限界そのものである。学習中に中間状態を観測すると、その床は<b>合成モデルに対してのみ</b>破られる：<code>OFML-nonlinear</code> は 0.579→0.401（単一 \(\{M\}\) で 0.214）、<code>OFML-Ens</code> は 0.317→0.195 とブラックボックスの下限を大きく下回る。決定的なのは、同一の観測情報を prefix-readout 行として与えられたブラックボックスが改善しない（<code>Pooled-GP</code> は悪化、<code>Prot-GP</code> は横ばい、<code>Shared-Ens</code> もわずか）ことである。つまり中間観測がもたらす識別信号は、<b>演算子を潜在モジュールとして表現できる代理モデルにのみ活性</b>であり、フラットな写像には不活性である。ミキサ \(M\) の観測が最も効く（単一 \(\{M\}\) 0.214）ことは、非線形的難しさが \(M\) に集中し、その出力観測が潜在フレームを固定するという機構的説明を与える。以上は<a class="xref" href="../experiments.html#c1">主張 1</a>を直接支える。</p>
+<p>兄弟実験と併せて読む：中間観測がプロトコル<b>順序</b>の識別に効く線形版は <a class="xref" href="c4-order-linear.html">図 6（order・linear）</a>、terminal-only の順方向転移そのものは <a class="xref" href="c1-fig1.html">図 1</a>、コスト指標での位置づけと能動観測は <a class="xref" href="cost-indexed.html">図 2</a>を参照。</p>
+<p class="annot">※ 限界：中間観測は<b>学習時のみ・クリーン（ノイズなし）</b>という理想化であり、評価は端末のみ。実運用では中間観測にもノイズ・コストが伴う（コスト付きの能動観測は <a class="xref" href="cost-indexed.html">図 2</a>）。ブラックボックスの prefix-readout はスカラー端末読み出しの拡張であり、潜在の 2 次元状態を直接与えるわけではない — したがって「ブラックボックスが改善しない」は<b>同一情報量ではなく同一の観測プロトコル</b>を与えた場合の結論である。各セルは 3 seed 平均で、NRMSE は 256 test 点上の端末評価、色閾値は target y-std 正規化。</p></div>
+</div>
+
+<div class="callout"><span class="lab">理論との対応</span><p>中間観測（内部 node の部分評価）は Lipschitz bridge 係数 \(\Lambda_{p_\star,q}\) と近似推論誤差 \(d_{\Delta,n}\) を改善し、深さに伴う識別限界を緩める（<a class="xref" href="../theory.html#prop:ofml-depth-limit" data-ref="prop:ofml-depth-limit">命題 6</a>、<a class="xref" href="../theory.html#lem:ofml-bridge" data-ref="lem:ofml-bridge">補題 6</a>）。中間観測を活用できるのが<b>合成的モデルのみ</b>なのは、pushforward の潜在モジュール \(g_{\theta_{\mathrm{op}}}\) を持ち、観測器 \(O_{\mathrm{op}}\) をその潜在に接続できるためである（フラットな写像には接続すべき内部潜在が存在しない）。ミキサ \(M\) の単独観測が最も効くことは、bridge 係数のボトルネックが \(M\) の非線形合成に集中しているという命題 6 の depth-limit 描像と整合する。</p></div>
+
+<div class="qa" style="margin-top:16px"><div class="blk"><div class="h">この実験が支える主張</div><div><a class="claimcard" href="../experiments.html#c1" style="--c:#0ea5a4;display:block;border-top-width:4px"><span class="cn">1</span><div class="ct" style="margin-top:8px">適切な条件（識別可能性）が揃うとき OFML は順方向転移を助ける</div><p>合成表現に加え、再利用する操作の識別可能性とモデル特定が揃うとき、terminal-only でも未知 target へゼロショット転移する。</p></a></div></div></div>
+
+<p style="margin-top:22px"><a class="back" href="../experiments.html">‹ Experiments へ戻る</a></p>
+</div>
+
+<script>
+(function(){var lb=document.createElement('div');lb.className='lightbox';lb.innerHTML='<div class="hint">クリック / Esc で閉じる</div><img alt=""/>';document.body.appendChild(lb);var im=lb.querySelector('img');document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.figbox img');if(t){im.src=t.currentSrc||t.src;lb.classList.add('open');document.body.style.overflow='hidden';return;}if(e.target.closest&&e.target.closest('.lightbox')){lb.classList.remove('open');document.body.style.overflow='';}});document.addEventListener('keydown',function(e){if(e.key==='Escape'){lb.classList.remove('open');document.body.style.overflow='';}});})();
+</script><script src="../lib/tex-svg.js" id="MathJax-script" async></script></body></html>

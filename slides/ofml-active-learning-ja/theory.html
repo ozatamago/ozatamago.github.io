@@ -1,0 +1,200 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Theoretical statement and proofs — OFML</title><link rel="stylesheet" href="style.css"/>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],macros:{Mcal:"\\mathcal{M}",Pcal:"\\mathcal{P}",Xcal:"\\mathcal{X}",Ycal:"\\mathcal{Y}",Zcal:"\\mathcal{Z}",Scal:"\\mathcal{S}",Qcal:"\\mathcal{Q}",Ccal:"\\mathcal{C}",Ucal:"\\mathcal{U}",Acal:"\\mathcal{A}",Dcal:"\\mathcal{D}",Hcal:"\\mathcal{H}",Gcal:"\\mathcal{G}",Tcal:"\\mathcal{T}",Rcal:"\\mathcal{R}",X:"\\mathcal{X}",B:"\\mathbb{B}",Hh:"\\mathcal{H}",F:"\\mathcal{F}",Pp:"\\mathbb{P}",E:"\\mathbb{E}",R:"\\mathbb{R}",N:"\\mathbb{N}",Law:"\\operatorname{Law}",Var:"\\operatorname{Var}",Cov:"\\operatorname{Cov}",supp:"\\operatorname{supp}",Eval:"\\operatorname{Eval}",Pa:"\\operatorname{Pa}",Anc:"\\operatorname{Anc}",Obs:"\\operatorname{Obs}",row:"\\operatorname{row}",rank:"\\operatorname{rank}",RMSE:"\\operatorname{RMSE}",AUC:"\\operatorname{AUC}",argmax:"\\operatorname*{arg\\,max}",norm:["\\left\\lVert #1\\right\\rVert",1],abs:["\\left\\lvert #1\\right\\rvert",1],MaxVar:"\\mathrm{MaxVar}",IVR:"\\mathrm{IVR}",SUR:"\\mathrm{SUR}",DeltaIVR:"\\Delta^{\\mathrm{IVR}}",eps:"\\varepsilon",En:"\\mathbb{E}_n",Varn:"\\operatorname{Var}_n",Covn:"\\operatorname{Cov}_n",Psrc:"\\mathcal{P}_{\\mathrm{src}}",Ptar:"\\mathcal{P}_{\\mathrm{tar}}",Dsrc:"\\mathcal{D}_{\\mathrm{src}}",dtrain:"d_{\\mathrm{train}}",Xtar:"\\mathbb{X}",ThetaSpace:"\\Theta",tensor:"\\otimes"},packages:{'[+]':['ams']}},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script src="refs.js"></script><script src="protoviz.js"></script><script src="hovercard.js"></script><script src="obsviz.js"></script></head><body>
+<nav class="sitenav"><div class="wrap"><a href="index.html">Overview</a><a href="background.html">Background</a><a href="problem.html">Problem setting</a><a href="method.html">Object-Flow Machine Learning</a><a class="on" href="theory.html">Theoretical statement and proofs</a><a href="experiments.html">Experiments</a><a href="references.html">References</a></div></nav>
+
+<div class="wrap page">
+<p class="kicker">Theoretical statement and proofs</p>
+<h2>\(C(\X)\) 値ベイズ能動学習の一致性と OFML target active correction への特化</h2>
+<p class="lead">本ページは理論部を全面的に再構成した版である。<b>旧 OFML 転移上界は主定理から外し</b>、一般の \(C(\X)\) 値ベイズモデルに対する<b>能動学習一致性</b>を一次貢献として据える。主定理は、正しく特定された \(C(\X)\) 値事後に対し、雑音付き \(\IVR/\SUR\) が潜在関数分散 \(v_n\) を全域で消失させ、事後平均 \(\mu_n\) を真の終端関数 \(G\) へ一様収束させることを示す。その後、OFML の固定 target protocol を \(C(\X)\) 値ランダム関数の pushforward として構成し、一般定理を <b>target active correction</b> に特化する。相互参照はホバーでプレビュー、クリックで移動。証明は各結果の「証明を表示」から開ける。</p>
+
+<h3 class="sub">全体アーキテクチャと主張の境界</h3>
+<div class="callout"><span class="lab">2 段構成：一般定理 → OFML instance</span>
+<p>論理順序は、<b>まず一般の \(C(\X)\) 値ベイズ能動学習定理を full proof で証明</b>し、<b>その後で OFML の target protocol に pushforward で特化</b>する。旧転移上界は独立の大域定理へは持ち上げない。転移側に残すのは、転移が成立しうる<b>十分条件（C1–C5）</b>、<b>線形 rank 命題</b>、および<b>失敗モードの診断</b>だけである。重要なのは<b>転移診断と能動補正の分離</b>である：C1–C5 は source→target の zero-shot 転移を診断するが、target active correction は target 終端を<b>直接</b>観測するため、module 同定に失敗しても、終端応答が \(C(\X)\) 値モデルとして正しく扱える限り一般定理を適用できる。</p></div>
+
+<div class="figbox" style="background:#fff">
+<svg viewBox="0 0 760 330" xmlns="http://www.w3.org/2000/svg" style="max-width:760px;width:100%;font-family:inherit">
+<defs><marker id="ah" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#0f766e"/></marker></defs>
+<style>.bx{fill:#f6f8fa;stroke:#0f766e;stroke-width:1.6;rx:10}.bt{font-weight:800;font-size:12.5px;fill:#10151c;text-anchor:middle}.bs{font-size:10.5px;fill:#5a6573;text-anchor:middle}.cn{stroke:#0f766e;stroke-width:2;fill:none}</style>
+<rect x="70" y="14" width="620" height="56" class="bx" rx="10"/>
+<text x="380" y="34" class="bt">Step 1 — 一般 C(𝒳) 値ベイズ能動学習</text>
+<text x="380" y="52" class="bs">正しい事後 ・ Hₙ=∫vₙ dλ ・ 雑音付き IVR/SUR で ‖vₙ‖∞→0, ‖μₙ−G‖∞→0 を full proof</text>
+<rect x="40" y="120" width="210" height="66" class="bx" rx="10"/>
+<text x="145" y="142" class="bt">転移診断</text>
+<text x="145" y="160" class="bs">C1–C5・任意 C6</text>
+<text x="145" y="176" class="bs">線形 rank 命題・失敗モード</text>
+<rect x="275" y="120" width="210" height="66" class="bx" rx="10"/>
+<text x="380" y="142" class="bt">pushforward</text>
+<text x="380" y="160" class="bs">θ ↦ G_θ(·)</text>
+<text x="380" y="176" class="bs">Πₙ(θ) ↦ Πₙ(G)</text>
+<rect x="510" y="120" width="210" height="66" class="bx" rx="10"/>
+<text x="615" y="142" class="bt">Lipschitz bridge</text>
+<text x="615" y="160" class="bs">DAG 標本路 Lipschitz</text>
+<text x="615" y="176" class="bs">Λ(p⋆,q)(θ)</text>
+<rect x="70" y="238" width="620" height="66" class="bx" rx="10"/>
+<text x="380" y="262" class="bt">Step 2 — OFML target active correction</text>
+<text x="380" y="281" class="bs">固定 target protocol と単一終端観測器へ一般定理を適用</text>
+<text x="380" y="297" class="bs">転移が破れても target 終端の直接能動観測で終端応答を回復</text>
+<line x1="145" y1="70" x2="145" y2="118" class="cn" marker-end="url(#ah)"/>
+<line x1="380" y1="70" x2="380" y2="118" class="cn" marker-end="url(#ah)"/>
+<line x1="615" y1="70" x2="615" y2="118" class="cn" marker-end="url(#ah)"/>
+<line x1="145" y1="186" x2="145" y2="236" class="cn" marker-end="url(#ah)"/>
+<line x1="380" y1="186" x2="380" y2="236" class="cn" marker-end="url(#ah)"/>
+<line x1="615" y1="186" x2="615" y2="236" class="cn" marker-end="url(#ah)"/>
+</svg>
+<figcaption>本稿の論理構造。一般 \(C(\X)\) 定理を先に証明し、OFML はその後の instance として扱う。</figcaption></div>
+
+<div class="callout"><span class="lab">証明の骨格（雑音付き主定理）</span>
+<p>最も非自明なのは \(\sup_x\DeltaIVR_n(x)\to0\ \Rightarrow\ \norm{v_n}_\infty\to0\) である。\(v_n\) がある点で正に残ると、事後二乗平均同程度連続性により近傍でも共分散 \(K_n(u,x)\) が正に残り、全台測度がその近傍に一様な質量を与えるため一段階期待低減量が正に残る — これは \(\sup_x\DeltaIVR_n\to0\) と矛盾する。</p>
+\[ \begin{gathered}
+\mu_n\to\mu_\infty,\quad v_n\to v_\infty \ \text{ in } C(\X)
+\ \Downarrow\
+H_n=\textstyle\int v_n\,d\lambda \ \text{は非負上マルチンゲール}
+\ \Downarrow\
+\sup_x\DeltaIVR_n(x)\to0
+\ \Downarrow\
+\norm{v_n}_\infty\to0 \ (\text{線形予測子下界}+\text{全台性})
+\ \Downarrow\
+G=\mu_\infty,\quad \norm{\mu_n-G}_\infty\to0.
+\end{gathered} \]
+</div>
+
+<!-- ==================== 一般 C(X) モデル ==================== -->
+<h3 class="sub">1. 一般の \(C(\X)\) 値ベイズモデル</h3>
+<p class="lead">未知の終端関数を \(G:\Omega\to C(\X)\) として扱う。\(\X\) はコンパクト距離空間、事後はガウス過程に限定しない。事後平均 \(\mu_n\) が真の関数 \(G\) へ一様収束すること \(\norm{\mu_n-G}_\infty\to0\) を示すのが目標である。</p>
+
+<section class="result" id="ass:base-model"><span class="kind assumption">Assumption</span><span class="rnum">1</span><span class="rtitle">入力空間と潜在関数</span><div class="st"><p>\((\Omega,\F,\Pp)\) を確率空間、\((\X,d)\) を非空コンパクト距離空間とする。\(C(\X)\) は一様ノルム \(\norm{g}_\infty=\sup_{x}\abs{g(x)}\) の下で可分バナッハ空間であり、そのボレル空間は標準ボレル空間である。未知の潜在関数 \(G:\Omega\to C(\X)\) はボレル可測で \(\E\norm{G}_\infty^2<\infty\) を満たす。履歴 \((\Hh_n)_{n\ge0}\) は増大する \(\sigma\) 加法族列、\(\Hh_\infty=\sigma(\bigcup_n\Hh_n)\)。</p></div></section>
+
+<section class="result" id="ass:correct-posterior"><span class="kind assumption">Assumption</span><span class="rnum">2</span><span class="rtitle">正しい事後分布</span><div class="st"><p>各 \(n\in\N\cup\{\infty\}\) について、\(\Pi_n=\Law(G\mid\Hh_n)\) を \(G\) の \(\Hh_n\) に関する正則条件付き分布の一つの版とする。</p></div></section>
+
+<div class="callout"><span class="lab">事後モーメント</span>
+<p>事後平均・生二次モーメント・共分散核・潜在分散を次で定義する。</p>
+\[ \mu_n=\E[G\mid\Hh_n],\quad M_n=\E[G\tensor G\mid\Hh_n],\quad K_n(x,u)=M_n(x,u)-\mu_n(x)\mu_n(u),\quad v_n(x)=K_n(x,x). \]
+<p class="annot">※ 雑音付き設定で消すべきは観測予測分散（\(=v_n(x)+\)雑音分散、固定雑音下でゼロへ行かない）ではなく、<b>潜在関数分散</b> \(v_n(x)=\Var(G(x)\mid\Hh_n)\) である。残差不確実性を \(H_n=\int_\X v_n(u)\,\lambda(du)\) と置く。</p></div>
+
+<section class="result" id="lem:pointwise-id"><span class="kind lemma">Lemma</span><span class="rnum">1</span><span class="rtitle">点評価と事後分散の同定</span><div class="st"><p><a class="xref" href="#ass:base-model" data-ref="ass:base-model">仮定 1</a>・<a class="xref" href="#ass:correct-posterior" data-ref="ass:correct-posterior">仮定 2</a> の下で、\(\mu_n(x)=\E[G(x)\mid\Hh_n]\)、\(M_n(x,u)=\E[G(x)G(u)\mid\Hh_n]\) が成り立つ版を取れる。したがって \(v_n(x)=\Var(G(x)\mid\Hh_n)\)、\(K_n(x,u)=\Cov(G(x),G(u)\mid\Hh_n)\)。</p></div>
+<details class="proof"><summary>証明を表示</summary><div class="pf"><p>点評価 \(\delta_x(g)=g(x)\) は連続線形写像。ボホナー条件付き期待の連続線形写像に対する可換性から \(\delta_x(\mu_n)=\E[G(x)\mid\Hh_n]\)。同様に \((x,u)\) 点評価を \(C(\X\times\X)\) に適用して \(M_n(x,u)=\E[G(x)G(u)\mid\Hh_n]\)。中心化で \(v_n,K_n\) が点ごとの条件付き分散・共分散と一致する。\(\qquad\blacksquare\)</p></div></details></section>
+
+<section class="result" id="lem:banach-levy"><span class="kind lemma">Lemma</span><span class="rnum">2</span><span class="rtitle">閉じた Banach 値 Lévy 上方収束</span><div class="st"><p>\(E\) を可分バナッハ空間、\(Z\in L^1(\Omega;E)\)、\(Z_n=\E[Z\mid\F_n]\)、\(Z_\infty=\E[Z\mid\F_\infty]\) をボホナー条件付き期待とする。このとき \(\norm{Z_n-Z_\infty}_E\to0\) ほとんど確実に、かつ \(\E\norm{Z_n-Z_\infty}_E\to0\)。</p></div>
+<details class="proof"><summary>証明を表示</summary><div class="pf"><p>塔則で \(Z_n=\E[Z_\infty\mid\F_n]\)。\(E\) 可分より、任意の \(\delta>0\) に \(\F_N\) 可測有限値単関数 \(S\) が存在して \(\E\norm{Z_\infty-S}_E<\delta\)。\(n\ge N\) で条件付き Jensen より \(\E\norm{Z_n-Z_\infty}_E\le2\E\norm{Z_\infty-S}_E<2\delta\)（\(L^1\) 収束）。概収束は \(\E\norm{Z_\infty-S_k}_E\le2^{-3k}\) と選び、\(\norm{Z_n-S_k}_E\le\E[\norm{Z_\infty-S_k}_E\mid\F_n]\) に Doob の弱型最大不等式（\(\Pp(\sup_{n\ge N_k}\norm{Z_n-S_k}_E>2^{-k})\le2^{-2k}\)）と Borel–Cantelli を適用して得る。\(\qquad\blacksquare\)</p></div></details></section>
+
+<section class="result" id="prop:common-moment-convergence"><span class="kind proposition">Proposition</span><span class="rnum">1</span><span class="rtitle">共通事後モーメントの一様収束</span><div class="st"><p><a class="xref" href="#ass:base-model" data-ref="ass:base-model">仮定 1</a>・<a class="xref" href="#ass:correct-posterior" data-ref="ass:correct-posterior">仮定 2</a> の下で、ほとんど確実に</p>\[ \mu_n\to\mu_\infty=\E[G\mid\Hh_\infty]\ \text{ in } C(\X),\qquad M_n\to M_\infty\ \text{ in } C(\X\times\X), \]<p>したがって \(K_n\to K_\infty\)、\(v_n\to v_\infty\) が \(C(\X)\) で成り立つ。</p></div>
+<details class="proof"><summary>証明を表示</summary><div class="pf"><p>\(G\in L^1(\Omega;C(\X))\) に <a class="xref" href="#lem:banach-levy" data-ref="lem:banach-levy">補題 2</a> を \(E=C(\X)\) で適用して \(\mu_n\to\mu_\infty\)。\(Q(g)(x,u)=g(x)g(u)\) は \(\norm{Q(g)}=\norm{g}_\infty^2\) を満たすので \(G\tensor G\in L^1(\Omega;C(\X\times\X))\)、同補題で \(M_n\to M_\infty\)。\(K_n=M_n-\mu_n\tensor\mu_n\) の一様収束と対角制限で \(v_n\to v_\infty\)。\(\qquad\blacksquare\)</p></div></details></section>
+
+<!-- ==================== 導入例：無雑音 MaxVar ==================== -->
+<h3 class="sub">2. 導入例：無雑音 \(\MaxVar\)</h3>
+<p class="lead">無雑音観測を仮定し、\(\MaxVar\) を証明構造の導入として扱う。主目的は「共通事後モーメント収束から分散消失を閉じる」構造を明示することである。</p>
+
+<section class="result" id="ass:noiseless"><span class="kind assumption">Assumption</span><span class="rnum">3</span><span class="rtitle">無雑音観測・\(\MaxVar\) 近似最大化</span><div class="st"><p>各時刻 \(n\) で \(X_{n+1}\) は \(\Hh_n\) 可測、観測は \(Y_{n+1}=G(X_{n+1})\)、\(\Hh_{n+1}=\sigma(\Hh_n,X_{n+1},Y_{n+1})\)。さらに非負誤差 \(\eta_n^{\MaxVar}\ge0\) が存在して \(v_n(X_{n+1})\ge\sup_x v_n(x)-\eta_n^{\MaxVar}\)、\(\eta_n^{\MaxVar}\to0\) ほとんど確実に。</p></div></section>
+
+<section class="result" id="thm:noiseless-maxvar" style="border-left:4px solid var(--theorem,#f59e0b)"><span class="kind theorem">Theorem</span><span class="rnum">1</span><span class="rtitle">無雑音 \(\MaxVar\) 関数学習一致性</span><div class="st"><p><a class="xref" href="#ass:base-model" data-ref="ass:base-model">仮定 1</a>・<a class="xref" href="#ass:correct-posterior" data-ref="ass:correct-posterior">仮定 2</a>・<a class="xref" href="#ass:noiseless" data-ref="ass:noiseless">仮定 3</a> の下で、ほとんど確実に \(\norm{v_n}_\infty\to0\)、\(G=\mu_\infty\) in \(C(\X)\)、\(\norm{\mu_n-G}_\infty\to0\)。</p></div>
+<details class="proof"><summary>証明を表示</summary><div class="pf"><p>無雑音では \(G(X_{n+1})=Y_{n+1}\) が \(\Hh_{n+1}\) 可測なので \(v_{n+1}(X_{n+1})=0\)。<a class="xref" href="#prop:common-moment-convergence" data-ref="prop:common-moment-convergence">命題 1</a> より \(\norm{v_n-v_{n+1}}_\infty\to0\)、よって \(v_n(X_{n+1})\to0\)。近似最大化から \(\norm{v_n}_\infty\le v_n(X_{n+1})+\eta_n^{\MaxVar}\to0\)、ゆえに \(v_\infty\equiv0\)。可算稠密集合上で \(G(q_j)=\mu_\infty(q_j)\)、連続性で \(G=\mu_\infty\)。最後に \(\norm{\mu_n-G}_\infty=\norm{\mu_n-\mu_\infty}_\infty\to0\)。\(\qquad\blacksquare\)</p></div></details></section>
+<div class="callout"><span class="lab">導入例としての位置づけ</span><p class="annot">※ \(\MaxVar\) の証明は無雑音補間性 \(v_{n+1}(X_{n+1})=0\) に依存し、簡潔だが固定雑音下では使えない。雑音付き主定理では残差不確実性 \(H_n\) の上マルチンゲール構造へ切り替える。</p></div>
+
+<!-- ==================== 主定理：雑音付き IVR/SUR ==================== -->
+<h3 class="sub">3. 主定理：雑音付き \(\IVR/\SUR\)</h3>
+
+<section class="result" id="ass:finite-variance"><span class="kind assumption">Assumption</span><span class="rnum">4</span><span class="rtitle">加法的・条件付き不偏・有限条件付き分散観測</span><div class="st"><p>\(X_{n+1}\) は \(\Hh_n\) 可測、観測は \(Y_{n+1}=G(X_{n+1})+\eps_{n+1}\)。雑音は条件付き不偏 \(\E[\eps_{n+1}\mid G,\Hh_n,X_{n+1}]=0\)、既知定数 \(0\le\tau^2<\infty\) に対し \(\Var(\eps_{n+1}\mid G,\Hh_n,X_{n+1})\le\tau^2\)。</p><p class="annot">※ 証明で使うのは条件付き不偏性と有限分散上界だけで、<b>劣ガウス性は仮定しない</b>（\(\tau^2=0\) は無雑音を含む）。劣ガウス性は有限標本の集中や実験報告への接続のための任意の強化条件。</p></div></section>
+
+<section class="result" id="ass:full-support"><span class="kind assumption">Assumption</span><span class="rnum">5</span><span class="rtitle">台が全体である評価測度</span><div class="st"><p>\(\lambda\) は \(\X\) 上の有限ボレル測度で \(\supp(\lambda)=\X\)。</p></div></section>
+
+<section class="result" id="ass:posterior-eq"><span class="kind assumption">Assumption</span><span class="rnum">6</span><span class="rtitle">事後二乗平均同程度連続性</span><div class="st"><p>確率 \(1\) の事象上で、ある非減少関数 \(\rho\)（\(\rho(r)\to0,\ r\downarrow0\)）が存在し、全ての \(n\) と \(x,u\in\X\) に対して \(\E[(G(u)-G(x))^2\mid\Hh_n]\le\rho(d(u,x))^2\)。</p></div></section>
+
+<div class="callout"><span class="lab">仮想観測核と雑音付き \(\IVR\) 獲得関数</span>
+<p>各 \(n\) について、正則事後核 \(\Pi_n\)、実際の雑音の正則条件付き分布の可測な版である仮想雑音核 \(R_n(\omega,x,g,de)\)、仮想観測 \(Y_x=g(x)+e\) の予測核 \(Q_n^x\)、および仮想事後核 \(\Pi_n^{x,y}\) を可測に固定する（可測性は<a class="xref" href="#ass:posterior-eq">上の仮定群</a>と標準ボレル性から従う）。仮想事後分散 \(v_n^{x,y}(u)\)、仮想残差不確実性 \(H_{n+1}^{x,y}=\int v_n^{x,y}\,d\lambda\) に対し、候補点 \(x\) の獲得関数を</p>
+\[ \DeltaIVR_n(x)=H_n-\int_\R H_{n+1}^{x,y}\,Q_n^x(dy) \]
+<p>で定義する。<b>近似最大化ルール</b>：\(x\mapsto\DeltaIVR_n(x)\) は上半連続な版を持ち、\(\Hh_n\) 可測な問い合わせ点 \(X_{n+1}\) が \(\DeltaIVR_n(X_{n+1})\ge\sup_x\DeltaIVR_n(x)-\eta_n^{\IVR}\)、\(\eta_n^{\IVR}\to0\) を満たす（可測選択は \(\X\) のコンパクト性と上半連続性による）。</p></div>
+
+<section class="result" id="lem:supermartingale"><span class="kind lemma">Lemma</span><span class="rnum">3</span><span class="rtitle">残差不確実性の上マルチンゲール性と獲得関数との一致</span><div class="st"><p>\(H_n=\int_\X v_n\,d\lambda\) は非負可積分上マルチンゲール \(\E[H_{n+1}\mid\Hh_n]\le H_n\)。実際に選ばれた点で \(D_n:=H_n-\E[H_{n+1}\mid\Hh_n]=\DeltaIVR_n(X_{n+1})\) であり、\(\sum_n\E[D_n]\le\E[H_0]<\infty\)。したがって近似最大化の下で \(\sup_x\DeltaIVR_n(x)\to0\) ほとんど確実に。</p></div>
+<details class="proof"><summary>証明を表示</summary><div class="pf"><p>全分散公式より \(v_n(u)=\E[v_{n+1}(u)\mid\Hh_n]+\Var(\E[G(u)\mid\Hh_{n+1}]\mid\Hh_n)\)、ゆえに \(\E[v_{n+1}(u)\mid\Hh_n]\le v_n(u)\)。条件付き Tonelli で \(\E[H_{n+1}\mid\Hh_n]\le H_n\)。仮想核は実際の更新核と一致するので \(\E[H_{n+1}\mid\Hh_n]=\int H_{n+1}^{X_{n+1},y}Q_n^{X_{n+1}}(dy)\)、よって \(D_n=\DeltaIVR_n(X_{n+1})\)。非負上マルチンゲールの望遠和 \(\sum_{k\le N}\E[D_k]=\E[H_0]-\E[H_{N+1}]\le\E[H_0]\) から \(D_n\to0\) a.s.。\(\DeltaIVR_n\ge0\) と近似最大化で \(0\le\sup_x\DeltaIVR_n(x)\le\DeltaIVR_n(X_{n+1})+\eta_n^{\IVR}\to0\)。\(\qquad\blacksquare\)</p></div></details></section>
+
+<section class="result" id="lem:linear-lower"><span class="kind lemma">Lemma</span><span class="rnum">4</span><span class="rtitle">雑音付き \(\IVR\) の線形予測子下界</span><div class="st"><p>任意の \(x\in\X\) に対し \(\displaystyle \DeltaIVR_n(x)\ge\int_\X\frac{K_n(u,x)^2}{v_n(x)+\tau^2}\,\lambda(du)\)（\(v_n(x)+\tau^2=0\) の場合は被積分関数を \(0\) と読む）。</p></div>
+<details class="proof"><summary>証明を表示</summary><div class="pf"><p>\(Y_x=G(x)+\eps_x\)。条件付き不偏性から \(\Covn(G(u),Y_x)=K_n(u,x)\)、\(\Varn(Y_x)\le v_n(x)+\tau^2\)。全分散公式で \(\DeltaIVR_n(x)=\int\Varn(\E[G(u)\mid\Hh_n,Y_x])\,\lambda(du)\)。\(\E[\,\cdot\mid\Hh_n,Y_x]\) は \(L^2\) の \(\sigma(Y_x)\) 上への直交射影なので \(\Varn(\E[G(u)\mid\Hh_n,Y_x])\ge\Covn(G(u),Y_x)^2/\Varn(Y_x)\ge K_n(u,x)^2/(v_n(x)+\tau^2)\)。積分して結論。\(\qquad\blacksquare\)</p></div></details></section>
+
+<div class="callout"><span class="lab">補助評価（近傍下界と小球質量）</span>
+<p><b>共分散の近傍下界：</b><a class="xref" href="#ass:posterior-eq" data-ref="ass:posterior-eq">仮定 6</a> と条件付き Cauchy–Schwarz から \(\abs{K_n(u,x)-v_n(x)}\le\rho(d(u,x))\sqrt{\norm{v_n}_\infty}\)。<b>一様小球質量：</b>\(\lambda\) が全台でコンパクトなら、任意の \(r>0\) に \(m(r)=\inf_x\lambda(B(x,r))>0\)（有限被覆による）。</p></div>
+
+<section class="result" id="prop:global-vanishing"><span class="kind proposition">Proposition</span><span class="rnum">2</span><span class="rtitle">雑音付き \(\IVR/\SUR\) による全域分散消失</span><div class="st"><p><a class="xref" href="#ass:base-model" data-ref="ass:base-model">仮定 1</a>–<a class="xref" href="#ass:posterior-eq" data-ref="ass:posterior-eq">仮定 6</a>（および可測な仮想核・近似最大化）の下で \(\norm{v_n}_\infty\to0\) ほとんど確実に。</p></div>
+<details class="proof"><summary>証明を表示</summary><div class="pf"><p>背理法。ある \(\delta>0\) と部分列 \((n_j)\)、最大点 \(x_{n_j}\) で \(v_{n_j}(x_{n_j})=\norm{v_{n_j}}_\infty\ge\delta\)。\(V_\star=\sup_n\norm{v_n}_\infty<\infty\)。近傍下界から \(\rho(r)\sqrt{V_\star}\le\delta/2\) となる小さい \(r\) を取れば \(d(u,x_{n_j})<r\) で \(K_{n_j}(u,x_{n_j})\ge\delta/2\)。<a class="xref" href="#lem:linear-lower" data-ref="lem:linear-lower">補題 4</a> より</p>\[ \DeltaIVR_{n_j}(x_{n_j})\ge\int_{B(x_{n_j},r)}\frac{K_{n_j}(u,x_{n_j})^2}{v_{n_j}(x_{n_j})+\tau^2}\lambda(du)\ge\frac{\delta^2}{4(V_\star+\tau^2)}\,m(r)>0 \]<p>が無限回成り立ち、<a class="xref" href="#lem:supermartingale" data-ref="lem:supermartingale">補題 3</a> の \(\sup_x\DeltaIVR_n(x)\to0\) と矛盾する。\(\qquad\blacksquare\)</p></div></details></section>
+
+<section class="result" id="thm:cx-main" style="border-left:5px solid #f59e0b;background:#fffdf5"><span class="kind theorem">Theorem</span><span class="rnum">2</span><span class="rtitle">雑音付き \(\IVR/\SUR\) による関数学習一致性（主定理）</span><div class="st"><p><a class="xref" href="#ass:base-model" data-ref="ass:base-model">仮定 1</a>–<a class="xref" href="#ass:posterior-eq" data-ref="ass:posterior-eq">仮定 6</a> の下で、ほとんど確実に</p>\[ G=\mu_\infty\ \text{ in } C(\X),\qquad \norm{\mu_n-G}_\infty\to0. \]</div>
+<details class="proof"><summary>証明を表示</summary><div class="pf"><p><a class="xref" href="#prop:global-vanishing" data-ref="prop:global-vanishing">命題 2</a> で \(\norm{v_n}_\infty\to0\)、<a class="xref" href="#prop:common-moment-convergence" data-ref="prop:common-moment-convergence">命題 1</a> で \(v_\infty\equiv0\)。可算稠密集合上で \(\Var(G(q_j)\mid\Hh_\infty)=0\) すなわち \(G(q_j)=\mu_\infty(q_j)\) a.s.、連続性で \(G=\mu_\infty\)。\(\mu_n\to\mu_\infty\) 一様より \(\norm{\mu_n-G}_\infty\to0\)。\(\qquad\blacksquare\)</p></div></details></section>
+
+<!-- ==================== モデル水準十分条件 ==================== -->
+<h3 class="sub">4. モデル水準の十分条件</h3>
+<p class="lead"><a class="xref" href="#ass:posterior-eq" data-ref="ass:posterior-eq">仮定 6</a> は事後水準の条件に見えるが、モデルの<b>標本路連続率</b>から検証できる。識別性を結論に近い仮定として置くのではなく、標本路正則性に落とすのが役割である。</p>
+<section class="result" id="ass:model-modulus"><span class="kind assumption">Assumption</span><span class="rnum">7</span><span class="rtitle">モデル水準の二乗可積分連続率</span><div class="st"><p>ある非減少関数 \(\omega\)（\(\omega(r)\to0\)）と非負確率変数 \(\Lambda\)（\(\E[\Lambda^2]<\infty\)）が存在し、確率 \(1\) で任意の \(x,u\) に対し \(\abs{G(u)-G(x)}\le\Lambda\,\omega(d(u,x))\)。</p></div></section>
+<section class="result" id="prop:model-modulus"><span class="kind proposition">Proposition</span><span class="rnum">3</span><span class="rtitle">モデル水準連続率 → 事後二乗平均同程度連続性</span><div class="st"><p><a class="xref" href="#ass:model-modulus" data-ref="ass:model-modulus">仮定 7</a> の下で <a class="xref" href="#ass:posterior-eq" data-ref="ass:posterior-eq">仮定 6</a> が成り立つ。</p></div>
+<details class="proof"><summary>証明を表示</summary><div class="pf"><p>\((G(u)-G(x))^2\le\Lambda^2\omega(d(u,x))^2\) の条件付き期待で \(\E[(G(u)-G(x))^2\mid\Hh_n]\le\omega(d(u,x))^2\,\E[\Lambda^2\mid\Hh_n]\)。\(M_n^\Lambda=\E[\Lambda^2\mid\Hh_n]\) は閉じた非負スカラーマルチンゲールで a.s. 収束し \(C_\Lambda=\sup_n M_n^\Lambda<\infty\) a.s.。\(\rho(r)=\sqrt{C_\Lambda}\,\omega(r)\) で結論。\(\qquad\blacksquare\)</p></div></details></section>
+<div class="callout"><span class="lab">単一 GP・GPN・BNN での検証方針</span><p class="annot">※ 単一 GP はカーネル連続率と標本路正則性から。GP 関数ネットワークは各ノードの標本路連続率と合成のリプシッツ安定性を積み上げる。BNN は活性化のリプシッツ性・重み事前の二次モーメント・入力領域のコンパクト性から確率的リプシッツ定数 \(\Lambda\) の二乗可積分性を確認する。</p></div>
+
+<!-- ==================== 近似推論 ==================== -->
+<h3 class="sub">5. 近似推論と獲得関数誤差</h3>
+<div class="callout"><span class="lab">分離すべき診断量</span>
+<p>主定理は正しい事後と真の獲得関数の近似最大化誤差 \(\eta_n^{\IVR}\to0\) を仮定する。実装（MCMC, SMC, VI, Laplace, 深層アンサンブル）では次を分離診断する。</p>
+\[ a_n=\norm{\widehat\mu_n-\mu_n}_\infty,\quad b_n=\norm{\widehat v_n-v_n}_\infty,\quad d_{\Delta,n}=\norm{\widehat\DeltaIVR_n-\DeltaIVR_n}_\infty,\quad \eta_n^{\mathrm{opt}}=\sup_x\widehat\DeltaIVR_n(x)-\widehat\DeltaIVR_n(\widehat X_{n+1}). \]
+<p>\(d_{\Delta,n}\to0\) かつ \(\eta_n^{\mathrm{opt}}\to0\) なら \(\eta_n^{\IVR}\le2d_{\Delta,n}+\eta_n^{\mathrm{opt}}\to0\) で制御できる。固定近似族の VI・固定 Laplace・固定サイズ ensemble は一般に \(a_n,b_n,d_{\Delta,n}\to0\) を保証しない。理論条件と整合するのは成長予算 MCMC/SMC、容量を増やす近似族、または関数空間上で一貫性を検証できる近似推論に限られる。</p></div>
+
+<!-- ==================== OFML 特化 ==================== -->
+<h3 class="sub">6. OFML target active correction への特化</h3>
+<p class="lead">一般 \(C(\X)\) 定理を OFML に特化する。target は固定 protocol \(p_\star\) と単一終端観測器 \(q\in\Obs(p_\star)\)。転移側は診断条件に限定し、収束は target 終端の<b>直接能動観測</b>から得る。</p>
+
+<h4 style="font-weight:800;margin:14px 0 6px">転移診断（残す十分条件）と削除する主張</h4>
+<p>source protocols だけから target 応答を保証する<b>旧形式の大域転移上界は主定理として採用しない</b>。source 側経験誤差 \(\dtrain(\theta,\theta')=\sup_{p\in\Psrc}\sup_{x}\norm{\Eval(p;\theta;x)-\Eval(p;\theta';x)}\)、target 終端誤差 \(d_{\star,q}(\theta,\theta')=\sup_x\norm{\Eval_q(p_\star;\theta;x)-\Eval_q(p_\star;\theta';x)}\) に対し、次の条件は \(d_{\star,q}\) を source information から<b>診断</b>するためのものである。</p>
+<section class="result" id="ass:transfer-diagnostics"><span class="kind assumption">Assumption</span><span class="rnum">8</span><span class="rtitle">OFML 転移診断の十分条件 C1–C5（任意 C6）</span><div class="st"><p><b>C1</b>（vocabulary）target の全 node type は source と同じ module vocabulary に含まれる。<b>C2</b>（semantics）同じ type 名は同じ操作的意味を持つ。<b>C3</b>（coverage）target で type \(j\) が受け取る局所入力 \(\Ucal_j^\star\) は source probe の \(\Ucal_j^{\mathrm{src}}\) で残差 \(\rho_j\ge0\) を残して覆われる。<b>C4</b>（target-relevant identifiability）射影 \(\Pi_{j,q}\)・定数 \(K_j<\infty\)・識別残差 \(r_{j,q}^{\mathrm{id}}\ge0\) が存在し \(\norm{\Pi_{j,q}F_j^\theta(z)-\Pi_{j,q}F_j^{\theta'}(z)}\le K_j\dtrain(\theta,\theta')+r_{j,q}^{\mathrm{id}}+\rho_j\)。<b>C5</b>（Lipschitz stability）各 module は局所入力について Lipschitz で局所摂動が終端へ有限に伝播。<b>C6</b>（任意 realizability）参照 target 応答が class 内で表現可能（well-specified 版でのみ）。</p></div></section>
+
+<div class="tblwrap"><table class="condtbl">
+<thead><tr><th>条件</th><th>役割</th><th>破れたときの典型的失敗</th></tr></thead>
+<tbody>
+<tr><td>C1 vocabulary</td><td>target 操作が既知 module として存在する</td><td class="brk">未知操作は source 誤差から制御できない</td></tr>
+<tr><td>C2 semantics</td><td>同じ type が同じ状態更新を意味する</td><td class="brk">同名操作の意味ずれで source 学習が target に移らない</td></tr>
+<tr><td>C3 coverage</td><td>target 局所入力が source probe の近傍にある</td><td class="brk">外挿残差 \(\rho_j\) が残る</td></tr>
+<tr><td>C4 identifiability</td><td>target に効く方向が source 観測で見える</td><td class="brk">\(\ker\Phi\setminus\ker\Psi\) 方向が残り \(r^{\mathrm{id}}>0\)</td></tr>
+<tr><td>C5 stability</td><td>局所誤差が有限倍率で終端へ伝播</td><td class="brk">深い合成や高感度観測で証明定数が崩れる</td></tr>
+<tr><td>C6 realizability</td><td>真の target 応答が class 内にある</td><td class="brk">well-specified でなく近似誤差付きの主張になる</td></tr>
+</tbody>
+</table></div>
+
+<div class="callout"><span class="lab">診断としての知識転移上界（旧主定理を降格）</span>
+<p>C4 の per-module 不等式を DAG の下流 Lipschitz 増幅 \(\Lambda_v(p_\star,q)\) に沿って足し合わせると、形式的には</p>
+\[ d_{\star,q}(H,F^\dagger)\ \le\ C_{\mathrm{KT}}(p_\star,q)\,\dtrain(H,F^\dagger)+R_{\mathrm{id/cov}}(p_\star,q) \]
+<p>という<b>知識転移上界</b>が得られる（\(C_{\mathrm{KT}}=\sum_v\Lambda_v K_{\tau(v)}\)、\(R_{\mathrm{id/cov}}=\sum_v\Lambda_v(r^{\mathrm{id}}_{\tau(v),q}+\rho_{\tau(v)})\)）。本稿ではこれを<b>独立の転移定理へは持ち上げず</b>、あくまで zero-shot 転移が期待できるかの診断として扱う。識別残差 \(r^{\mathrm{id}}>0\) や被覆残差 \(\rho>0\) が残る場合の一致性は、次の target active correction に委ねる。</p></div>
+
+<h4 style="font-weight:800;margin:16px 0 6px">線形特徴づけ</h4>
+<p>加法アフィンモデルでは \(\Eval(p;\theta;x)=\varphi_{p,x}^\top\theta\)。source probe の感度作用素を \(\Phi\)、target 終端の感度作用素を \(\Psi\) とする。</p>
+<section class="result" id="prop:ofml-linear"><span class="kind proposition">Proposition</span><span class="rnum">4</span><span class="rtitle">加法アフィン OFML の識別可能性（rank 条件）</span><div class="st"><p>(i) \(r^{\mathrm{id}}=0\ \Longleftrightarrow\ \ker\Phi\subseteq\ker\Psi\ \Longleftrightarrow\ \row(\Psi)\subseteq\row(\Phi)\)。(ii) このとき C4 最小定数は \(K=\sup_{\delta\theta\notin\ker\Phi}\frac{\norm{\Psi\delta\theta}}{\norm{\Phi\delta\theta}}\le\frac{\norm{\Psi}_2}{\sigma_{\min}^{+}(\Phi)}\)。(iii) full-rank probe で係数が一意なら対応方向で被覆残差 \(\rho=0\)。(iv) \(\Phi\) 列フルランク・経験誤差 \(\le\delta\) なら \(\norm{\widehat\theta-\theta^\dagger}\le\delta/\sigma_{\min}(\Phi)\)。</p></div>
+<details class="proof"><summary>証明を表示</summary><div class="pf"><p>(i) 有限な支配定数 \(K\) の必要条件が \(\ker\Phi\subseteq\ker\Psi\)。逆に成り立てば \(\Psi\) は商空間 \(\ThetaSpace/\ker\Phi\) 上の有界作用素を誘導し \(K<\infty\)。線形代数で \(\row\) 条件と同値。(ii) \((\ker\Phi)^\perp\) 上への射影で \(\norm{\Phi\delta\theta}\ge\sigma_{\min}^{+}(\Phi)\norm{\delta\theta}\)、\(\norm{\Psi\delta\theta}\le\norm{\Psi}_2\norm{\delta\theta}\)。(iii) full-rank probe で係数一意なら target 値も同じ係数から決まる。(iv) 標準的最小二乗摂動評価。\(\qquad\blacksquare\)</p></div></details></section>
+<p class="annot">※ 実験対応：rank 条件（線形 order の識別）は <a class="xref" href="experiments/c1-order.html">図 4</a>、count 外挿は <a class="xref" href="experiments/c1-count.html">図 5</a>、識別可能なレジームの存在証明は <a class="xref" href="experiments/c1-fig1.html">図 1a</a>（<a class="xref" href="experiments.html#c1">主張 1 の 1-A</a>）。三体相互作用による \(r^{\mathrm{id}}>0\) の失敗は <a class="xref" href="experiments/c2-failures.html">図 1b（s7）</a>、識別可能性の rank 監査は <a class="xref" href="experiments/c2-tradeoff.html">Φ/Ψ 監査</a>（<a class="xref" href="experiments.html#c1">主張 1 の 1-B</a>）。</p>
+<div class="callout"><span class="lab">失敗モード：三体相互作用と過剰潜在次元</span>
+<p><b>三体相互作用：</b>色水混合で三体項 \(\gamma\,rgb\) を許すと単色・二色 probe で常に \(rgb=0\) なので \(\gamma\in\ker\Phi\)。三色 target で \(rgb\ne0\) なら \(\gamma\notin\ker\Psi\)。よって \(\ker\Phi\subseteq\ker\Psi\) が破れ \(r^{\mathrm{id}}>0\)（<b>probe 設計の核</b>から生じる、非線形性の有無とは無関係）。<b>過剰潜在次元：</b>gauge が source と target 両方で観測不能なら \(\ker\Phi\cap\ker\Psi\) に入り無害。source で観測不能だが target に効く方向は \(\ker\Phi\setminus\ker\Psi\) に入り \(r^{\mathrm{id}}>0\)。過剰容量は容量そのものでなく target-relevant identifiability の問題として整理される。</p></div>
+
+<h4 style="font-weight:800;margin:16px 0 6px">pushforward と Lipschitz bridge</h4>
+<section class="result" id="lem:ofml-pushforward"><span class="kind lemma">Lemma</span><span class="rnum">5</span><span class="rtitle">OFML target posterior の \(C(\Xtar)\) pushforward</span><div class="st"><p>\(\Xtar=\X_{p_\star}\) を compact metric とする。(a) 各 \(\theta\) で \(x\mapsto\Eval_q(p_\star;\theta;x)\) が連続、(b) \((\theta,x)\mapsto\Eval_q(p_\star;\theta;x)\) が可測、(c) envelope \(B(\theta)\) が \(\sup_x\abs{\Eval_q(p_\star;\theta;x)}\le B(\theta)\)、\(\E[B(\theta)^2]<\infty\) を満たすとする。このとき \(T_{p_\star,q}(\theta)(x)=\Eval_q(p_\star;\theta;x)\) は可測で \(G=T_{p_\star,q}(\theta)\) は \(C(\Xtar)\) 値二乗可積分確率変数。さらに \(\Pi_n^G=(T_{p_\star,q})_\#\Pi_n^\theta=\Law(G\mid\Hh_n^{\mathrm{tar}})\)。</p></div>
+<details class="proof"><summary>証明を表示</summary><div class="pf"><p>可算稠密集合上の点評価で \(C(\Xtar)\) のボレル \(\sigma\) 加法族が生成され、(b) で各点可測なので \(T_{p_\star,q}\) は可測。(c) で \(\E\norm{G}_\infty^2\le\E[B(\theta)^2]<\infty\)。任意のボレル \(A\) に \((T_{p_\star,q})_\#\Pi_n^\theta(A)=\Pp(G\in A\mid\Hh_n^{\mathrm{tar}})\) より pushforward は正しい事後。\(\qquad\blacksquare\)</p></div></details></section>
+<section class="result" id="lem:ofml-bridge"><span class="kind lemma">Lemma</span><span class="rnum">6</span><span class="rtitle">OFML Lipschitz bridge</span><div class="st"><p>各 node \(v\) の局所入力 injection \(\iota_v\) が design input について Lipschitz（定数 \(c_v\)）、各 module \(F_{\tau(v)}^\theta\) が局所入力について Lipschitz（定数 \(L_{\tau(v)}(\theta)\)）とする。\(\Lambda_{p_\star,q}(\theta)=\sum_{v\preceq q}c_v\sum_{\pi:v\to q}\prod_{w\in\pi}L_{\tau(w)}(\theta)\) が有限で \(\E[\Lambda_{p_\star,q}(\theta)^2]<\infty\) なら、\(G_\theta(x)=\Eval_q(p_\star;\theta;x)\) は \(\abs{G_\theta(u)-G_\theta(x)}\le\Lambda_{p_\star,q}(\theta)\,d(u,x)\) を満たす。したがって <a class="xref" href="#ass:model-modulus" data-ref="ass:model-modulus">仮定 7</a>（\(\omega(r)=r\)）が成り立ち、<a class="xref" href="#prop:model-modulus" data-ref="prop:model-modulus">命題 3</a> により <a class="xref" href="#ass:posterior-eq" data-ref="ass:posterior-eq">仮定 6</a> が従う。</p></div>
+<details class="proof"><summary>証明を表示</summary><div class="pf"><p>state 差 \(e_v=\norm{s_v^\theta(u)-s_v^\theta(x)}\) を DAG の位相順序で帰納。親なしで \(e_v\le L_{\tau(v)}c_v d(u,x)\)、親ありで \(e_v\le L_{\tau(v)}(c_v d(u,x)+\sum_{a\in\Pa(v)}e_a)\)。展開すると各 node の design input 由来差が \(v\to q\) の各 path 上の Lipschitz 定数積で増幅され \(e_q\le\Lambda_{p_\star,q}(\theta)d(u,x)\)。二乗可積分性で \(\E[\Lambda^2]<\infty\)。\(\qquad\blacksquare\)</p></div></details></section>
+<div class="callout"><span class="lab">有界版と独立版</span><p class="annot">※ spectral norm 制約・有界活性化・weight clipping で \(L_j(\theta)\le\bar L_j\) を置けば \(\Lambda_{p_\star,q}\) は決定論的に有界。独立な random Lipschitz constants では \(\E[\prod_j L_j(\theta)^2]<\infty\) を直接確認する。</p></div>
+
+<h4 style="font-weight:800;margin:16px 0 6px">target active correction の一致性</h4>
+<section class="result" id="thm:ofml-active" style="border-left:5px solid var(--teal-d);background:#f0faf8"><span class="kind theorem">Theorem</span><span class="rnum">3</span><span class="rtitle">OFML target active correction の終端応答一致性</span><div class="st"><p>固定 target protocol \(p_\star\)、単一終端 \(q\)、compact \(\Xtar\) を考える。(i) <a class="xref" href="#lem:ofml-pushforward" data-ref="lem:ofml-pushforward">補題 5</a> の条件で pushforward posterior が正しい、(ii) target 観測は <a class="xref" href="#ass:finite-variance" data-ref="ass:finite-variance">仮定 4</a>、(iii) \(\lambda\) は \(\Xtar\) 上全台（<a class="xref" href="#ass:full-support" data-ref="ass:full-support">仮定 5</a>）、(iv) 可測な仮想核、(v) \(\IVR/\SUR\) 近似最大化、(vi) <a class="xref" href="#lem:ofml-bridge" data-ref="lem:ofml-bridge">補題 6</a> の条件、を仮定する。このとき \(\norm{v_n}_\infty\to0\)、\(\norm{\mu_n-G}_\infty\to0\) a.s.。特に well-specified \(f_{p_\star}^{\dagger}=G\) なら \(\norm{\mu_n-f_{p_\star}^{\dagger}}_\infty\to0\) a.s.</p></div>
+<details class="proof"><summary>証明を表示</summary><div class="pf"><p><a class="xref" href="#lem:ofml-pushforward" data-ref="lem:ofml-pushforward">補題 5</a> で <a class="xref" href="#ass:base-model" data-ref="ass:base-model">仮定 1</a>・<a class="xref" href="#ass:correct-posterior" data-ref="ass:correct-posterior">仮定 2</a> を、(ii)–(v) で <a class="xref" href="#ass:finite-variance" data-ref="ass:finite-variance">仮定 4</a>・<a class="xref" href="#ass:full-support" data-ref="ass:full-support">仮定 5</a> と可測核・近似最大化を、<a class="xref" href="#lem:ofml-bridge" data-ref="lem:ofml-bridge">補題 6</a>＋<a class="xref" href="#prop:model-modulus" data-ref="prop:model-modulus">命題 3</a> で <a class="xref" href="#ass:posterior-eq" data-ref="ass:posterior-eq">仮定 6</a> を discharge。<a class="xref" href="#thm:cx-main" data-ref="thm:cx-main">主定理（定理 2）</a>を \(\X=\Xtar\) に適用して結論。\(\qquad\blacksquare\)</p></div></details></section>
+<p class="annot">※ 実験対応：コスト軸で統一した順方向転移＋ target 能動適応は <a class="xref" href="experiments/cost-indexed.html">図 2（コスト指標曲線）</a>、全代理での AL レースは <a class="xref" href="experiments/c3-dsweep.html">S4</a>（<a class="xref" href="experiments.html#c2">主張 2</a>）。</p>
+
+<section class="result" id="prop:ofml-rescue"><span class="kind proposition">Proposition</span><span class="rnum">5</span><span class="rtitle">転移識別が破れても target active correction で救える</span><div class="st"><p><a class="xref" href="#prop:ofml-linear" data-ref="prop:ofml-linear">命題 4</a> の意味で \(r^{\mathrm{id}}>0\) が残り source だけからの zero-shot 転移が target 残差を持つとする。それでも <a class="xref" href="#thm:ofml-active" data-ref="thm:ofml-active">定理 3</a> の仮定が満たされ target 終端 \(f_{p_\star}^{\dagger}\) が well-specified なら \(\norm{\mu_n-f_{p_\star}^{\dagger}}_\infty\to0\) a.s.</p></div>
+<details class="proof"><summary>証明を表示</summary><div class="pf"><p>\(r^{\mathrm{id}}>0\) は source protocols だけからは target-relevant 方向を識別できないことを意味するが、<a class="xref" href="#thm:ofml-active" data-ref="thm:ofml-active">定理 3</a> は source-only transfer を仮定しない。Source data \(\Dsrc\) は初期履歴 \(\Hh_0^{\mathrm{tar}}\) として posterior を初期化するだけで、その後 target 終端観測が \(\lambda\) 全台の \(\IVR/\SUR\) rule で追加される。適用して結論。\(\qquad\blacksquare\)</p></div></details></section>
+
+<div class="callout" id="prop:ofml-depth-limit"><span class="lab">深さ限界と中間観測の動機づけ</span>
+<p>chain depth \(D\) の target で bridge 係数は典型的に \(\Lambda_{p_\star,q}(\theta)\asymp\prod_{k=1}^{D}L_k(\theta)\) を含む。\(\E[\prod_k L_k(\theta)^2]\) が深さとともに増大すると <a class="xref" href="#ass:posterior-eq" data-ref="ass:posterior-eq">仮定 6</a> の \(\rho\) 係数は緩くなる（反例ではなく、有限予算での分散崩壊を遅く見せうる証明定数上の問題）。また有限粒子 Monte Carlo で \(d_{\Delta,n}\not\to0\) なら近似最大化条件を満たせず、<a class="xref" href="#thm:ofml-active" data-ref="thm:ofml-active">定理 3</a> は実装方策には適用できない。深い非ガウス pushforward では標本共分散・仮想観測 posterior の推定が不安定なため、<b>中間観測や内部 node の部分評価</b>は \(\Lambda_{p_\star,q}\) と \(d_{\Delta,n}\) の両方を改善する設計動機を持つ（＝中間観測＝<a class="xref" href="experiments.html#c1">主張 1 の 1-C</a> の理論的裏付け）。</p></div>
+<p class="annot">※ 実験対応：中間観測アブレーションは <a class="xref" href="experiments/c4-s0.html">図 6</a>、観測下の order 識別は <a class="xref" href="experiments/c4-order-linear.html">図 7</a>・<a class="xref" href="experiments/c4-order-nonlinear.html">図 8</a>、観測下の count 制御は <a class="xref" href="experiments/c4-count.html">図 9</a>（<a class="xref" href="experiments.html#c1">主張 1 の 1-C</a>）。</p>
+
+<!-- ==================== 限界と実験の主張への接続 ==================== -->
+<h3 class="sub">7. 限界と実験の主張への接続</h3>
+<div class="note">本理論は実験の 2 主張と次のように対応する。<b>主張 1（転移・b=0）：</b>線形操作かつ容量一致で <b>rank 条件 \(\row(\Psi)\subseteq\row(\Phi)\)</b> が成り立てば \(r^{\mathrm{id}}=0\) となり、合成が順方向転移を助ける（<a class="xref" href="#prop:ofml-linear" data-ref="prop:ofml-linear">命題 4</a>）。三体相互作用のように <b>probe 設計の核</b>から \(r^{\mathrm{id}}>0\) が残ると terminal-only ではゼロショットで消せず、深さ限界を緩める<b>中間観測</b>が \(\Lambda_{p_\star,q}\) と \(d_{\Delta,n}\) を改善して条件を回復する（<a class="xref" href="#prop:ofml-depth-limit" data-ref="prop:ofml-depth-limit">命題 6</a>）。以上が <a class="xref" href="experiments.html#c1">主張 1</a>。<b>主張 2（能動学習・b&gt;0）：</b>識別が破れても、<b>target 終端の直接能動観測</b>（全台 \(\lambda\) + 正しい事後）により <a class="xref" href="#thm:ofml-active" data-ref="thm:ofml-active">定理 3</a>・<a class="xref" href="#prop:ofml-rescue" data-ref="prop:ofml-rescue">命題 5</a> で終端応答一致性を回復し、構造の優位で誤差を早く下げる（<a class="xref" href="experiments.html#c2">主張 2</a>）。</div>
+<div class="callout"><span class="lab">限界</span><p class="annot">※ (1) 消えるのは観測予測分散でなく潜在関数分散 \(v_n\)。(2) 主定理は加法的・条件付き不偏・有限分散観測に依存し、一般観測核へは局所識別性（Fisher 情報量型下界）が要る。(3) 雑音付き \(\MaxVar\) は本稿の主対象でない。(4) 近似推論の一貫性は自動には得られず、固定近似族は事後分散を過小・過大評価しうる。Misspecified で best-in-class limit への収束を主張するには擬真値・posterior concentration・misspecified BvM 型の別仮定が必要。</p></div>
+
+<p style="margin-top:24px"><a class="back" href="experiments.html">Experiments へ →</a></p>
+</div>
+
+<script>
+(function(){var lb=document.createElement('div');lb.className='lightbox';lb.innerHTML='<div class="hint">クリック / Esc で閉じる</div><img alt=""/>';document.body.appendChild(lb);var im=lb.querySelector('img');document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.figbox img');if(t){im.src=t.currentSrc||t.src;lb.classList.add('open');document.body.style.overflow='hidden';return;}if(e.target.closest&&e.target.closest('.lightbox')){lb.classList.remove('open');document.body.style.overflow='';}});document.addEventListener('keydown',function(e){if(e.key==='Escape'){lb.classList.remove('open');document.body.style.overflow='';}});})();
+</script><script src="lib/tex-svg.js" id="MathJax-script" async></script></body></html>

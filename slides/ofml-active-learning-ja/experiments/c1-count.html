@@ -1,0 +1,137 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>count 識別と反復外挿 C^k M O（図5・表5）— OFML Experiments</title><link rel="stylesheet" href="../style.css"/>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],macros:{Mcal:"\\mathcal{M}",Pcal:"\\mathcal{P}",Xcal:"\\mathcal{X}",Zcal:"\\mathcal{Z}",Scal:"\\mathcal{S}",Obs:"\\operatorname{Obs}",E:"\\mathbb{E}",RMSE:"\\operatorname{RMSE}",NRMSE:"\\operatorname{NRMSE}",IVR:"\\mathrm{IVR}",SUR:"\\mathrm{SUR}",eps:"\\varepsilon",norm:["\\left\\lVert #1\\right\\rVert",1]},packages:{'[+]':['ams']}},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script src="../refs.js"></script><script src="../protoviz.js"></script><script src="../hovercard.js"></script><script src="../obsviz.js"></script></head><body>
+<nav class="sitenav"><div class="wrap"><a href="../index.html">Overview</a><a href="../background.html">Background</a><a href="../problem.html">Problem setting</a><a href="../method.html">Object-Flow Machine Learning</a><a href="../theory.html">Theoretical statement and proofs</a><a href="../experiments.html">Experiments</a><a href="../references.html">References</a></div></nav>
+<div class="topbar"><div class="wrap"><a class="back" href="../experiments.html">‹ Experiments</a><span class="crumb">主張 1 › 図 5（count 外挿）</span></div></div>
+
+<div class="wrap page">
+<p class="kicker"><span class="pill" style="--c:#0ea5a4">主張 1 · 合成は転移を助ける</span></p>
+<h2>図 5 — count 識別と反復外挿（C^k M O）</h2>
+<p class="lead">主張 1 の核心のうち「操作の<b>反復回数（count）を外挿できるか</b>」を切り出した実験。source は各操作を<b>高々 1 回</b>しか含まない 16 本の count probe（\(x\in[-1,1]^2\)）で学習し、target は同一操作 C を \(k=1,\dots,4\) 回反復した \(C^k M O\)（\(x\in[0,1]^2\)、count は真に訓練分布外）で評価する。加法アフィン構造を陽に持つ <code>OFML-linear</code> は、訓練で高々 1 回しか見ていない C の増分を \(k\) 回加法合成して<b>反復を外挿</b>でき（macro NRMSE 0.049）、合成則を陽に持たない count 記述子ベースの <code>Shared-Ens</code> は訓練 count の外で自由に外挿して <b>\(k\) とともに発散</b>する（macro 1.175）。これは「加法アフィンは full-rank probe で全域一意に決まる」という <a class="xref" href="../theory.html#prop:ofml-linear" data-ref="prop:ofml-linear">命題 4</a>(iii)(iv) の直接系である。</p>
+
+<figure class="figbox"><svg viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" style="max-width:680px;width:100%;font-family:inherit" role="img" aria-label="反復回数 k に対する count 外挿 NRMSE の折れ線（OFML-linear / OFML-Ens / Shared-Ens）">
+<style>
+.grid{stroke:#e2e8f0;stroke-width:1}
+.ax{stroke:#94a3b8;stroke-width:1.2}
+.albl{font-size:11px;fill:#64748b}
+.axt{font-size:11.5px;fill:#475569;font-weight:700}
+.tt{font-size:12.5px;font-weight:800;fill:#10151c;text-anchor:middle}
+.lg{font-size:11px;fill:#475569}
+.series polyline.ln{fill:none;stroke-width:2.4;transition:stroke-width .12s}
+.series .hit{fill:none;stroke:#000;stroke-opacity:0;stroke-width:22;pointer-events:stroke;cursor:pointer}
+.series circle{stroke:#fff;stroke-width:1.2}
+.series .val{font-size:10.5px;font-weight:800;text-anchor:middle;opacity:0;transition:opacity .12s;pointer-events:none}
+.series:hover polyline.ln{stroke-width:4.2}
+.series:hover .val{opacity:1}
+</style>
+<text x="354" y="20" class="tt">count 外挿 NRMSE — 反復回数 k が増えると Shared-Ens だけ発散する</text>
+<line class="grid" x1="72" y1="205.5" x2="636" y2="205.5"/>
+<line class="grid" x1="72" y1="153" x2="636" y2="153"/>
+<line class="grid" x1="72" y1="100.5" x2="636" y2="100.5"/>
+<line class="grid" x1="72" y1="48" x2="636" y2="48"/>
+<line class="ax" x1="72" y1="258" x2="636" y2="258"/><line class="ax" x1="72" y1="45" x2="72" y2="258"/>
+<text x="64" y="262" class="albl" text-anchor="end">0.0</text>
+<text x="64" y="209" class="albl" text-anchor="end">0.5</text>
+<text x="64" y="157" class="albl" text-anchor="end">1.0</text>
+<text x="64" y="104" class="albl" text-anchor="end">1.5</text>
+<text x="64" y="52" class="albl" text-anchor="end">2.0</text>
+<text x="26" y="155" class="axt" text-anchor="middle" transform="rotate(-90 26 155)">NRMSE（12 seed 平均）</text>
+<text x="150" y="276" class="albl" text-anchor="middle">k=1</text>
+<text x="300" y="276" class="albl" text-anchor="middle">k=2</text>
+<text x="450" y="276" class="albl" text-anchor="middle">k=3</text>
+<text x="600" y="276" class="albl" text-anchor="middle">k=4</text>
+<text x="354" y="302" class="axt" text-anchor="middle">反復回数 k（C^k M O：C を k 回適用して M・O で終端）</text>
+<line x1="92" y1="64" x2="118" y2="64" stroke="#0f766e" stroke-width="3"/><circle cx="105" cy="64" r="3" fill="#0f766e"/><text x="124" y="68" class="lg">OFML-linear（加法アフィン合成）</text>
+<line x1="92" y1="83" x2="118" y2="83" stroke="#2563eb" stroke-width="3"/><circle cx="105" cy="83" r="3" fill="#2563eb"/><text x="124" y="87" class="lg">OFML-Ens（合成ネット・アンサンブル）</text>
+<line x1="92" y1="102" x2="118" y2="102" stroke="#f59e0b" stroke-width="3"/><circle cx="105" cy="102" r="3" fill="#f59e0b"/><text x="124" y="106" class="lg">Shared-Ens（count 記述子・合成則なし）</text>
+<g class="series">
+<polyline class="hit" points="150,255.9 300,254.2 450,252.1 600,249.4"/>
+<polyline class="ln" points="150,255.9 300,254.2 450,252.1 600,249.4" stroke="#0f766e"/>
+<circle cx="150" cy="255.9" r="3.6" fill="#0f766e"/><circle cx="300" cy="254.2" r="3.6" fill="#0f766e"/><circle cx="450" cy="252.1" r="3.6" fill="#0f766e"/><circle cx="600" cy="249.4" r="3.6" fill="#0f766e"/>
+<text class="val" x="150" y="246.9" fill="#0f766e">0.020</text><text class="val" x="300" y="245.2" fill="#0f766e">0.036</text><text class="val" x="450" y="243.1" fill="#0f766e">0.056</text><text class="val" x="600" y="240.4" fill="#0f766e">0.082</text>
+</g>
+<g class="series">
+<polyline class="hit" points="150,239.4 300,229.5 450,215.7 600,197.7"/>
+<polyline class="ln" points="150,239.4 300,229.5 450,215.7 600,197.7" stroke="#2563eb"/>
+<circle cx="150" cy="239.4" r="3.6" fill="#2563eb"/><circle cx="300" cy="229.5" r="3.6" fill="#2563eb"/><circle cx="450" cy="215.7" r="3.6" fill="#2563eb"/><circle cx="600" cy="197.7" r="3.6" fill="#2563eb"/>
+<text class="val" x="150" y="230.4" fill="#1d4ed8">0.177</text><text class="val" x="300" y="220.5" fill="#1d4ed8">0.271</text><text class="val" x="450" y="206.7" fill="#1d4ed8">0.403</text><text class="val" x="600" y="188.7" fill="#1d4ed8">0.574</text>
+</g>
+<g class="series">
+<polyline class="hit" points="150,238.1 300,215.6 450,154.3 600,49.8"/>
+<polyline class="ln" points="150,238.1 300,215.6 450,154.3 600,49.8" stroke="#f59e0b"/>
+<circle cx="150" cy="238.1" r="3.6" fill="#f59e0b"/><circle cx="300" cy="215.6" r="3.6" fill="#f59e0b"/><circle cx="450" cy="154.3" r="3.6" fill="#f59e0b"/><circle cx="600" cy="49.8" r="3.6" fill="#f59e0b"/>
+<text class="val" x="150" y="229.1" fill="#b45309">0.190</text><text class="val" x="300" y="206.6" fill="#b45309">0.404</text><text class="val" x="450" y="145.3" fill="#b45309">0.988</text><text class="val" x="600" y="40.8" fill="#b45309">1.983</text>
+</g>
+</svg><figcaption>図 5：線形族 \(C^k M O\)（\(k=1..4\)）での count 外挿 NRMSE（12 seed 平均）。<code>OFML-linear</code>（緑）は加法アフィン合成で反復を外挿し、\(k\) が増えてもほぼ床（0.02→0.08）。<code>OFML-Ens</code>（青）は緩やかに劣化。<code>Shared-Ens</code>（橙）は合成則を持たず、訓練 count 範囲を超えると自由外挿して発散（k=4 で 1.98）。<b>線（または折れ線上の点）にカーソルを合わせると</b>、その系列の各 k における NRMSE 値が表示される。</figcaption></figure>
+
+<div class="qa">
+<div class="blk goal"><div class="h">実験目的（主張の要約）</div>
+<p>「操作の<b>反復回数（count）に関する識別・外挿</b>」を切り出して主張 1 を検証する。source が各操作を<b>高々 1 回</b>しか含まなくても、加法アフィン合成なら target の反復 \(C^k M O\)（\(k=1..4\)）を<b>外挿</b>できることを示す（<code>OFML-linear</code>、macro NRMSE 0.049）。一方、count を陽の合成則なしに扱う <code>Shared-Ens</code> は \(k\) の増加とともに<b>発散</b>し（macro 1.175）、識別可能性の境界を画定する。これは「加法アフィンは full-rank probe から全域一意に決まる」という <a class="xref" href="../theory.html#prop:ofml-linear" data-ref="prop:ofml-linear">命題 4</a>(iii)(iv) の実データ検証にあたる。</p></div>
+
+<div class="blk setup"><div class="h">実験設定</div>
+<p>合成場ベンチマーク上に <b>2 つの操作族</b>を置く：<b>線形族</b>（各操作が \(2\times2\) アフィン変換の <code>_lin_truth</code>、加法アフィン構造）と<b>非線形族</b>（アフィンでない滑らかな操作 <code>_nl_truth</code>）。各族で、<b>source は 16 本の count probe</b>（各操作の出現回数を系統的に変える。ただし<b>いずれの操作も高々 1 回</b>＝反復は含まない、\(x\in[-1,1]^2\)）を <b>per_proto=32 点</b>ずつノイズ有 \(\sigma=0.02\) で学習し、<b>target は同一操作 C を反復した \(C^k M O\)</b>（\(k=1,2,3,4\)＝C M O / C C M O / C C C M O / C C C C M O、\(x\in[0,1]^2\)）を <b>n_test=80 点</b>のノイズ無し真値で評価する。source と target の入力域を \([-1,1]^2\to[0,1]^2\) とずらし、かつ count \(k\ge2\) を訓練で見せないことで、<b>count は真に分布外（外挿）</b>になる。3 代理モデル（<code>OFML-linear</code>／<code>OFML-Ens</code>／<code>Shared-Ens</code>）を同一データで比較し、<b>12 bench seed</b>を主統計単位に平均する。</p>
+<p class="annot">※ 生の per-\(k\) 曲線は<b>線形族</b>で集計（図 5・表 5）。<b>非線形族</b>はスケール横断の要約として <b>macro NRMSE のみ</b>報告する（表 5b）。すべての誤差は各 \(k\)・各族の test 上のスケールで正規化した <b>NRMSE</b>で、生 RMSE は用いない。<code>OFML-linear</code> は最小二乗＋アフィン推定で本来 seed 非依存だが、観測ノイズ実現のばらつきを込めて 12 seed 平均を取る。</p></div>
+
+<div class="blk setup"><div class="h">モデル構成とメトリクス定義</div>
+<div class="tblwrap"><table class="data"><caption>3 代理モデル（count 外挿タスク \(C^k M O\)）。差は「反復（count）をどう合成するか」に集約される。</caption>
+<thead><tr><th style="text-align:left">モデル</th><th style="text-align:left">構造</th><th style="text-align:left">主要設定</th><th style="text-align:left">count 外挿の挙動</th></tr></thead>
+<tbody>
+<tr><td style="text-align:left"><code>OFML-linear</code></td><td style="text-align:left">加法アフィン合成（操作型ごとに \(2\times2\) アフィン増分＋線形読み出しを推定し、\(C^k\) を<b>単一 C 増分の \(k\) 回加法合成</b>で構成）</td><td style="text-align:left">最小二乗＋アフィン推定、決定論的</td><td style="text-align:left">高々 1 回の C から反復を<b>厳密に外挿</b>（発散しない）</td></tr>
+<tr><td style="text-align:left"><code>OFML-Ens</code></td><td style="text-align:left">合成ネット <code>TerminalOnlyOFML</code> の 5-member 深層アンサンブル（操作型ごとの潜在モジュールを合成）</td><td style="text-align:left">latent_dim=10, hidden=32, 400 epoch, y 標準化</td><td style="text-align:left">反復を<b>近似合成</b>（\(k\) とともに緩やかに劣化）</td></tr>
+<tr><td style="text-align:left"><code>Shared-Ens</code></td><td style="text-align:left">操作 count 記述子（出現回数ベクトル）を入力とする共有 5-member MLP。<b>加法合成則を陽に持たない</b></td><td style="text-align:left">hidden=32, 300 epoch, y 標準化</td><td style="text-align:left">訓練 count 範囲外を<b>自由外挿＝発散</b>（count 盲）</td></tr>
+</tbody></table></div>
+<p>指標はすべて<b>マクロ／per-\(k\) NRMSE</b>。各 \(k\) の target について test 上の自スケール \(s_k\) で正規化し、\[ \NRMSE(k)=\sqrt{\mathrm{mean}_{x}\big(\mu_k(x)-f_k(x)\big)^2}\;\big/\;s_k,\qquad s_k=\sqrt{\mathrm{mean}_{x}\big(f_k(x)-\bar f_k\big)^2},\qquad \overline{\NRMSE}=\frac1K\sum_{k=1}^{K}\NRMSE(k),\ \ K=4. \] \(\mu_k\) はモデル予測、\(f_k\) は target \(C^k M O\) の真値、\(\bar f_k\) は test 上平均。\(s_k\) は各 \(k\) の target を自スケールに正規化するので、count が増えて振幅が変わっても誤差を公平に比較できる。<b>「count 盲」</b>とは、<code>Shared-Ens</code> が count を単なる入力特徴として扱い加法合成則を課さないため、訓練で見た count の外では予測が自由に外挿してしまうことを指す。</p></div>
+
+<div class="blk setup"><div class="h">使用プロトコル（付録 A）</div>
+<div class="protoset" data-kind="source" data-title="<b>source（代表 8 本／計 16 count probe・各操作は高々 1 回、x∈[-1,1]²）</b>" data-protocols="M O;C M O;A M O;B M O;A C M O;B C M O;A B M O;A B C M O" data-cols="2"></div>
+<div class="protoset" data-kind="target" data-title="<b>target（C を反復した C^k M O・k=1..4、x∈[0,1]²）</b>" data-protocols="C M O;C C M O;C C C M O;C C C C M O" data-cols="1"></div>
+<div class="tblwrap"><table class="data" style="min-width:520px"><caption>count 外挿ランのデータ生成（各族・各 target ごと）</caption>
+<thead><tr><th style="text-align:left">要素</th><th style="text-align:left">値</th><th style="text-align:left">性質</th></tr></thead>
+<tbody>
+<tr><td style="text-align:left">source 学習</td><td style="text-align:left">per_proto=32 点 × 16 count probe（計 512 点）</td><td style="text-align:left">\(x\in[-1,1]^2\)・ノイズ有 \(\sigma=0.02\)・各操作は高々 1 回</td></tr>
+<tr><td style="text-align:left">target test</td><td style="text-align:left">n_test=80 点/target（\(k=1..4\)）</td><td style="text-align:left">\(x\in[0,1]^2\)・ノイズ無（真値）・count は外挿域</td></tr>
+<tr><td style="text-align:left">操作族</td><td style="text-align:left">線形族 <code>_lin_truth</code> ／ 非線形族 <code>_nl_truth</code></td><td style="text-align:left">前者は加法アフィン、後者はアフィンでない</td></tr>
+<tr><td style="text-align:left">統計単位</td><td style="text-align:left">12 bench seed 平均</td><td style="text-align:left">task/pool/noise/model を seed で分離</td></tr>
+</tbody></table></div>
+<p class="phint">モジュール型にカーソルを合わせると、共有される同一操作が全プロトコルで強調される（＝重み共有）。source が C を高々 1 回しか含まないのに対し、target が C を \(k\) 回反復していることが可視化される。</p>
+<details class="proof" style="margin-top:10px"><summary>詳細な設定（seed 分類・手続き・QC・限界）</summary><div class="pf">
+<b>seed 分類.</b> <code>bench_seed</code>（12 本）が<b>主統計単位</b>で、真のベンチマークモジュール（線形族／非線形族の操作行列・読み出し）を引き直す。派生ストリームを分離：task=bench_seed、pool=bench_seed×7+1、noise=bench_seed×7+2、model=bench_seed。モデル間比較は同一 bench_seed で対応化（ペア化）。<br><br>
+<b>手続き.</b> 各族で 16 本の count probe（各操作 ≤1 回）から source を学習し、\(k=1..4\) の \(C^k M O\) を評価。<code>OFML-linear</code> は操作ごとのアフィン増分を最小二乗で推定し、\(C^k\) を単一 C 増分の \(k\) 回合成として解析的に構成（学習は決定論的、seed はノイズ実現のみ）。<code>OFML-Ens</code>／<code>Shared-Ens</code> は各族の source 全体で 1 度学習し、全 \(k\) の target をゼロショット評価（target evidence なし＝順方向転移のみ）。<br><br>
+<b>QC.</b> test は \(x\in[0,1]^2\) で source 域 \([-1,1]^2\) の内側だが count \(k\ge2\) は訓練外＝真の外挿。test はノイズ無し（train-on-test なし）。<code>Shared-Ens</code> の count 記述子は source と同一実装で、異順序でも byte 単位同一（順序盲＝<a class="xref" href="c1-order.html">図 4</a> で別途露出）。<br><br>
+<b>限界.</b> per-\(k\) の生曲線は線形族のみ（図 5）。非線形族は macro 要約のみ（表 5b）。<code>OFML-linear</code> の外挿性は加法アフィン仮定に依存し、非線形族では厳密外挿にならない。NRMSE の正規化スケール \(s_k\) は 80 点 test 上の RMS 近似。
+</div></details></div>
+
+<div class="blk result"><div class="h">実験結果</div>
+<p><b>線形族（図 5・表 5）。</b> <code>OFML-linear</code> は全 \(k\) で最良で、count が増えても誤差はほぼ床（NRMSE 0.020→0.082、macro 0.049）＝<b>高々 1 回の操作を反復外挿できている</b>。<code>OFML-Ens</code> は緩やかに劣化（0.177→0.574、macro 0.286）。<code>Shared-Ens</code> は加法合成則を持たず、訓練 count 範囲（\(k\le1\)）を超えると自由外挿して<b>発散</b>（0.190→1.983、macro 1.175）。各 \(k\) 列の最小はすべて <code>OFML-linear</code>。</p>
+<div class="tblwrap"><table class="data"><caption>表 5 — 線形族 \(C^k M O\) の count 外挿 NRMSE（12 seed 平均、\(k=1..4\)）。各 \(k\) 列の最小を best。macro は \(k\) 平均。すべて NRMSE。</caption>
+<thead><tr><th>モデル</th><th>\(k=1\)</th><th>\(k=2\)</th><th>\(k=3\)</th><th>\(k=4\)</th><th>macro</th></tr></thead>
+<tbody>
+<tr><td><b>OFML-linear</b></td><td class="best">0.020</td><td class="best">0.036</td><td class="best">0.056</td><td class="best">0.082</td><td class="best">0.049</td></tr>
+<tr><td>OFML-Ens</td><td>0.177</td><td>0.271</td><td>0.403</td><td>0.574</td><td>0.286</td></tr>
+<tr><td>Shared-Ens</td><td>0.190</td><td>0.404</td><td>0.988</td><td>1.983</td><td>1.175</td></tr>
+</tbody></table></div>
+<p><b>非線形族（表 5b）。</b> 加法アフィンが厳密には成り立たない族でも、合成を持つ <code>OFML-nonlinear</code> が count 盲の <code>Shared-Ens</code> を上回る（macro NRMSE 0.391 vs 0.608）。ただし線形族ほどの完全外挿にはならず、合成則が近似的にしか使えないぶん誤差水準は上がる。</p>
+<div class="tblwrap"><table class="data" style="min-width:360px"><caption>表 5b — 非線形族 \(C^k M O\) の macro NRMSE（同一 count 外挿タスク、12 seed 平均）。最小を best。</caption>
+<thead><tr><th style="text-align:left">モデル</th><th>macro NRMSE</th></tr></thead>
+<tbody>
+<tr><td style="text-align:left"><b>OFML-nonlinear</b></td><td class="best">0.391</td></tr>
+<tr><td style="text-align:left">Shared-Ens</td><td>0.608</td></tr>
+</tbody></table></div></div>
+
+<div class="blk disc"><div class="h">考察 — 主張をどう支えるか</div>
+<p>この実験は主張 1 の「合成は転移を助ける」を、<b>count（反復）の外挿</b>という最も鋭い形で切り出す。source が C を高々 1 回しか含まないにもかかわらず、<code>OFML-linear</code> は単一 C の増分を \(k\) 回加法合成するだけで \(C^k M O\) を全 \(k\) で復元できる（macro 0.049）。これは加法アフィン構造が <b>full-rank probe から全域一意に決定される</b>（<a class="xref" href="../theory.html#prop:ofml-linear" data-ref="prop:ofml-linear">命題 4</a>(iii)(iv)）ことの直接系である。対照的に <code>Shared-Ens</code> は count を陽の合成則なしに扱うため、訓練 count の外で予測が拘束を失い、\(k\) とともに発散する — 合成則の有無が<b>外挿可能性の境界</b>を画定する。非線形族でも合成モデルが優位（0.391 vs 0.608）で、加法性が近似的にしか成り立たない場合でも合成の恩恵が残ることを示す。</p>
+<p>順方向転移の他の断面は <a class="xref" href="c1-fig1.html">図 1a（線形 s0 パリティ）</a>・<a class="xref" href="c1-order.html">図 4（order：順序の識別）</a>を、識別可能性の階数監査は <a class="xref" href="c2-tradeoff.html">Φ/Ψ 監査</a>を、コスト指標での位置づけは <a class="xref" href="cost-indexed.html">図 2</a>を参照。count（本図）と order（図 4）は「合成の 2 軸」を成し、両者が揃って初めて terminal-only の識別限界（<a class="xref" href="../experiments.html#c1">主張 1</a>）が明確になる。</p>
+<p class="annot">※ 限界：per-\(k\) の生曲線は線形族のみで、非線形族は macro 要約に留める。<code>OFML-linear</code> の厳密外挿は加法アフィン仮定に依存し、真に非線形な反復には及ばない（表 5b が上限を示す）。<code>Shared-Ens</code> の発散は count 特徴の外挿域挙動に依存し、正則化やアーキテクチャで水準は変わりうるが、合成則を持たない限り \(k\) 依存の劣化は残る。NRMSE の正規化は各 \(k\) の 80 点 test 上のスケール。</p></div>
+</div>
+
+<div class="callout"><span class="lab">理論との対応</span>
+<p>本図は <a class="xref" href="../theory.html#prop:ofml-linear" data-ref="prop:ofml-linear">命題 4</a> の (iii)(iv) を数値化したものである：<b>加法アフィン族では、各操作の増分が full-rank probe（source の count basis）から全域一意に決まり</b>、その和として反復 \(C^k\) が任意の \(k\) に外挿される（\(r^{\mathrm{id}}=0\iff\ker\Phi\subseteq\ker\Psi\)、条件数 \(K\) が有界）。<code>OFML-linear</code> の床張り付き（表 5）はこの一意性の実現であり、<code>Shared-Ens</code> の発散は合成則を持たない仮説クラスが同じ probe から count を同定<b>できない</b>ことに対応する。反復が識別可能でない設定（非加法・probe 不足）では、target 終端の能動観測が必要になる（<a class="xref" href="../theory.html#thm:ofml-active" data-ref="thm:ofml-active">定理 3</a>・<a class="xref" href="../theory.html#prop:ofml-rescue" data-ref="prop:ofml-rescue">命題 5</a>）。</p></div>
+
+<div class="qa" style="margin-top:16px"><div class="blk"><div class="h">この実験が支える主張</div><div><a class="claimcard" href="../experiments.html#c1" style="--c:#0ea5a4;display:block;border-top-width:4px"><span class="cn">1</span><div class="ct" style="margin-top:8px">適切な条件（識別可能性）が揃うとき OFML は順方向転移を助ける</div><p>合成表現に加え、再利用する操作の識別可能性とモデル特定が揃うとき、terminal-only でも未知 target へゼロショット転移する。</p></a></div></div></div>
+
+<p style="margin-top:22px"><a class="back" href="../experiments.html">‹ Experiments へ戻る</a></p>
+</div>
+
+<script>
+(function(){var lb=document.createElement('div');lb.className='lightbox';lb.innerHTML='<div class="hint">クリック / Esc で閉じる</div><img alt=""/>';document.body.appendChild(lb);var im=lb.querySelector('img');document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.figbox img');if(t){im.src=t.currentSrc||t.src;lb.classList.add('open');document.body.style.overflow='hidden';return;}if(e.target.closest&&e.target.closest('.lightbox')){lb.classList.remove('open');document.body.style.overflow='';}});document.addEventListener('keydown',function(e){if(e.key==='Escape'){lb.classList.remove('open');document.body.style.overflow='';}});})();
+</script><script src="../lib/tex-svg.js" id="MathJax-script" async></script></body></html>

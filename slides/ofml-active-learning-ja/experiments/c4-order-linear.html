@@ -1,0 +1,84 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>図 7 — 観測下の order 識別可能性（線形）— OFML Experiments</title><link rel="stylesheet" href="../style.css"/>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],macros:{Mcal:"\\mathcal{M}",Pcal:"\\mathcal{P}",Xcal:"\\mathcal{X}",Zcal:"\\mathcal{Z}",Scal:"\\mathcal{S}",Obs:"\\operatorname{Obs}",E:"\\mathbb{E}",RMSE:"\\operatorname{RMSE}",NRMSE:"\\operatorname{NRMSE}",IVR:"\\mathrm{IVR}",SUR:"\\mathrm{SUR}",eps:"\\varepsilon",norm:["\\left\\lVert #1\\right\\rVert",1]},packages:{'[+]':['ams']}},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script src="../refs.js"></script><script src="../protoviz.js"></script><script src="../hovercard.js"></script><script src="../obsviz.js"></script></head><body>
+<nav class="sitenav"><div class="wrap"><a href="../index.html">Overview</a><a href="../background.html">Background</a><a href="../problem.html">Problem setting</a><a href="../method.html">Object-Flow Machine Learning</a><a href="../theory.html">Theoretical statement and proofs</a><a href="../experiments.html">Experiments</a><a href="../references.html">References</a></div></nav>
+<div class="topbar"><div class="wrap"><a class="back" href="../experiments.html">‹ Experiments</a><span class="crumb">主張 1 › 図 7（観測下の order 識別・線形）</span></div></div>
+
+<div class="wrap page">
+<p class="kicker"><span class="pill" style="--c:#f59e0b">主張 1 · 中間観測は識別可能性の限界を修復する</span></p>
+<h2>図 7 — 観測下の order 識別可能性（線形）</h2>
+<p class="lead">線形 order ストレスでは、端末読み出しだけでは解けなかった操作 <b>order</b> を、<b>学習中の中間観測</b>が識別可能にする — ただし合成的（compositional）モデルに限る。設計上識別可能な <code>OFML-linear</code> が下限（\(\eps=0.002\)）を与え、柔軟なニューラル OFML（<code>Ensemble / MCD / BNN / GPN</code>）は空観測の 0.44–0.72 から完全観測サブセットで 0.09–0.26 へ大きく<b>救済</b>される。対して count（操作数）記述子ベースの <code>Shared-Ens / Pooled-GP / Prot-GP</code> は同一の観測を受け取っても<b>横ばい</b>（1.078→1.067, 0.795→0.790, 0.771→0.765）— order は count 特徴に載らないため、観測の行は活かされない。これが主張 1 の<b>非対称性</b>である。</p>
+
+<figure class="figbox"><img src="../figures/order_traceablation2_linear_obs_ABCM.png" alt="図7 order（線形）中間観測アブレーション、完全観測サブセット {A,B,C,M}"/><figcaption>図 7：order（線形、<code>order_rotation</code>）中間観測アブレーション（<code>traceablation2</code>）。完全観測サブセット \(S=\{A,B,C,M\}\) の例。行＝ホールドアウト order、列＝モデル、セル＝per-proto RMSE（\(\approx\NRMSE\)、暗いほど良い）。観測は<b>学習時のみ</b>、評価は端末のみ。クリックで拡大。</figcaption></figure>
+
+<div class="qa">
+<div class="blk goal"><div class="h">実験目的（主張の要約）</div>
+<p>主張 1「中間観測は識別可能性の限界を修復する」を支える。<a class="xref" href="c1-order.html">図 4</a> の線形 order 設計を、各観測サブセット \(S\subseteq\{A,B,C,M\}\)（全 \(2^4=16\) 通り）の下で再実行し、<b>端末読み出しだけでは解けない操作 order を中間観測が識別可能にするか</b>を問う。狙いは二点：(i) 合成的 OFML では \(S\) を増やすと per-proto 誤差が下限（<code>OFML-linear</code> の 0.002）へ向かって落ちること、(ii) 順序情報を表現できない count 記述子モデルでは同じ観測が<b>不活性</b>（横ばい）であること — すなわち「観測は演算子を真の写像に表現できる代理モデルのみを助ける」という非対称性を示す。</p></div>
+
+<div class="blk setup"><div class="h">実験設定</div>
+<p>線形 order 設計（<code>order_rotation</code>）を、各観測サブセット \(S\subseteq\{A,B,C,M\}\) の下で再実行する。source は operation 数が同じで<b>順序だけ異なる</b>プロトコル群（12 本）、target は<b>ホールドアウト order</b> 3 本。中間観測は、被観測操作型 <code>op ∈ S</code> の位置に観測器モジュール \(O_{op}\) を置き、その出力を<b>学習時のみ</b>与えて実現する（<b>評価は端末のみ</b>）。観測されるのは<b>その操作を適用した直後の真の 2 次元状態</b> \(s^{\star}_{op}\)（post-op・ノイズなし）。主統計単位は <b>16 サブセット × 3 seed</b>、報告は各サブセットでホールドアウト order 3 本 × 3 seed を平均した per-proto RMSE（\(\approx\NRMSE\)）で、空観測（\(S=\varnothing\)、端末のみ）から完全観測（\(S=\{A,B,C,M\}\)）への変化を主軸に読む。<code>D</code> はこれらのプロトコルに現れず、端末観測器 <code>O</code> は既に端末で観測済みなので \(S\) には含めない。</p>
+<p class="annot">※ 指標について：本図は trace アブレーション由来で元データが per-proto RMSE のため、表・本文では <b>RMSE（=\(\NRMSE\) 近似）</b>と明記する。各 target は同一の面積保存線形族から生成され自スケールが揃っているため、生 RMSE がマクロ \(\NRMSE\) の良い近似になる。中心結果のコスト指標曲線（<a class="xref" href="cost-indexed.html">図 2</a>）は厳密な \(\NRMSE\) を用いる。</p></div>
+
+<div class="blk setup"><div class="h">モデル構成とメトリクス定義</div>
+<div class="tblwrap"><table class="data"><caption>比較モデル（合成的 OFML 群と count 記述子ブラックボックス群）。観測器 \(O_{op}\) は OFML 群のみが持つ。</caption>
+<thead><tr><th style="text-align:left">群</th><th style="text-align:left">モデル</th><th style="text-align:left">構造</th><th style="text-align:left">観測の受け取り方</th></tr></thead>
+<tbody>
+<tr><td style="text-align:left" rowspan="5">合成的<br>OFML</td><td style="text-align:left"><code>OFML-linear</code></td><td style="text-align:left">真の族と同じ操作構造をもつ合成アフィン線形モデル（<b>設計上識別可能</b>）</td><td style="text-align:left">操作型ごとの線形整列 \(O_{op}\)（下限を与える参照）</td></tr>
+<tr><td style="text-align:left"><code>OFML-Ensemble</code></td><td style="text-align:left">合成ネット <code>TerminalOnlyOFML</code> ＋ 種のみ 5 メンバ深層アンサンブル</td><td style="text-align:left">操作型ごとの学習可能 \(O_{op}:\mathbb{R}^d\!\to\!\mathbb{R}^2\)</td></tr>
+<tr><td style="text-align:left"><code>OFML-MCD</code></td><td style="text-align:left">合成ネット ＋ Monte-Carlo Dropout（不確実性）</td><td style="text-align:left">同上（並列・非破壊の側枝）</td></tr>
+<tr><td style="text-align:left"><code>OFML-BNN</code></td><td style="text-align:left">合成ネット ＋ 変分ベイズ NN 読み出し</td><td style="text-align:left">同上</td></tr>
+<tr><td style="text-align:left"><code>OFML-GPN</code></td><td style="text-align:left">合成ネット ＋ 深層カーネル GP 読み出し（Gaussian process neural）</td><td style="text-align:left">同上</td></tr>
+<tr><td style="text-align:left" rowspan="3">count 記述子<br>ブラックボックス</td><td style="text-align:left"><code>Shared-Ens</code></td><td style="text-align:left">操作 count 記述子ベースの 5 メンバ MLP（<b>順序盲</b>）</td><td style="text-align:left">観測器なし → prefix-readout 拡張で同情報を付与</td></tr>
+<tr><td style="text-align:left"><code>Pooled-GP</code></td><td style="text-align:left">count 記述子上の単一プールド GP</td><td style="text-align:left">同上（prefix-readout）</td></tr>
+<tr><td style="text-align:left"><code>Prot-GP</code></td><td style="text-align:left">プロトコル（count）記述子ごとの独立 GP</td><td style="text-align:left">同上（prefix-readout）</td></tr>
+</tbody></table></div>
+<p>指標は各観測サブセット \(S\) でのホールドアウト order の per-proto RMSE をシード・order 平均したもの：\[ \eps(S)=\frac{1}{|H|\,R}\sum_{p\in H}\sum_{r=1}^{R}\underbrace{\sqrt{\mathrm{mean}_{x}\big(\mu^{(r)}_p(x)-f_p(x)\big)^2}}_{\text{per-proto }\RMSE\ (\approx\,\NRMSE)},\qquad |H|=3,\ R=3. \] OFML 群の補助観測損失は、端末損失に \[ \mathcal{L}_{\mathrm{obs}}=\sum_{o\in S}\norm{O_o(s_o)-s^{\star}_o}^2 \] を加えたもの（\(d=2\) なら \(2\times2\) 整列、\(d>2\) なら \(d\!\to\!2\) 射影）。共有 1 枚の整列にしないのは、そのゲージ自由度（縮小的／拡大的実現の非識別）を除去するためである。ブラックボックス群は付随する潜在モジュールを持たないため、接頭辞プロトコル \(op_1\dots op_t\,O\) の端末スカラー \(y=\mathrm{readout}(s^{\star}_{\text{after }t})\) を追加訓練行として与える（prefix-readout 拡張）。</p></div>
+
+<div class="blk" style="border-left:4px solid #0f766e"><div class="h">観測器モジュール O_A, O_B, O_C, O_M（付録 A.3）</div><p>中間観測は、被観測操作型 <code>op ∈ S</code>（<code>S ⊆ {A,B,C,M}</code>）の位置に観測器モジュール <code>O_op</code> を置き、その出力を<b>学習時のみ</b>観測して実現する。<code>O_op</code> が観測するのは<b>その操作を適用した直後の真の 2 次元状態</b> <code>state*_op = s_v† = F_op†(z_v†)</code>（post-op・ノイズなし）— すなわち <code>O_A</code> は「A 適用直後の (s₀,s₁)」、<code>O_M</code> は「M 適用直後の状態」を観測する。<code>D</code> はこれらのプロトコルに現れず、端末観測器 <code>O</code> は既に端末で観測済みなので <code>S</code> には含めない。</p><p><b>OFML 側（合成モデル）：</b>各被観測操作型に<b>操作型ごとに別々の</b>学習可能な観測器 <code>O_op : ℝᵈ→ℝ²</code>（バイアスなし線形）を付け、補助損失 <code>Σ_{op∈S} ‖O_op(s_op) − state*_op‖²</code> を端末損失に加える（<code>d=2</code> なら 2×2 整列、<code>d&gt;2</code> なら <code>d→2</code> 射影）。共有 1 枚の整列にしないのは、そのゲージ自由度（縮小的/拡大的実現の非識別）を除去し count <code>C^k</code> 発散を抑えるためである。</p><p><b>並列・非破壊の側枝：</b>合成の本流は潜在 <code>s ← g_θ_op(s)</code> を <code>d</code> 次元のまま伝播し、下流操作（例: B）は前段（例: A）の<b>潜在 s そのもの</b>を受け取る。<code>O_op(s)</code> はその時点の潜在を 2 次元へ写す<b>並列の読み出しヘッド</b>にすぎず、補助損失を与えるだけで <code>s</code> を書き換えない。したがって <b>O_A は B に接続されず</b>、観測を入れても順伝播グラフと合成は不変で、観測は潜在への<b>追加の勾配制約</b>としてのみ作用する（試料を変えない非破壊測定の類似）。<code>d&gt;2</code> のモデルでは潜在が観測 2 次元より多くの情報を保持し、<code>O_op</code> はその <code>d→2</code> 射影を学習する。</p><p><b>ブラックボックス側は観測器を持たない：</b>付随させる潜在モジュールがないため、<b>prefix-readout 拡張</b>で同じ情報を与える — 各被観測位置 <code>t</code> について、接頭辞プロトコル <code>op₁ … op_t O</code> の端末 readout をスカラー <code>y = readout(state*_after_t)</code> として観測する訓練行を追加する。よって <code>O_A, O_B, O_C, O_M</code> は <b>OFML 専用</b>であり、ブラックボックスは接頭辞のスカラー読み出しのみを受け取る。</p></div>
+<div class="obswidget" data-protocol="A B C M" data-observable="A,B,C,M" data-title="観測部分集合 S を選ぶ（全 2⁴ = 16 通り）。代表プロトコル A → B → C → M → O で図示 — ボタンで S を選ぶと、その操作型の直後に観測器 op ↓ O_op → y_op（並列・非破壊の側枝）が横に並ぶ。モジュール型にホバーすると重み共有が強調される。"></div>
+
+<div class="blk setup"><div class="h">使用プロトコル（付録 A）</div><p>図 4 の order タスク（線形 <code>order_rotation</code>）をそのまま再利用（source 12・target ホールドアウト order 3 本）。加えて観測部分集合 <code>S ⊆ {A,B,C,M}</code>（全 16）を<b>学習時のみ</b>観測する（評価は端末のみ）。source は operation 数が同じで<b>順序だけ</b>が異なるため、順序盲エイリアシングが直接露出する。</p><div class="protoset" data-kind="source" data-title="<b>order source（12 本）</b>" data-protocols="A M O;B M O;C M O;A B M O;B A M O;A C M O;C A M O;B C M O;C B M O;A B C M O;B C A M O;C A B M O" data-cols="1"></div><div class="protoset" data-kind="target" data-title="<b>target（ホールドアウト order・3 本）</b>" data-protocols="A C B M O;B A C M O;C B A M O"></div>
+<div class="tblwrap"><table class="data" style="min-width:520px"><caption>観測アブレーションのデータ生成（各 target ごと）</caption>
+<thead><tr><th style="text-align:left">要素</th><th style="text-align:left">値</th><th style="text-align:left">性質</th></tr></thead>
+<tbody>
+<tr><td style="text-align:left">source 学習</td><td style="text-align:left">12 source プロトコル（図 4 と同一、同数・異順序）</td><td style="text-align:left">order のみが難所</td></tr>
+<tr><td style="text-align:left">観測サブセット \(S\)</td><td style="text-align:left">\(S\subseteq\{A,B,C,M\}\)、全 \(2^4=16\) 通り</td><td style="text-align:left">学習時のみ・端末評価は不変</td></tr>
+<tr><td style="text-align:left">中間観測 \(s^{\star}_{op}\)</td><td style="text-align:left">被観測操作直後の真の 2D 状態（post-op）</td><td style="text-align:left">ノイズなし（真値）</td></tr>
+<tr><td style="text-align:left">test</td><td style="text-align:left">ホールドアウト order 3 本、端末読み出しのみ</td><td style="text-align:left">source と互いに素な order</td></tr>
+<tr><td style="text-align:left">seed</td><td style="text-align:left">3 seed（サブセットごとに反復）</td><td style="text-align:left">order × seed を平均</td></tr>
+</tbody></table></div>
+<details class="proof" style="margin-top:10px"><summary>真の写像 F<sub>j</sub>†（データ生成元, 付録 A.1(c)）</summary><div class="pf"><b>order_rotation</b>（強非可換・面積保存の線形操作 + 線形 readout。難所は順序のみ）：F<sub>A</sub>=(−s₁,s₀)（+90°回転）、F<sub>B</sub>=(s₁,s₀)（入替）、F<sub>C</sub>=(s₀,1.2s₀+s₁)（強シアー）、F<sub>M</sub>=(0.866s₀−0.5s₁,0.5s₀+0.866s₁)（30°回転, mixer）、readout y=1.2·s₀−0.8·s₁。各操作は線形・非飽和なので単一プロトコルは x の線形写像（自明に学習可能）で、難しさは操作順序に集中する。したがって count（操作数）記述子は原理的に order を区別できず、中間観測を足しても順序情報を表現する場所がない。</div></details><p class="phint">モジュール型にカーソルを合わせると、共有される同一操作が全プロトコルで強調される（＝重み共有）。同数・異順序の target が「順序を見ないと区別できない」ことを可視化する。</p></div>
+
+<div class="blk result"><div class="h">実験結果</div>
+<p><b>合成的 OFML は観測で救済され、count 記述子は横ばい。</b> 設計上識別可能な <code>OFML-linear</code> は空観測でもすでに \(\eps=0.006\)、完全観測で \(0.002\) の<b>下限</b>を与える。柔軟なニューラル OFML はいずれも大きく救済される：<code>Ensemble</code> 0.440→0.091、<code>MCD</code> 0.455→0.129、<code>BNN</code> 0.628→0.132、<code>GPN</code> 0.717→0.264。一方、count 記述子ベースの 3 モデルは同一の観測を得ても <b>ほぼ変化しない</b>（<code>Shared-Ens</code> 1.078→1.067、<code>Pooled-GP</code> 0.795→0.790、<code>Prot-GP</code> 0.771→0.765）。</p>
+<div class="tblwrap"><table class="data"><caption>図 7 — order（線形、<code>order_rotation</code>）中間観測アブレーション。per-proto RMSE（\(\approx\NRMSE\)、ホールドアウト order 3 本 × 3 seed 平均）。列＝空観測 \(S=\varnothing\)（端末のみ）と完全観測 \(S=\{A,B,C,M\}\)（＝全）。最良値を強調。</caption>
+<thead><tr><th>群</th><th>モデル</th><th>\(\varnothing\)（端末のみ）</th><th>全 \(\{A,B,C,M\}\)</th></tr></thead>
+<tbody>
+<tr><td rowspan="5">合成的 OFML</td><td>OFML-linear（設計上識別可能）</td><td class="best">0.006</td><td class="best">0.002</td></tr>
+<tr><td>OFML-Ensemble</td><td>0.440</td><td>0.091</td></tr>
+<tr><td>OFML-MCD</td><td>0.455</td><td>0.129</td></tr>
+<tr><td>OFML-BNN</td><td>0.628</td><td>0.132</td></tr>
+<tr><td>OFML-GPN</td><td>0.717</td><td>0.264</td></tr>
+<tr><td rowspan="3">count 記述子<br>ブラックボックス</td><td>Shared-Ens</td><td>1.078</td><td>1.067</td></tr>
+<tr><td>Pooled-GP</td><td>0.795</td><td>0.790</td></tr>
+<tr><td>Prot-GP</td><td>0.771</td><td>0.765</td></tr>
+</tbody></table></div>
+<p class="phint">合成的 OFML 群は \(\varnothing\to\) 全でおよそ 4–8 倍の誤差低減（\(\eps\) が下限 0.002 へ向かう）。count 記述子群は 1% 前後の変化しかなく、観測の行を活かせない。</p></div>
+
+<div class="blk disc"><div class="h">考察 — 主張をどう支えるか</div>
+<p>観測は端末読み出しでは解決できない操作 order を識別する — <b>ただし合成的モデルに限る</b>。線形 order ストレスでは、柔軟なニューラル OFML が空観測の 0.44–0.72 から完全観測で 0.09–0.26 へ救済され、設計上識別可能な <code>OFML-linear</code> の下限 0.002 に近づく。これは、観測損失 \(\mathcal{L}_{\mathrm{obs}}\) が各操作型の潜在モジュールに直接勾配制約を与え、terminal-only では欠けていた識別信号（どの操作がどの順序でどう作用したか）を供給するためである。</p>
+<p>一方、count 記述子のブラックボックスは同一の観測を得ても 0.77–1.08 にとどまる — order は count 特徴では表現できないため、追加された観測の行を載せる場所がない（prefix-readout を与えても順序を復元できない）。これが主張 1 の<b>非対称性</b>である：観測は、演算子を真の写像に表現できる代理モデルのみを助ける。順方向転移そのもの（観測なし）の order 結果は <a class="xref" href="c1-order.html">図 4</a>、非線形 order での観測救済は <a class="xref" href="c4-order-nonlinear.html">図 8</a>、count ストレスでの観測アブレーションは <a class="xref" href="c4-count.html">count 版</a>、s0 パリティは <a class="xref" href="c4-s0.html">s0 版</a>を参照。</p>
+<p class="annot">※ 限界：per-proto RMSE は各 target を自スケール正規化した \(\NRMSE\) の近似（線形族で自スケールが揃うため妥当）。観測は<b>学習時のみ</b>与え、評価は端末のみ（配備時に中間状態を要求しない）。<code>OFML-linear</code> の 0.002 は真の族と同構造ゆえの下限であり、他モデルはその近傍を目標とする。代表列としては 16 サブセット中の「最良」ではなく<b>完全観測</b> \(\{A,B,C,M\}\) を報告している（部分サブセットの最良値は本文の救済幅の内側に収まる）。</p></div>
+</div>
+
+<div class="callout"><span class="lab">理論との対応</span>
+<p>中間観測が線形 order を識別可能にするのは、観測が \(\ker\Phi\) を縮めて rank 条件 \(\ker\Phi\subseteq\ker\Psi\) へ近づけるためである（<a class="xref" href="../theory.html#prop:ofml-linear" data-ref="prop:ofml-linear">命題 4</a>）。観測損失 \(\mathcal{L}_{\mathrm{obs}}\) は各操作型の中間状態を追加の行として source 行に積み、\(\Phi\) の行空間を拡大する — これが terminal-only では \(\ker\Phi\setminus\ker\Psi\) に落ちていた order 方向を励起する。合成的モデルのみが恩恵を受けるのは、観測器 \(O_{op}\) が操作型ごとの潜在モジュールへ勾配制約として作用するのに対し、count 記述子には順序方向を担う自由度が存在しないためである。中間観測による深さ限界の緩和（terminal-only の depth 制限の回避）は <a class="xref" href="../theory.html#prop:ofml-depth-limit" data-ref="prop:ofml-depth-limit">命題 6</a>に対応する。</p></div>
+
+<div class="qa" style="margin-top:16px"><div class="blk"><div class="h">この実験が支える主張</div><div><a class="claimcard" href="../experiments.html#c1" style="--c:#0ea5a4;display:block;border-top-width:4px"><span class="cn">1</span><div class="ct" style="margin-top:8px">適切な条件（識別可能性）が揃うとき OFML は順方向転移を助ける</div><p>合成表現に加え、再利用する操作の識別可能性とモデル特定が揃うとき、terminal-only でも未知 target へゼロショット転移する。</p></a></div></div></div>
+
+<p style="margin-top:22px"><a class="back" href="../experiments.html">‹ Experiments へ戻る</a></p>
+</div>
+
+<script>
+(function(){var lb=document.createElement('div');lb.className='lightbox';lb.innerHTML='<div class="hint">クリック / Esc で閉じる</div><img alt=""/>';document.body.appendChild(lb);var im=lb.querySelector('img');document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.figbox img');if(t){im.src=t.currentSrc||t.src;lb.classList.add('open');document.body.style.overflow='hidden';return;}if(e.target.closest&&e.target.closest('.lightbox')){lb.classList.remove('open');document.body.style.overflow='';}});document.addEventListener('keydown',function(e){if(e.key==='Escape'){lb.classList.remove('open');document.body.style.overflow='';}});})();
+</script><script src="../lib/tex-svg.js" id="MathJax-script" async></script></body></html>

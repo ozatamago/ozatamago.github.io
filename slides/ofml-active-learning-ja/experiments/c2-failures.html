@@ -1,0 +1,121 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>terminal-only の識別限界 — 表 1（転移条件 C1–C6）— OFML Experiments</title><link rel="stylesheet" href="../style.css"/>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],macros:{Mcal:"\\mathcal{M}",Pcal:"\\mathcal{P}",Xcal:"\\mathcal{X}",Zcal:"\\mathcal{Z}",Scal:"\\mathcal{S}",Obs:"\\operatorname{Obs}",E:"\\mathbb{E}",RMSE:"\\operatorname{RMSE}",NRMSE:"\\operatorname{NRMSE}",IVR:"\\mathrm{IVR}",SUR:"\\mathrm{SUR}",eps:"\\varepsilon",norm:["\\left\\lVert #1\\right\\rVert",1]},packages:{'[+]':['ams']}},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script src="../refs.js"></script><script src="../protoviz.js"></script><script src="../hovercard.js"></script><script src="../obsviz.js"></script></head><body>
+<nav class="sitenav"><div class="wrap"><a href="../index.html">Overview</a><a href="../background.html">Background</a><a href="../problem.html">Problem setting</a><a href="../method.html">Object-Flow Machine Learning</a><a href="../theory.html">Theoretical statement and proofs</a><a href="../experiments.html">Experiments</a><a href="../references.html">References</a></div></nav>
+<div class="topbar"><div class="wrap"><a class="back" href="../experiments.html">‹ Experiments</a><span class="crumb">主張 1 › 表 1（転移条件 C1–C6）</span></div></div>
+
+<div class="wrap page">
+<p class="kicker"><span class="pill" style="--c:#6366f1">主張 1 · 端末観測のみの学習には識別可能性の限界がある</span></p>
+<h2>表 1 — terminal-only の識別限界（転移条件 C1–C6 × 失敗シナリオ）</h2>
+<p class="lead">主張 1 の<b>正直な失敗集合</b>。中間トレースを与えず<b>端末観測のみ</b>で合成を学習するとき、ゼロショット順方向転移が破れる<b>系統的な条件</b>を切り分ける。転移診断（<a class="xref" href="../theory.html#ass:transfer-diagnostics" data-ref="ass:transfer-diagnostics">仮定 8：C1–C5</a>）の各条件に、故意に一つずつ違反させた合成シナリオ <code>s1</code>–<code>s7</code> を作り、<b>C6 実現可能性</b>を加えた 6 条件で失敗を分類する。各シナリオで <code>Shared-Ens</code>（順序盲 count 記述子）・<code>OFML-Ens</code>（非線形合成）・<code>OFML-linear</code>（線形合成・<a class="xref" href="../theory.html#prop:ofml-linear" data-ref="prop:ofml-linear">命題 4</a> の \(\Phi/\Psi\) 監査対象）を比較する。合成は<b>識別可能な条件が満たされる限りで</b>転移を助け、破れれば terminal-only ではどの合成モデルもゼロショットで回復できない — この境界を表 1 が定量化する。</p>
+
+<figure class="figbox"><img src="../figures/fig1_nonlinear.png" alt="図1（非線形族）s0–s7 の 8 モデル比較グリッド。terminal-only の失敗を含む正直な結果。"/><figcaption>図 1（非線形族）：<b>s0–s7</b> の各シナリオ（列）× <b>8 モデル</b>（行）の真値／予測比較グリッド（GP 合成場、非線形族）。左端の <code>s0</code> は識別可能で全合成モデルが転移する一方、<code>s1</code>（未見操作 D）はどのモデルも真値に届かず、<code>s2/s6</code>（意味シフト・誤特定）や <code>s7</code>（三体相互作用）は合成モデルのみ部分的に回復する。<b>正直な失敗を隠さず併載</b>したパネル。表 1 は同じ設計を<b>線形族</b>で NRMSE 化して集計したもの。クリックで拡大。</figcaption></figure>
+
+<div class="qa">
+<div class="blk goal"><div class="h">実験目的（主張の要約）</div>
+<p>「端末観測のみでは、すべての操作意味論や高次相互作用がゼロショットで識別可能なわけではない」という主張 1 を、<b>転移診断の各条件に対する対照的違反</b>で示す。識別可能性が保たれる限り合成（とくに <code>OFML-linear</code>）は転移を助ける（<a class="xref" href="../experiments.html#c1">主張 1</a>）が、語彙・意味・被覆・識別・安定・実現可能性のいずれかが破れると terminal-only ではゼロショットで消せない残差が残る。とくに <b>(i)</b> 未見操作 <code>s1</code> は<b>全モデル失敗</b>（source に存在しない語彙は再結合できない）、<b>(ii)</b> 三体相互作用 <code>s7</code> は単色・二色 probe の核から \(r^{\mathrm{id}}>0\) が生じ部分回復にとどまる、<b>(iii)</b> source probe 削減 <code>s4</code> は残差が小さくても<b>条件数が大</b>で <code>OFML-linear</code> がむしろ悪化する — という三つの正直な失敗を確認する。</p></div>
+
+<div class="blk setup"><div class="h">実験設定</div>
+<p>合成ベンチマーク工場で、<b>転移条件 C1–C6 に一対一で対応する故意の違反</b>を作る。ベース <code>s0</code> は識別可能な source/target 対（両順序ペアで全操作方向を励起）。ここから <b>C1 語彙</b>＝target に source 不在の操作 D を導入（<code>s1_unknown_op</code>）、<b>C2 意味</b>＝同名操作の意味を source/target 間でシフト（<code>s2_semantics</code>）、<b>C3 被覆</b>＝target の隠れ状態を source 訓練域外へ外挿（<code>s3_input_extrap</code>）、<b>C4 識別可能性</b>＝source probe を削減して階数を落とす（<code>s4_missing_probe</code>）および target 限定の三体相互作用（<code>s7_three_body</code>）、<b>C5 安定性</b>＝high-gain 合成で Lipschitz 定数を増大（<code>s5_lipschitz</code>）、<b>C6 実現可能性</b>＝読み出しを誤特定（<code>s6_misspec</code>）。表 1 の主統計は<b>線形族</b>（アフィン操作行列＋線形読み出し）で、<b>12 bench seed</b> を主統計単位に NRMSE を集計。全 <code>s0</code>–<code>s7</code> × 8 モデル × 2 族（線形・非線形）の予測グリッドは補足 S1（<code>fig1_linear.png</code> / <code>fig1_nonlinear.png</code>、3 seed）に置く。ゼロショット（コスト 0）評価のみ — 能動観測による補正はここでは行わない（それは <a class="xref" href="../theory.html#thm:ofml-active" data-ref="thm:ofml-active">定理 3</a> の領域）。</p>
+<p class="annot">※ このページは<b>失敗の分類</b>に徹し、補正（能動学習）は測らない。identifiability の階数分解そのものは <a class="xref" href="c2-tradeoff.html">Φ/Ψ 監査</a>で、失敗を割ってから床を割る適応の全体像は <a class="xref" href="cost-indexed.html">図 2（コスト指標）</a>で扱う。C6（実現可能性）は仮定 8 の C1–C5 の外にあるモデルクラス誤特定で、診断残差ではなく「真の関数が仮説クラスに実現可能か」を問う。</p></div>
+
+<div class="blk setup"><div class="h">モデル構成とメトリクス定義</div>
+<div class="tblwrap"><table class="data"><caption>比較 3 モデル（すべて terminal-only ＝端末観測のみで学習、中間トレースなし）</caption>
+<thead><tr><th style="text-align:left">モデル</th><th style="text-align:left">構造</th><th style="text-align:left">主要設定</th><th style="text-align:left">失敗の効き方</th></tr></thead>
+<tbody>
+<tr><td style="text-align:left"><code>Shared-Ens</code></td><td style="text-align:left">操作 count 記述子ベースの 5-member MLP（<b>順序盲</b>・非線形。異順序 target を byte 単位同一に予測）</td><td style="text-align:left">hidden=32, 300 epoch, y 標準化, 種のみ 5 メンバ</td><td style="text-align:left">順序・高次相互作用を原理的に持てず、失敗の<b>下限基準</b>となる</td></tr>
+<tr><td style="text-align:left"><code>OFML-Ens</code></td><td style="text-align:left">合成ネット <code>TerminalOnlyOFML</code>（操作型ごとの潜在モジュールを合成、非線形）</td><td style="text-align:left">latent_dim=10, hidden=32, 400 epoch, 5 メンバ</td><td style="text-align:left">識別可能なら回復。容量過多は逼迫時に同定を不安定化</td></tr>
+<tr><td style="text-align:left"><code>OFML-linear</code></td><td style="text-align:left">線形合成モデル（アフィン操作行列＋線形読み出し、パラメータ 23 次元。<a class="xref" href="c2-tradeoff.html">Φ/Ψ 監査</a>対象）</td><td style="text-align:left">解析的最小二乗、乱数なしの決定論核</td><td style="text-align:left">\(r^{\mathrm{id}}=0\) なら near-exact、\(r^{\mathrm{id}}>0\) で失敗し \(K\) 大で増幅</td></tr>
+</tbody></table></div>
+<p>指標はすべて<b>マクロ NRMSE</b>。各 target の自スケール \(s_\star^2=\operatorname{mean}_x(f-\bar f)^2\)（真値の分散）で正規化し、\[ \NRMSE_m(s)=\sqrt{\operatorname{mean}_x\,(\mu-f)^2\big/\,s_\star^2},\qquad \NRMSE\approx 1 \iff \text{平均予測（自明解）}. \] \(\NRMSE>1\) は<b>自明な平均予測より悪い</b>ことを意味する。失敗の識別可能性側の診断は Φ/Ψ 監査の目標関連残差 \(r^{\mathrm{id}}=\norm{\Psi(I-P_{\operatorname{row}}(\Phi))}_F/\norm{\Psi}_F\) と条件数 \(K=\sigma_{\max}(\Psi)/\sigma^{+}_{\min}(\Phi)\) で与えられ、\(r^{\mathrm{id}}=0\iff\ker\Phi\subseteq\ker\Psi\iff\) target が source から識別可能である（<a class="xref" href="../theory.html#prop:ofml-linear" data-ref="prop:ofml-linear">命題 4</a>）。</p></div>
+
+<div class="blk setup"><div class="h">使用プロトコル（付録 A）</div>
+<div class="protoset" data-kind="source" data-title="<b>識別可能な source probe（両順序ペア＝全操作方向を励起）</b>" data-protocols="A B O;B A O;A C O;C A O" data-cols="2"></div>
+<div class="protoset" data-kind="target" data-title="<b>target s1（C1 語彙）：source 不在の操作 D を要求 → 全モデル失敗</b>" data-protocols="A D O;D B O"></div>
+<div class="protoset" data-kind="target" data-title="<b>target s7（C4 識別）：target 限定の三体相互作用 → r_id&gt;0</b>" data-protocols="A B C O;C B A O"></div>
+<div class="protoset" data-kind="source" data-title="<b>s4（C4 識別）：削減された source probe（単色のみ → 階数落ち・K 増大）</b>" data-protocols="A O;B O;C O" data-cols="3"></div>
+<div class="tblwrap"><table class="data" style="min-width:520px"><caption>失敗スイートのデータ生成（各シナリオ共通）</caption>
+<thead><tr><th style="text-align:left">要素</th><th style="text-align:left">値</th><th style="text-align:left">性質</th></tr></thead>
+<tbody>
+<tr><td style="text-align:left">source 学習</td><td style="text-align:left">60 点/source</td><td style="text-align:left">ノイズ有 \(\sigma=0.02\)</td></tr>
+<tr><td style="text-align:left">test</td><td style="text-align:left">256 点/target（Sobol scramble A）</td><td style="text-align:left">ノイズ無（真値）</td></tr>
+<tr><td style="text-align:left">評価</td><td style="text-align:left">コスト 0（ゼロショット順方向転移のみ）</td><td style="text-align:left">能動観測なし</td></tr>
+<tr><td style="text-align:left">族</td><td style="text-align:left">線形（表 1 の主統計）／非線形 GP 合成場（図 1・補足 S1）</td><td style="text-align:left">同一の C1–C6 設計</td></tr>
+<tr><td style="text-align:left">seed</td><td style="text-align:left">表 1：12 bench seed（線形）／補足 S1：3 seed（両族グリッド）</td><td style="text-align:left">bench_seed で族自体を引き直し</td></tr>
+</tbody></table></div>
+<p class="phint">モジュール型にカーソルを合わせると、共有される同一操作が全プロトコルで強調される（＝重み共有）。s1 の操作 D は source 側に現れず、s7 の三体順序は二色 probe の核に落ちることが視覚的に確認できる。</p>
+<details class="proof" style="margin-top:10px"><summary>詳細な設定（条件定義・honest-failure の基準・QC）</summary><div class="pf">
+<b>条件–シナリオ対応.</b> C1 語彙/<code>s1_unknown_op</code>（操作 D が全 source に不在、\(\ker\Phi\setminus\ker\Psi\)）、C2 意味/<code>s2_semantics</code>（同名操作の作用行列が source→target でシフト）、C3 被覆/<code>s3_input_extrap</code>（target 隠れ状態が source 訓練域の凸包外）、C4 識別/<code>s4_missing_probe</code>（source probe を単色のみに削減し rank(Φ) を落とす）と <code>s7_three_body</code>（三体相互作用が単色・二色 probe で励起されない）、C5 安定/<code>s5_lipschitz</code>（合成の gain を上げ Lipschitz 定数を増大）、C6 実現/<code>s6_misspec</code>（読み出しを仮説クラス外に誤特定）。<br><br>
+<b>honest-failure の基準.</b> 各行の 3 モデル最小 NRMSE を <code>best</code> とするが、「回復」とは自明解 \(\NRMSE\approx1\) を有意に下回ることを指す。s1 は全モデル \(\NRMSE&gt;1\)（回復なし＝正直な失敗を明記）、s3/s5/s6 は <code>OFML-linear</code> が識別可能なら回復、s4 は <code>OFML-linear</code> が条件数大で悪化（1.805）。<br><br>
+<b>QC.</b> 線形族は決定論核（乱数は観測ノイズと Sobol ストリームのみ）。全レコード status=ok。表 1 は 12 seed 平均、補足グリッドは 3 seed の代表ドロー。図 1 の非線形族は視覚確認用で NRMSE 集計は線形族（表 1）を主とする。
+</div></details></div>
+
+<div class="blk result"><div class="h">実験結果</div>
+<p><b>失敗は条件ごとに異なる署名を持つ。</b> 順序盲の <code>Shared-Ens</code> はほぼ全条件で自明解より悪く（terminal-only の下限）、合成モデルは<b>識別可能な条件でのみ</b>回復する。<code>s1</code>（C1 語彙）は<b>全モデル失敗</b>（NRMSE 1.39–1.51）— source に存在しない操作 D は再結合できず、terminal-only で消せない残差の典型。<code>s2</code>（意味）・<code>s3</code>（被覆）・<code>s5</code>（安定）・<code>s6</code>（実現）は <code>OFML-linear</code> が明確に回復（とくに s3 は 3.726→0.213）。<code>s7</code>（三体）は合成モデルのみ部分回復（0.985）で、二色 probe の核に三体方向が落ちるため \(r^{\mathrm{id}}>0\) が残る。<code>s4</code>（probe 削減）は<b>OFML-linear がむしろ悪化</b>（1.805）— 残差が小さくても \(K\) が大きく余剰容量が同定を不安定化する、主張 1 の直感どおりの正直な失敗である。</p>
+
+<figure class="figbox"><svg viewBox="0 0 660 300" xmlns="http://www.w3.org/2000/svg" style="max-width:660px;width:100%;font-family:inherit" role="img" aria-label="転移条件 C1-C6 の失敗シナリオごとの NRMSE を 3 モデルで比較した棒グラフ">
+<style>.ax{stroke:#cbd5e1;stroke-width:1}.gl{stroke:#e2e8f0;stroke-width:1;stroke-dasharray:2 3}.tv{stroke:#dc2626;stroke-width:1.2;stroke-dasharray:5 3}.bl{font-size:10.5px;fill:#5a6573;text-anchor:middle}.bc{font-size:9.5px;font-weight:800;fill:#4338ca;text-anchor:middle}.cap{font-size:8.5px;font-weight:800;fill:#b45309;text-anchor:middle}.tt{font-size:12px;font-weight:800;fill:#10151c;text-anchor:middle}.lg{font-size:10px;fill:#5a6573}.yt{font-size:10px;fill:#94a3b8;text-anchor:end}</style>
+<text x="330" y="16" class="tt">線形族の失敗署名：条件 C1–C6 が破れると terminal-only は自明解を割れない</text>
+<line class="ax" x1="64" y1="210" x2="630" y2="210"/><line class="ax" x1="64" y1="40" x2="64" y2="210"/>
+<line class="gl" x1="64" y1="40" x2="630" y2="40"/>
+<line class="tv" x1="64" y1="125" x2="630" y2="125"/>
+<text x="58" y="214" class="yt">0</text><text x="58" y="129" class="yt">1.0</text><text x="58" y="44" class="yt">2.0</text>
+<text x="626" y="121" class="lg" text-anchor="end" fill="#dc2626">自明な平均予測（NRMSE 1.0）</text>
+<!-- s1 C1 -->
+<rect x="90" y="91.9" width="16" height="118.1" fill="#f59e0b"/><rect x="108" y="83.4" width="16" height="126.6" fill="#0ea5a4"/><rect x="126" y="81.4" width="16" height="128.6" fill="#6366f1"/>
+<text x="115" y="224" class="bl">s1</text><text x="115" y="236" class="bc">C1 語彙</text>
+<!-- s2 C2 -->
+<rect x="162" y="61.4" width="16" height="148.6" fill="#f59e0b"/><rect x="180" y="150.8" width="16" height="59.2" fill="#0ea5a4"/><rect x="198" y="151.1" width="16" height="58.9" fill="#6366f1"/>
+<text x="187" y="224" class="bl">s2</text><text x="187" y="236" class="bc">C2 意味</text>
+<!-- s3 C3 -->
+<rect x="234" y="40" width="16" height="170" fill="#f59e0b"/><text x="242" y="36" class="cap">&gt;3.7</text><rect x="252" y="42.0" width="16" height="168.0" fill="#0ea5a4"/><rect x="270" y="191.9" width="16" height="18.1" fill="#6366f1"/>
+<text x="259" y="224" class="bl">s3</text><text x="259" y="236" class="bc">C3 被覆</text>
+<!-- s4 C4 -->
+<rect x="306" y="40" width="16" height="170" fill="#f59e0b"/><text x="314" y="36" class="cap">2.42</text><rect x="324" y="93.6" width="16" height="116.4" fill="#0ea5a4"/><rect x="342" y="56.6" width="16" height="153.4" fill="#6366f1"/>
+<text x="331" y="224" class="bl">s4</text><text x="331" y="236" class="bc">C4 識別</text>
+<!-- s7 C4 -->
+<rect x="378" y="78.9" width="16" height="131.1" fill="#f59e0b"/><rect x="396" y="116.1" width="16" height="93.9" fill="#0ea5a4"/><rect x="414" y="126.3" width="16" height="83.7" fill="#6366f1"/>
+<text x="403" y="224" class="bl">s7</text><text x="403" y="236" class="bc">C4 三体</text>
+<!-- s5 C5 -->
+<rect x="450" y="153.3" width="16" height="56.7" fill="#f59e0b"/><rect x="468" y="143.1" width="16" height="66.9" fill="#0ea5a4"/><rect x="486" y="169.7" width="16" height="40.3" fill="#6366f1"/>
+<text x="475" y="224" class="bl">s5</text><text x="475" y="236" class="bc">C5 安定</text>
+<!-- s6 C6 -->
+<rect x="522" y="118.7" width="16" height="91.3" fill="#f59e0b"/><rect x="540" y="138.7" width="16" height="71.3" fill="#0ea5a4"/><rect x="558" y="156.2" width="16" height="53.8" fill="#6366f1"/>
+<text x="547" y="224" class="bl">s6</text><text x="547" y="236" class="bc">C6 実現</text>
+<!-- legend -->
+<rect x="70" y="256" width="12" height="12" fill="#f59e0b"/><text x="87" y="266" class="lg">Shared-Ens（count 記述子・順序盲）</text>
+<rect x="300" y="256" width="12" height="12" fill="#0ea5a4"/><text x="317" y="266" class="lg">OFML-Ens（合成・非線形）</text>
+<rect x="480" y="256" width="12" height="12" fill="#6366f1"/><text x="497" y="266" class="lg">OFML-linear（合成・線形）</text>
+<text x="70" y="286" class="lg">赤破線より上は自明な平均予測より悪い。s3・s4 の Shared-Ens は軸上限で切詰め（実値を上に付記）。</text>
+</svg><figcaption>表 1 の可視化（線形族、12 seed 平均、ゼロショット NRMSE）。<b>赤破線＝自明な平均予測（NRMSE 1.0）</b>。<code>Shared-Ens</code>（橙）はほぼ全条件で破線を超え terminal-only の下限を成す。<code>OFML-linear</code>（藍）は s2/s3/s5/s6/s7 で最小だが、<b>s1 は全モデルが破線を超え（語彙欠落＝回復不能）</b>、<b>s4 は OFML-linear が条件数大で悪化</b>する — いずれも隠さない正直な失敗。</figcaption></figure>
+
+<div class="tblwrap"><table class="data"><caption>表 1 — 転移条件 C1–C6 × 失敗シナリオのゼロショット順方向転移 NRMSE（線形族、12 seed 平均）。各行の最小値を <b>best</b>。失敗シグネチャは違反した診断条件を示す。指標はマクロ NRMSE（\(\approx1\) が自明な平均予測）。</caption>
+<thead><tr><th style="text-align:left">転移条件（仮定 8）</th><th style="text-align:left">シナリオ</th><th style="text-align:left">失敗シグネチャ</th><th>Shared-Ens</th><th>OFML-Ens</th><th>OFML-linear</th></tr></thead>
+<tbody>
+<tr><td style="text-align:left">C1 語彙</td><td style="text-align:left"><code>s1_unknown_op</code></td><td style="text-align:left">未見操作 D（source 不在）</td><td class="best">1.39</td><td>1.49</td><td>1.513</td></tr>
+<tr><td style="text-align:left">C2 意味</td><td style="text-align:left"><code>s2_semantics</code></td><td style="text-align:left">source/target 間の操作意味シフト</td><td>1.748</td><td>0.697</td><td class="best">0.693</td></tr>
+<tr><td style="text-align:left">C3 被覆</td><td style="text-align:left"><code>s3_input_extrap</code></td><td style="text-align:left">隠れ状態の外挿（入力域外）</td><td>3.726</td><td>1.976</td><td class="best">0.213</td></tr>
+<tr><td rowspan="2" style="text-align:left">C4 識別可能性</td><td style="text-align:left"><code>s4_missing_probe</code></td><td style="text-align:left">source probe 削減（階数落ち・\(K\) 大）</td><td>2.416</td><td class="best">1.37</td><td>1.805</td></tr>
+<tr><td style="text-align:left"><code>s7_three_body</code></td><td style="text-align:left">target 限定の三体相互作用</td><td>1.542</td><td>1.105</td><td class="best">0.985</td></tr>
+<tr><td style="text-align:left">C5 安定性</td><td style="text-align:left"><code>s5_lipschitz</code></td><td style="text-align:left">high-gain 合成（Lipschitz 増大）</td><td>0.667</td><td>0.787</td><td class="best">0.474</td></tr>
+<tr><td style="text-align:left">C6 実現可能性</td><td style="text-align:left"><code>s6_misspec</code></td><td style="text-align:left">誤特定読み出し</td><td>1.074</td><td>0.839</td><td class="best">0.633</td></tr>
+</tbody></table></div>
+<p><b>正直な失敗の三点。</b> <code>s1</code> は<b>全モデルが自明解より悪い</b>（best でも 1.39）＝語彙欠落は terminal-only で原理的に回復不能。<code>s4</code> は <code>OFML-linear</code>（1.805）が <code>OFML-Ens</code>（1.37）に負ける＝<b>厳密識別が逼迫する領域で線形核の条件数が誤差を増幅</b>する。<code>s7</code> は best でも 0.985（自明解の縁）＝三体方向が二色 probe の核に落ち、terminal-only ではゼロショットで消えない。これらは合成が万能でないことを示す設計上の限界である。</p></div>
+
+<div class="blk disc"><div class="h">考察 — 主張をどう支えるか</div>
+<p>表 1 は主張 1 の適用範囲（転移が成功する条件と失敗する条件の境界）を<b>条件ごとに</b>画定する。識別可能性が保たれる条件（C2/C3/C5/C6）では合成が明確に転移を助け（<a class="xref" href="../experiments.html#c1">主張 1</a>）、それが破れる条件（C1/C4）では terminal-only の<b>識別限界</b>が露出する（<a class="xref" href="../experiments.html#c1">主張 1</a>）。C1 の <code>s1</code> は操作 D が全 source に不在で \(\ker\Phi\setminus\ker\Psi\) に落ち、どの合成も語彙を発明できない。C4 の <code>s7</code> は三体相互作用が単色・二色 probe の核に落ちて \(r^{\mathrm{id}}>0\) を生む（<a class="xref" href="../theory.html#prop:ofml-linear" data-ref="prop:ofml-linear">命題 4</a>）。C4 の <code>s4</code> は残差が小さくても条件数が大きく、<b>余剰容量が厳密識別の逼迫時に演算子同定を不安定化する</b>という直感を <code>OFML-linear</code> の悪化（1.805）が定量化する。</p>
+<p>これらの失敗は<b>能動観測で救えるか</b>が次の問い：target 終端を直接観測すれば終端応答一致性を回復でき（<a class="xref" href="../theory.html#thm:ofml-active" data-ref="thm:ofml-active">定理 3</a>）、コスト指標曲線が床を割る様子は <a class="xref" href="cost-indexed.html">図 2</a>で見える。ただし C1（語彙欠落）は補正の対象語彙そのものが存在しないため、能動観測でも target 側に D の probe を新たに用意しない限り回復しない — これが terminal-only の最も硬い限界である。失敗の階数分解（\(r^{\mathrm{id}}\)・\(K\)・操作別 source 階数）は姉妹実験の <a class="xref" href="c2-tradeoff.html">Φ/Ψ 監査</a>を参照。</p>
+<p class="annot">※ 限界：表 1 は<b>ゼロショット（コスト 0）のみ</b>で、能動観測による補正は測っていない。NRMSE は 256 test 点上の評価、線形族の 12 seed 平均（SE 未掲載）。C6（実現可能性）は仮定 8 の C1–C5 の外にあり、診断残差ではなくモデルクラス誤特定を問う別種の失敗。図 1（非線形族）は視覚確認用で、集計統計は線形族（表 1）を主とする。</p></div>
+</div>
+
+<div class="callout"><span class="lab">理論との対応</span>
+<p>各行は<b>転移診断</b>（<a class="xref" href="../theory.html#ass:transfer-diagnostics" data-ref="ass:transfer-diagnostics">仮定 8：C1–C5</a>）の各条件への故意の違反である：C1 語彙/<code>s1</code>、C2 意味/<code>s2</code>、C3 被覆/<code>s3</code>、C4 識別可能性/<code>s4</code>＋<code>s7</code>、C5 安定性/<code>s5</code>、そして仮定 8 の外の C6 実現可能性/<code>s6</code>。識別可能性の破れは <a class="xref" href="../theory.html#prop:ofml-linear" data-ref="prop:ofml-linear">命題 4</a> の rank 条件で厳密に測れ、とくに三体相互作用（<code>s7</code>）は単色・二色 probe の核から \(r^{\mathrm{id}}>0\) を生む。破れた識別は terminal-only のゼロショットでは消せないが、target 終端を直接<b>能動観測</b>すれば終端応答一致性を回復できる（<a class="xref" href="../theory.html#thm:ofml-active" data-ref="thm:ofml-active">定理 3</a>）— 補正が<b>能動観測を必要とする</b>ことが、この失敗集合の裏返しの含意である。</p></div>
+
+<div class="qa" style="margin-top:16px"><div class="blk"><div class="h">この実験が支える主張</div><div><a class="claimcard" href="../experiments.html#c1" style="--c:#0ea5a4;display:block;border-top-width:4px"><span class="cn">1</span><div class="ct" style="margin-top:8px">適切な条件（識別可能性）が揃うとき OFML は順方向転移を助ける</div><p>合成表現に加え、再利用する操作の識別可能性とモデル特定が揃うとき、terminal-only でも未知 target へゼロショット転移する。</p></a></div></div></div>
+
+<p style="margin-top:22px"><a class="back" href="../experiments.html">‹ Experiments へ戻る</a></p>
+</div>
+
+<script>
+(function(){var lb=document.createElement('div');lb.className='lightbox';lb.innerHTML='<div class="hint">クリック / Esc で閉じる</div><img alt=""/>';document.body.appendChild(lb);var im=lb.querySelector('img');document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.figbox img');if(t){im.src=t.currentSrc||t.src;lb.classList.add('open');document.body.style.overflow='hidden';return;}if(e.target.closest&&e.target.closest('.lightbox')){lb.classList.remove('open');document.body.style.overflow='';}});document.addEventListener('keydown',function(e){if(e.key==='Escape'){lb.classList.remove('open');document.body.style.overflow='';}});})();
+</script><script src="../lib/tex-svg.js" id="MathJax-script" async></script></body></html>

@@ -1,0 +1,131 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>図 9 — 観測下の count 識別と、反復失敗の制御（表 9）— OFML Experiments</title><link rel="stylesheet" href="../style.css"/>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],macros:{Mcal:"\\mathcal{M}",Pcal:"\\mathcal{P}",Xcal:"\\mathcal{X}",Zcal:"\\mathcal{Z}",Scal:"\\mathcal{S}",Obs:"\\operatorname{Obs}",E:"\\mathbb{E}",RMSE:"\\operatorname{RMSE}",NRMSE:"\\operatorname{NRMSE}",IVR:"\\mathrm{IVR}",SUR:"\\mathrm{SUR}",eps:"\\varepsilon",norm:["\\left\\lVert #1\\right\\rVert",1]},packages:{'[+]':['ams']}},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script src="../refs.js"></script><script src="../protoviz.js"></script><script src="../hovercard.js"></script><script src="../obsviz.js"></script></head><body>
+<nav class="sitenav"><div class="wrap"><a href="../index.html">Overview</a><a href="../background.html">Background</a><a href="../problem.html">Problem setting</a><a href="../method.html">Object-Flow Machine Learning</a><a href="../theory.html">Theoretical statement and proofs</a><a href="../experiments.html">Experiments</a><a href="../references.html">References</a></div></nav>
+<div class="topbar"><div class="wrap"><a class="back" href="../experiments.html">‹ Experiments</a><span class="crumb">主張 1 › 図 9（観測下の count 制御）</span></div></div>
+
+<div class="wrap page">
+<p class="kicker"><span class="pill" style="--c:#f59e0b">主張 1 · 中間観測は識別可能性の限界を修復する</span></p>
+<h2>図 9 — 観測下の count 識別と、反復失敗の制御</h2>
+<p class="lead">主張 1 を支える。<b>中間観測</b> \(S=\{A,M\}\)（学習時のみ・端末直後の真の潜在状態を観測）は、端末観測のみ（\(S=\varnothing\)）では欠けている識別信号を供給し、反復 count \(C^k\) の転移を安定化する。<b>合成的モデルはこの信号を消費して</b><a class="xref" href="c1-count.html">count 記述子</a>の下限より下へ誤差を押し下げるが、<b>ブラックボックス（Pooled-GP・Prot-GP）は同じ観測を prefix-readout 拡張で受け取っても不活性で横ばい</b>のままである（付随させる潜在モジュールが無いため）。さらに観測下で唯一伴う失敗モード（反復演算子 \(C^k\) の発散）の原因を機構的に特定し — <b>観測器のゲージ自由度 → Lipschitz \(>1\)</b> — count 安定性＋order 識別を組み合わせた目的で選んだアーキテクチャによって除去する。指標はすべて<b>マクロ NRMSE</b>（各 target の自スケールで正規化）。</p>
+
+<figure class="figbox"><img src="../figures/count_traceablation2_obs_AM.png" alt="Figure 9 count ablation under observation (subset AM)"/><figcaption>図 9：観測サブセット <code>AM</code> 下での count 識別。容量一致 <code>OFML-nonlinear</code> (\(d=2\)) の count-\(k=4\) 転移。count のみの正則化レジーム（<code>traceablation1</code>）は反復とともに発散し、count+order 統合レジーム（<code>traceablation2</code>）は \(k\) にわたり横ばい。クリックで拡大。</figcaption></figure>
+
+<figure class="figbox"><svg viewBox="0 0 680 342" xmlns="http://www.w3.org/2000/svg" style="max-width:680px;width:100%;font-family:inherit" role="img" aria-label="端末のみ から S={A,M} 観測へ 各モデルの count k=4 NRMSE の変化">
+<style>.ax{stroke:#94a3b8;stroke-width:1.2}.gl{stroke:#e2e8f0;stroke-width:1}.tt{font-size:12.5px;font-weight:800;fill:#10151c;text-anchor:middle}.yl{font-size:10px;fill:#5a6573;text-anchor:end}.xl{font-size:11px;font-weight:700;fill:#334155;text-anchor:middle}.lg{font-size:10.5px;fill:#334155}.nb{font-size:10px;font-style:italic;fill:#64748b}</style>
+<text x="316" y="18" class="tt">反復 count k=4 の NRMSE：中間観測 S={A,M} で合成は床を割り、ブラックボックスは横ばい</text>
+<line class="gl" x1="160" y1="300" x2="440" y2="300"/><line class="gl" x1="160" y1="248" x2="440" y2="248"/><line class="gl" x1="160" y1="196" x2="440" y2="196"/><line class="gl" x1="160" y1="144" x2="440" y2="144"/><line class="gl" x1="160" y1="92" x2="440" y2="92"/><line class="gl" x1="160" y1="40" x2="440" y2="40"/>
+<text x="152" y="304" class="yl">0</text><text x="152" y="252" class="yl">0.1</text><text x="152" y="200" class="yl">0.2</text><text x="152" y="148" class="yl">0.3</text><text x="152" y="96" class="yl">0.4</text><text x="152" y="44" class="yl">0.5</text>
+<text x="128" y="174" class="yl" transform="rotate(-90 128 174)" style="text-anchor:middle">count k=4 マクロ NRMSE</text>
+<line class="ax" x1="160" y1="40" x2="160" y2="300"/><line class="ax" x1="160" y1="300" x2="440" y2="300"/>
+<text x="180" y="318" class="xl">∅（端末のみ）</text><text x="420" y="318" class="xl">S = {A, M}</text>
+<line x1="180" y1="294.8" x2="420" y2="300.0" stroke="#0f766e" stroke-width="2.4"/><circle cx="180" cy="294.8" r="4" fill="#0f766e"/><circle cx="420" cy="300.0" r="4" fill="#0f766e"/>
+<line x1="180" y1="274.0" x2="420" y2="294.8" stroke="#2563eb" stroke-width="2.4"/><circle cx="180" cy="274.0" r="4" fill="#2563eb"/><circle cx="420" cy="294.8" r="4" fill="#2563eb"/>
+<line x1="180" y1="279.2" x2="420" y2="289.6" stroke="#0ea5a4" stroke-width="2.4"/><circle cx="180" cy="279.2" r="4" fill="#0ea5a4"/><circle cx="420" cy="289.6" r="4" fill="#0ea5a4"/>
+<line x1="180" y1="154.4" x2="420" y2="248.0" stroke="#6366f1" stroke-width="2.4"/><circle cx="180" cy="154.4" r="4" fill="#6366f1"/><circle cx="420" cy="248.0" r="4" fill="#6366f1"/>
+<line x1="180" y1="60.8" x2="420" y2="144.0" stroke="#7c3aed" stroke-width="2.4"/><circle cx="180" cy="60.8" r="4" fill="#7c3aed"/><circle cx="420" cy="144.0" r="4" fill="#7c3aed"/>
+<line x1="180" y1="175.2" x2="420" y2="222.0" stroke="#f59e0b" stroke-width="2.4"/><circle cx="180" cy="175.2" r="4" fill="#f59e0b"/><circle cx="420" cy="222.0" r="4" fill="#f59e0b"/>
+<line x1="180" y1="185.6" x2="420" y2="185.6" stroke="#64748b" stroke-width="2.4" stroke-dasharray="5 4"/><circle cx="180" cy="185.6" r="4" fill="#64748b"/><circle cx="420" cy="185.6" r="4" fill="#64748b"/>
+<line x1="180" y1="189.2" x2="420" y2="189.2" stroke="#94a3b8" stroke-width="2.4" stroke-dasharray="2 4"/><circle cx="180" cy="189.2" r="3.4" fill="#94a3b8"/><circle cx="420" cy="189.2" r="3.4" fill="#94a3b8"/>
+<text x="300" y="205" class="nb" text-anchor="middle">ブラックボックス：横ばい（不活性）</text>
+<rect x="472" y="52" width="16" height="4" rx="2" fill="#0f766e"/><text x="494" y="59" class="lg">OFML-linear　0.01 → 0.00</text>
+<rect x="472" y="82" width="16" height="4" rx="2" fill="#2563eb"/><text x="494" y="89" class="lg">OFML-Ensemble　0.05 → 0.01</text>
+<rect x="472" y="112" width="16" height="4" rx="2" fill="#0ea5a4"/><text x="494" y="119" class="lg">OFML-MCD　0.04 → 0.02</text>
+<rect x="472" y="142" width="16" height="4" rx="2" fill="#6366f1"/><text x="494" y="149" class="lg">OFML-BNN　0.28 → 0.10</text>
+<rect x="472" y="172" width="16" height="4" rx="2" fill="#7c3aed"/><text x="494" y="179" class="lg">OFML-GPN　0.46 → 0.30</text>
+<rect x="472" y="202" width="16" height="4" rx="2" fill="#f59e0b"/><text x="494" y="209" class="lg">Shared-Ens　0.24 → 0.15</text>
+<rect x="472" y="232" width="16" height="4" rx="2" fill="#64748b"/><text x="494" y="239" class="lg">Pooled-GP　0.22 → 0.22（BB）</text>
+<rect x="472" y="262" width="16" height="4" rx="2" fill="#94a3b8"/><text x="494" y="269" class="lg">Prot-GP　0.22 → 0.22（BB）</text>
+</svg><figcaption>各モデルの count-\(k=4\) マクロ NRMSE が \(S=\varnothing\)（端末のみ）から \(S=\{A,M\}\)（中間観測）へどう動くか（線形 count テストベッド、16 サブセット×3 seed）。合成 OFML 群（<b>OFML-linear/Ensemble/MCD/BNN/GPN</b>）は下降＝観測を消費して床を割る。<b>Pooled-GP・Prot-GP は水平＝横ばい</b>（prefix-readout を受け取っても不活性、\(\Delta=0\)）。<code>Shared-Ens</code>（順序盲 count 記述子）は床付近で小さく改善。</figcaption></figure>
+
+<div class="qa">
+<div class="blk goal"><div class="h">実験目的（主張の要約）</div>
+<p>主張 1「<b>中間観測は識別可能性の限界を修復する — 使えるのは合成的モデルのみ</b>」を、最も反復に敏感な count テストベッド（target が同一操作 \(C\) を \(k\) 回反復）で検証する。二段構えで示す：<b>(i) 識別の修復</b> — 中間観測 \(S=\{A,M\}\) は端末観測のみでは欠けている真の識別信号を供給し、合成的代理モデルの count-\(k=4\) 誤差を <a class="xref" href="c1-count.html">count 記述子</a>の下限より下へ押し下げる。<b>この信号を消費できるのは合成的モデルのみ</b>で、ブラックボックス（<code>Pooled-GP</code>・<code>Prot-GP</code>）は同じ観測を prefix-readout 拡張で与えても<b>横ばい</b>（\(\Delta=0\)）。<b>(ii) 反復失敗の制御</b> — 観測下で唯一伴う失敗モード（強い教師信号で鋭くされた演算子を反復した際の count \(C^k\) 発散）を機構的に特定（ゲージ自由度 → Lipschitz \(>1\)）し、目的関数駆動のアーキテクチャ選択で完全に除去する。すなわち発散は観測に内在するコストではなく、アーキテクチャ/正則化のアーティファクトである。</p></div>
+
+<div class="blk setup"><div class="h">実験設定</div>
+<p><a class="xref" href="c1-count.html">図 5</a> の count テストベッドを再利用する。<b>source は 16 プロトコル</b>（各操作型を高々 1 回・終端 <code>M O</code>）、<b>target は操作 \(C\) を \(k\) 回反復</b>する <code>C×k M O</code>（\(k=1,\dots,4\)）。観測部分集合 \(S\subseteq\{A,B,C,M\}\)（全 \(2^4=16\) 通り）を<b>学習時のみ</b>観測し、<b>評価は端末のみ</b>（target 終端 readout の NRMSE）で行う。本ページの主要比較は代表サブセット \(S=\{A,M\}\)、主指標は最も反復に敏感な <b>count-\(k=4\)</b>。<b>16 サブセット × 3 seed</b> を統計単位とする。8 つの代理モデル（合成 6・記述子 1・ブラックボックス 2）を同一の source 行・同一の観測情報で比較し、構造だけを切り分ける。発散の対照実験には<b>容量一致の <code>OFML-nonlinear</code></b>（\(d=2\)、より深く <code>n_hidden=2</code>、より遅い <code>lr=0.002</code>）を用い、trace_weight スイープでの Lipschitz 定数 \(\operatorname{lip}(C)\)、線形合成／端末のみ／tanh 有界化／align-free 直接教師の各条件を並べる。</p>
+<p class="annot">※ 主要な設計原則：観測は<b>並列・非破壊の側枝</b>（<code>op ↓ O_op → y_op</code>）として潜在に追加の勾配制約のみを与え、順伝播グラフと合成を変えない（試料を変えない非破壊測定の類似）。ブラックボックスには対応する潜在モジュールが無いので、同じ情報を<b>prefix-readout 拡張</b>（接頭辞プロトコルの端末スカラー readout）で与える — それでも消費できないことが主張 1 の要諦である。指標は生 RMSE ではなく各 target の自スケールで正規化した<b>マクロ NRMSE</b>を用いる（count テストベッドは readout を自スケール標準化しているため、後掲のトレースアブレーション表の生 RMSE は ≈NRMSE）。</p></div>
+
+<div class="blk setup"><div class="h">モデル構成とメトリクス定義</div>
+<div class="tblwrap"><table class="data"><caption>8 代理モデル（合成 6・順序盲記述子 1・ブラックボックス 2）と中間観測信号の利用可否</caption>
+<thead><tr><th style="text-align:left">モデル</th><th style="text-align:left">構造</th><th style="text-align:left">中間観測の消費</th><th style="text-align:left">count-\(k=4\) の挙動</th></tr></thead>
+<tbody>
+<tr><td style="text-align:left"><code>OFML-linear</code></td><td style="text-align:left">線形合成（設計上識別可能・操作型ごとに \(2\times2\) 行列を共有）</td><td style="text-align:left">観測器 <code>O_op</code> で消費可</td><td style="text-align:left">全域で免疫（\(\approx 0.00\)）</td></tr>
+<tr><td style="text-align:left"><code>OFML-Ensemble</code></td><td style="text-align:left">合成ネット・種のみ 5-member 深層アンサンブル</td><td style="text-align:left">観測器で消費</td><td style="text-align:left">発散せず・観測で改善</td></tr>
+<tr><td style="text-align:left"><code>OFML-MCD</code></td><td style="text-align:left">合成ネット・MC dropout 不確実性</td><td style="text-align:left">観測器で消費</td><td style="text-align:left">発散せず・観測で改善</td></tr>
+<tr><td style="text-align:left"><code>OFML-BNN</code></td><td style="text-align:left">合成ネット・変分ベイズ（重み分布）</td><td style="text-align:left">観測器で消費</td><td style="text-align:left">端末のみ弱い → 観測で大幅改善</td></tr>
+<tr><td style="text-align:left"><code>OFML-GPN</code></td><td style="text-align:left">合成ネット・GP 潜在（GP-net）</td><td style="text-align:left">観測器で消費</td><td style="text-align:left">端末のみ最弱 → 観測で改善（残差大）</td></tr>
+<tr><td style="text-align:left"><code>Shared-Ens</code></td><td style="text-align:left">操作 count 記述子ベース・<b>順序盲</b>共有アンサンブル</td><td style="text-align:left">部分的にのみ反映</td><td style="text-align:left">記述子床付近 → 小改善</td></tr>
+<tr><td style="text-align:left"><code>Pooled-GP</code></td><td style="text-align:left"><b>ブラックボックス</b>・count/接頭辞入力のプールド GP</td><td style="text-align:left">prefix-readout のみ・<b>不活性</b></td><td style="text-align:left">横ばい（\(\Delta=0\)）</td></tr>
+<tr><td style="text-align:left"><code>Prot-GP</code></td><td style="text-align:left"><b>ブラックボックス</b>・プロトコル核 GP</td><td style="text-align:left">prefix-readout のみ・<b>不活性</b></td><td style="text-align:left">横ばい（\(\Delta=0\)）</td></tr>
+</tbody></table></div>
+<p>指標はすべて<b>マクロ NRMSE</b>。各 target \(p\) の予測 \(\mu_p\) と真値 \(f_p\) を、その target 自身のスケール \(s_p\) で正規化する：\[ \NRMSE_p=\sqrt{\operatorname{mean}_x(\mu_p-f_p)^2 \,/\, s_p^2},\qquad s_p=\sqrt{\operatorname{mean}_x(f_p-\bar f_p)^2}, \] マクロ NRMSE は target 集合上の等重み平均。反復感度は \(k\) を横断した \(\NRMSE\) の増大で測り、深さ効果は演算子ゲイン \(\operatorname{lip}(C)\) の反復積 \(\prod_{i=1}^{k}\operatorname{lip}(C)\) と結びつける（Lipschitz \(>1\) の反復が潜在を増幅し、学習領域外で ReLU 線形外挿 → 発散）。中間観測は各 \(k\) での終端誤差を計り直すのではなく、<b>潜在に真の post-op 状態を固定する追加制約</b>としてゲインの暴走を抑える。</p></div>
+
+<div class="blk" style="border-left:4px solid #0f766e"><div class="h">観測器モジュール O_A, O_B, O_C, O_M（付録 A.3）</div>
+<p>中間観測は、被観測操作型 <code>op ∈ S</code>（<code>S ⊆ {A,B,C,M}</code>）の位置に観測器モジュール <code>O_op</code> を置き、その出力を<b>学習時のみ</b>観測して実現する。<code>O_op</code> が観測するのは<b>その操作を適用した直後の真の 2 次元状態</b> <code>state*_op = F_op†(z†)</code>（post-op・ノイズなし）— すなわち <code>O_A</code> は「A 適用直後の \((s_0,s_1)\)」、<code>O_M</code> は「M 適用直後の状態」を観測する。端末観測器 <code>O</code> は既に端末で観測済みなので <code>S</code> には含めない。</p>
+<p><b>OFML 側（合成モデル）：</b>各被観測操作型に<b>操作型ごとに別々の</b>学習可能な観測器 <code>O_op : ℝᵈ→ℝ²</code>（バイアスなし線形）を付け、補助損失 <code>Σ_{op∈S} ‖O_op(s_op) − state*_op‖²</code> を端末損失に加える。共有 1 枚の整列にしないのは、その<b>ゲージ自由度</b>（縮小的/拡大的実現の非識別）を除去して count \(C^k\) 発散を抑えるためである。<code>O_op(s)</code> は潜在を 2 次元へ写す<b>並列の読み出しヘッド</b>にすぎず、補助損失を与えるだけで <code>s</code> を書き換えない（<b>O_A は B に接続されず</b>、観測を入れても順伝播と合成は不変）。</p>
+<p><b>ブラックボックス側は観測器を持たない：</b>付随させる潜在モジュールがないため、<b>prefix-readout 拡張</b>で同じ情報を与える — 各被観測位置 <code>t</code> について接頭辞プロトコル <code>op₁ … op_t O</code> の端末 readout をスカラー <code>y = readout(state*_after_t)</code> として観測する訓練行を追加する。よって <code>O_A, O_B, O_C, O_M</code> は <b>OFML 専用</b>であり、ブラックボックスは接頭辞のスカラー読み出しのみを受け取る（それでも消費できず横ばい）。</p></div>
+<div class="obswidget" data-protocol="A B C M" data-observable="A,B,C,M" data-title="観測部分集合 S を選ぶ（全 2⁴ = 16 通り）。代表プロトコル A → B → C → M → O で図示 — ボタンで S を選ぶと、その操作型の直後に観測器 op ↓ O_op → y_op（並列・非破壊の側枝）が横に並ぶ。本ページの主要比較は S = {A, M}。モジュール型にホバーすると重み共有が強調される。"></div>
+
+<div class="blk setup"><div class="h">使用プロトコル（付録 A）</div>
+<p>Fig 5 の count テストベッドを再利用（source 16・target <code>C×k M O</code>）。観測部分集合 <code>S ⊆ {A,B,C,M}</code>（全 16）を<b>学習時のみ</b>観測（評価は端末のみ）。示す図は観測サブセット <code>AM</code> の例。</p>
+<div class="protoset" data-kind="source" data-title="<b>count source（16 本、各操作 ≤1）</b>" data-protocols="M O;A M O;B M O;C M O;A B M O;B A M O;A C M O;C A M O;B C M O;C B M O;A B C M O;A C B M O;B A C M O;B C A M O;C A B M O;C B A M O" data-cols="1"></div>
+<div class="protoset" data-kind="target" data-title="<b>target：C を k 回反復（<code>C×k M O</code>）</b>" data-protocols="C M O;C C M O;C C C M O;C C C C M O" data-labels="k=1;k=2;k=3;k=4"></div>
+<div class="tblwrap"><table class="data" style="min-width:520px"><caption>観測下 count ランのデータ生成（各サブセット \(S\) ごと）</caption>
+<thead><tr><th style="text-align:left">要素</th><th style="text-align:left">値</th><th style="text-align:left">性質</th></tr></thead>
+<tbody>
+<tr><td style="text-align:left">source</td><td style="text-align:left">16 プロトコル（各操作 ≤1・終端 <code>M O</code>）</td><td style="text-align:left">端末読み出しで学習</td></tr>
+<tr><td style="text-align:left">target</td><td style="text-align:left"><code>C×k M O</code>（\(k=1..4\)）</td><td style="text-align:left">評価は端末のみ（NRMSE）</td></tr>
+<tr><td style="text-align:left">中間観測 \(S\)</td><td style="text-align:left">\(\subseteq\{A,B,C,M\}\)（全 16）</td><td style="text-align:left">学習時のみ・post-op 真値 2D・ノイズなし</td></tr>
+<tr><td style="text-align:left">seed</td><td style="text-align:left">3（サブセットごと）</td><td style="text-align:left">主統計単位（16×3）</td></tr>
+<tr><td style="text-align:left">発散対照</td><td style="text-align:left"><code>OFML-nonlinear</code> \(d=2\), <code>n_hidden=2</code>, <code>lr=0.002</code></td><td style="text-align:left">容量一致（余裕潜在なし）</td></tr>
+</tbody></table></div>
+<details class="proof" style="margin-top:10px"><summary>真の写像 F<sub>j</sub>†（データ生成元, 付録 A.1(e) 線形 / (b) 非線形）</summary><div class="pf"><b>linear_noncommutative</b>（アフィン・非可換操作 + アフィン readout）：F<sub>A</sub>=(s₀+0.6s₁,s₁)、F<sub>B</sub>=(s₀,0.4s₀+0.5s₁)、F<sub>C</sub>=(0.7s₀−0.3s₁+0.1,0.3s₀+0.8s₁)、F<sub>M</sub>=(0.6s₀+0.4s₁,0.5s₀−0.5s₁)、readout y=0.9·s₀−0.6·s₁+0.2（順序非依存だが操作は非可換なので反復回数 count が効く）。<br><br><b>非線形族 nonlinear</b>（sigmoid/tanh 操作 + 非線形 readout。<code>OFML-nonlinear</code> が容量一致）：F<sub>A</sub>=(2σ(2.4s₀−0.8s₁+0.1)−0.8, s₁)、F<sub>B</sub>=(s₀, 2σ(2.0s₁+0.7s₀−0.2)−0.8)、F<sub>C</sub>=(1.2·ss(2.2s₀+0.8s₁−1.0), 1.2·ss(2.0s₁−0.6s₀−0.6))（<b>縮小的</b>, Lipschitz&lt;1）、F<sub>M</sub>=(s₀+0.4tanh(s₀−s₁), s₁+0.4tanh(s₀+s₁))、readout y=1.4·ss(2s₀−1.6s₁+1.2s₀s₁−0.1)+0.25·sin(2π(s₀−s₁))（高周波 sin 項が既約な難易度下限）。真の \(C\) は縮小的（\(\operatorname{lip}&lt;1\)）である点が要点：発散はデータではなく教師信号が \(C\) のゲインを 1 超へ押し上げることに由来する。</div></details>
+<p class="phint">モジュール型にカーソルを合わせると、共有される同一操作が全プロトコルで強調される（＝重み共有）。</p></div>
+
+<div class="blk result"><div class="h">実験結果</div>
+<p><b>中間観測は合成モデルの誤差を押し下げ、ブラックボックスは横ばい。</b> \(S=\{A,M\}\) を観測すると 6 つの合成 OFML はすべて count-\(k=4\) NRMSE を下げる（例：<code>OFML-BNN</code> 0.28→0.10、<code>OFML-GPN</code> 0.46→0.30、<code>OFML-Ensemble</code> 0.05→0.01）。設計上識別可能な <code>OFML-linear</code> は元より免疫（0.01→0.00）。順序盲の <code>Shared-Ens</code> は記述子床付近で小さく改善（0.24→0.15）。対して<b>ブラックボックスは不活性</b>：<code>Pooled-GP</code> 0.22→0.22、<code>Prot-GP</code> 0.22→0.22（\(\Delta=0\)）— 同じ観測情報を prefix-readout で受け取っても消費できない。</p>
+<div class="tblwrap"><table class="data"><caption>表 9 — 反復 count-\(k=4\) 転移マクロ NRMSE（線形 count テストベッド、16 サブセット×3 seed）。\(\varnothing\)＝端末のみ、\(\{A,M\}\)＝中間観測、\(\Delta=\varnothing-\{A,M\}\)（大きいほど観測利得が大）。各列の最良（最小）値を強調。</caption>
+<thead><tr><th style="text-align:left">モデル</th><th>\(\varnothing\)（端末のみ）</th><th>\(S=\{A,M\}\)</th><th>\(\Delta\)</th></tr></thead>
+<tbody>
+<tr><td style="text-align:left"><b>OFML-linear</b></td><td class="best">0.01</td><td class="best">0.00</td><td>0.01</td></tr>
+<tr><td style="text-align:left">OFML-Ensemble</td><td>0.05</td><td>0.01</td><td>0.04</td></tr>
+<tr><td style="text-align:left">OFML-MCD</td><td>0.04</td><td>0.02</td><td>0.02</td></tr>
+<tr><td style="text-align:left">OFML-BNN</td><td>0.28</td><td>0.10</td><td>0.18</td></tr>
+<tr><td style="text-align:left">OFML-GPN</td><td>0.46</td><td>0.30</td><td>0.16</td></tr>
+<tr><td style="text-align:left">Shared-Ens（順序盲 count）</td><td>0.24</td><td>0.15</td><td>0.09</td></tr>
+<tr><td style="text-align:left">Pooled-GP（ブラックボックス）</td><td>0.22</td><td>0.22</td><td>0.00</td></tr>
+<tr><td style="text-align:left">Prot-GP（ブラックボックス）</td><td>0.22</td><td>0.22</td><td>0.00</td></tr>
+</tbody></table></div>
+<p><b>反復失敗（count \(C^k\) 発散）は統合レジームで除去できる。</b> 容量一致 <code>OFML-nonlinear</code> (\(d=2\)) で観測下の唯一の失敗モードを検証する。count のみの正則化レジーム（<code>traceablation1</code>, reg-BO）は全サブセットで発散する一方、count+order 統合レジーム（<code>traceablation2</code>, combined-BO）は横ばいを保つ。16 サブセット中の最悪 \(k=4\) は <b>14.59 → 1.25</b>、発散数（誤差&gt;2）は <b>5/16 → 0/16</b> に減少する。</p>
+<div class="tblwrap"><table class="data"><caption>反復 \(C^k\) 発散の制御 — 容量一致 <code>OFML-nonlinear</code> (\(d=2\))。reg-BO(<code>traceablation1</code>) vs combined-BO(<code>traceablation2</code>) の観測サブセット別 count-\(k=4\) 誤差（生 RMSE、count テストベッドは自スケール標準化のため =NRMSE 近似）。各行の最良（最小）を強調。</caption>
+<thead><tr><th>観測サブセット</th><th>reg-BO (traceablation1)</th><th>combined-BO (traceablation2)</th></tr></thead>
+<tbody>
+<tr><td>AM</td><td>14.59（発散）</td><td class="best">0.22</td></tr>
+<tr><td>CM</td><td>14.21（発散）</td><td class="best">0.58</td></tr>
+<tr><td>ACM</td><td>14.22（発散）</td><td class="best">0.92</td></tr>
+<tr><td>BC</td><td>2.94（発散）</td><td class="best">0.51</td></tr>
+<tr><td>BCM</td><td>2.04（発散）</td><td class="best">0.53</td></tr>
+<tr><td>16 サブセット中の最悪値</td><td>14.59</td><td class="best">1.25</td></tr>
+<tr><td>発散数（誤差&gt;2）</td><td>5/16</td><td class="best">0/16</td></tr>
+</tbody></table></div>
+<figure class="figbox" style="margin-top:12px"><img src="../figures/count_TANH_confirmation.png" alt="count TANH confirmation"/><figcaption>補足：潜在を tanh で有界化すると trace_weight=1.0 でも発散を除去（count \(k=4\) 誤差 227→0.96、生 RMSE ≈NRMSE）。観測器のゲージ自由度が増幅器であることを確認する対照。クリックで拡大。</figcaption></figure>
+<p><b>失敗モードの機構（§8.4）。</b> 真の \(C\) は縮小的（\(\operatorname{lip}&lt;1\)）だが、強いトレース教師信号は学習領域上で \(C\) を真の出力へ点ごとに固定し、ReLU MLP はその写像を 1 を超える Lipschitz ゲインで適合できる。実測でも \(\operatorname{lip}(C)\) は trace_weight を 0→1 とするにつれ 0.8→2.1 へ単調に上昇する（データではなく教師信号がゲインを押し上げる）。ゲイン \(>1\) の写像を反復すると潜在が増幅し、学習領域を離れると ReLU が線形外挿して発散する。根本原因は<b>観測器のゲージ（再パラメータ化）自由度</b>である。確認：(1) trace_weight スイープで \(\operatorname{lip}(C)\) が単調に 0.8→2.1、(2) 線形合成は免疫・端末のみも免疫、(3) 潜在を tanh で有界化すると trace_weight=1.0 でも発散除去、(4) align-free 直接教師で Lipschitz 17→1.2。</p></div>
+
+<div class="blk disc"><div class="h">考察 — 主張をどう支えるか</div>
+<p>この結果は主張 1 を二段構えで支える。<b>第一に、中間観測は真の実行可能なシグナル</b>であり、被覆・順序制約ケースを識別可能にして count-\(k=4\) 誤差を <a class="xref" href="c1-count.html">count 記述子</a>の下限より下へ押し下げる — そして<b>これを消費できるのは合成的な代理モデルのみ</b>で、ブラックボックス（<code>Pooled-GP</code>・<code>Prot-GP</code>）は同じ prefix-readout を受け取っても \(\Delta=0\) で横ばいである（付随させる潜在モジュールが無い）。<b>第二に、観測下での唯一の留保</b>（反復演算子の過度な鋭化による count \(C^k\) 発散）は<b>機構的に理解され</b>、目的関数駆動のアーキテクチャ選択によって除去される：count 安定性＋order 識別を組み合わせた目的でトレース学習アーキテクチャを選ぶと、容量一致 \(d=2\) の <code>OFML-nonlinear</code> は、潜在の余裕・有界活性化・明示的 Lipschitz ペナルティのいずれも用いずに全 16 サブセットで発散しない（最悪 \(k=4\) 14.6→1.25、発散 5/16→0/16）。</p>
+<p>反論としてまとめれば、この失敗はアーキテクチャ/正則化のアーティファクトであって観測に内在するコストではない。したがって「中間観測がもたらす識別可能性の修復」という主張 1 の核は、留保つきではなく成立する。関連する観測ページは <a class="xref" href="c4-s0.html">図 6（\(s0\) 観測アブレーション）</a>・<a class="xref" href="c4-order-linear.html">図 7（order 線形）</a>・<a class="xref" href="c4-order-nonlinear.html">図 8（order 非線形）</a>、終端側の識別限界は <a class="xref" href="../experiments.html#c1">主張 1</a>、合成の鋭い優位は <a class="xref" href="c1-count.html">図 5（count）</a>、コスト指標での位置づけは <a class="xref" href="cost-indexed.html">図 2</a>を参照。</p>
+<p class="annot">※ 限界：表 9 は代表サブセット \(S=\{A,M\}\) の count-\(k=4\) を切り出したもので、16 サブセット×3 seed の平均。ブラックボックスの \(\Delta=0\) は「観測を全く使えない」ではなく「prefix-readout 拡張という等価情報を与えても有意な改善が出ない」の意（設計に潜在合成が無いため）。発散制御表の生 RMSE は count テストベッド上で自スケール標準化されており NRMSE 近似だが、大きな発散値（14.59 等）は数値的に飽和した領域での指標であり順序情報としてのみ読む。\(\operatorname{lip}(C)\) は学習領域上の有限差分推定。</p></div>
+</div>
+
+<div class="callout"><span class="lab">理論との対応</span>
+<p>反復 \(C^k\) の発散を観測下で抑えられるのは、<b>深さ（Lipschitz 積）の増大を中間観測が緩和する</b>ためである（<a class="xref" href="../theory.html#prop:ofml-depth-limit" data-ref="prop:ofml-depth-limit">命題 6</a>：合成深さに沿った誤差増幅は演算子ゲインの積 \(\prod_i\operatorname{lip}\) で上から抑えられ、中間観測は各段の潜在を真の post-op 状態へ固定してゲインの暴走を除く）。中間観測が供給する識別信号自体は、識別可能性の rank 条件（<a class="xref" href="../theory.html#prop:ofml-linear" data-ref="prop:ofml-linear">命題 4</a>）の欠落成分を能動的に埋める操作にあたり、target 終端応答一致性の回復（<a class="xref" href="../theory.html#thm:ofml-active" data-ref="thm:ofml-active">定理 3</a>・<a class="xref" href="../theory.html#prop:ofml-rescue" data-ref="prop:ofml-rescue">命題 5</a>）と対応する。ブラックボックスがこの信号を使えないのは、pushforward される潜在合成構造（<a class="xref" href="../theory.html#lem:ofml-bridge" data-ref="lem:ofml-bridge">補題 6</a>）を持たないためと読める。</p></div>
+
+<div class="qa" style="margin-top:16px"><div class="blk"><div class="h">この実験が支える主張</div><div><a class="claimcard" href="../experiments.html#c1" style="--c:#0ea5a4;display:block;border-top-width:4px"><span class="cn">1</span><div class="ct" style="margin-top:8px">適切な条件（識別可能性）が揃うとき OFML は順方向転移を助ける</div><p>合成表現に加え、再利用する操作の識別可能性とモデル特定が揃うとき、terminal-only でも未知 target へゼロショット転移する。</p></a></div></div></div>
+
+<p style="margin-top:22px"><a class="back" href="../experiments.html">‹ Experiments へ戻る</a></p>
+</div>
+
+<script>
+(function(){var lb=document.createElement('div');lb.className='lightbox';lb.innerHTML='<div class="hint">クリック / Esc で閉じる</div><img alt=""/>';document.body.appendChild(lb);var im=lb.querySelector('img');document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.figbox img');if(t){im.src=t.currentSrc||t.src;lb.classList.add('open');document.body.style.overflow='hidden';return;}if(e.target.closest&&e.target.closest('.lightbox')){lb.classList.remove('open');document.body.style.overflow='';}});document.addEventListener('keydown',function(e){if(e.key==='Escape'){lb.classList.remove('open');document.body.style.overflow='';}});})();
+</script><script src="../lib/tex-svg.js" id="MathJax-script" async></script></body></html>

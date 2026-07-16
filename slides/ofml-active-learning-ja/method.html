@@ -1,0 +1,127 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Object-Flow Machine Learning — 手法</title><link rel="stylesheet" href="style.css"/>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],macros:{Mcal:"\\mathcal{M}",Pcal:"\\mathcal{P}",Xcal:"\\mathcal{X}",Ycal:"\\mathcal{Y}",Zcal:"\\mathcal{Z}",Scal:"\\mathcal{S}",Qcal:"\\mathcal{Q}",Ccal:"\\mathcal{C}",Ucal:"\\mathcal{U}",Acal:"\\mathcal{A}",Dcal:"\\mathcal{D}",Hcal:"\\mathcal{H}",Gcal:"\\mathcal{G}",Tcal:"\\mathcal{T}",Rcal:"\\mathcal{R}",E:"\\mathbb{E}",R:"\\mathbb{R}",N:"\\mathbb{N}",Eval:"\\operatorname{Eval}",Pa:"\\operatorname{Pa}",Anc:"\\operatorname{Anc}",Obs:"\\operatorname{Obs}",Var:"\\operatorname{Var}",Cov:"\\operatorname{Cov}",RMSE:"\\operatorname{RMSE}",AUC:"\\operatorname{AUC}",argmax:"\\operatorname*{arg\\,max}",norm:["\\left\\lVert #1\\right\\rVert",1],abs:["\\left\\lvert #1\\right\\rvert",1]},packages:{'[+]':['ams']}},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script src="refs.js"></script><script src="protoviz.js"></script><script src="hovercard.js"></script><script src="obsviz.js"></script></head><body>
+<nav class="sitenav"><div class="wrap"><a href="index.html">Overview</a><a href="background.html">Background</a><a href="problem.html">Problem setting</a><a class="on" href="method.html">Object-Flow Machine Learning</a><a href="theory.html">Theoretical statement and proofs</a><a href="experiments.html">Experiments</a><a href="references.html">References</a></div></nav>
+
+<div class="wrap page">
+<p class="kicker">Object-Flow Machine Learning</p>
+<h2>プロトコル構造を保存した代理モデリング</h2>
+<p class="lead"><a class="xref" href="problem.html">問題設定</a>では真の実験過程を未知の写像 \(\{F_j^\dagger\}_{j=1}^m\) で定義し、測定器型集合 \(\Qcal\) に属するモジュール出力だけが観測されるとした。OFML はこの構造に対して、モジュール型ごとの学習可能な予測成分を導入し、同じモジュール型が複数プロトコルに現れる場合にその予測成分を共有する。以下、要点を箱で示す（背景の地の文は補足のみ）。</p>
+
+<h3 class="sub">プロトコル構造付き代理モデル</h3>
+
+<div class="callout"><span class="lab">候補モジュール集合</span>
+<p>任意の候補モジュール集合 \(H=(h_1,\ldots,h_m),\ h_j:\Zcal_j\to\Scal_j\) を考える。\(H\) は操作モジュールと測定器モジュールの両方を含む。すなわち測定も実験操作の一種として扱い、\(\Qcal\) に属する測定器型についても同じ形式のモジュール写像を持つ。</p></div>
+
+<div class="callout"><span class="lab">DAG 上の合成（実行規則）</span>
+<p>プロトコル \(p=(V_p,E_p,\tau_p,\iota_p)\) と設計変数 \(x\in\Xcal_p\) に対し、ノード出力を DAG の位相順序に従って再帰的に定義する：</p>
+\[ z_v^H(x) = \iota_{p,v}\!\left((s_u^H(x))_{u\in\Pa_p(v)},\, u_{p,v}(x)\right),\qquad s_v^H(x) = h_{\tau_p(v)}\!\left(z_v^H(x)\right). \]
+<p>プロトコル \(p\) の観測予測は測定器ノード集合の出力をまとめた \(\Eval(p;H;x)=\left(s_q^H(x)\right)_{q\in\Obs(p)}\in \Ycal_p^{\mathrm{obs}}\)。</p></div>
+
+<div class="callout"><span class="lab">学習可能な予測成分</span>
+<p>各モジュール型 \(M_j\in\Mcal\) にパラメータ付き予測成分 \(g_{\theta_j}:\Zcal_j\to\Scal_j,\ \theta_j\in\Theta_j\) を導入する。\(\Theta=\prod_j\Theta_j\)、\(H_\theta=(g_{\theta_1},\ldots,g_{\theta_m})\) とすると OFML の点予測は</p>
+\[ \widehat\Eval(p,x;\theta) = \Eval(p;H_\theta;x). \]</div>
+
+<p class="annot">下のウィジェットで操作を並べると、プロトコルが「共有モジュールの合成」として組み上がる様子を確認できる（同色チップ＝同一の共有成分 \(g_\theta\)）。</p>
+<div class="composer" id="composer">
+  <div class="ops">
+    <span style="font-weight:700;font-size:13px;color:var(--muted);margin-right:2px">操作を追加：</span>
+    <button data-op="A" class="op-A">A</button>
+    <button data-op="B" class="op-B">B</button>
+    <button data-op="C" class="op-C">C</button>
+    <button data-op="M" class="op-M">M</button>
+    <button class="util" data-act="undo">↶ 戻す</button>
+    <button class="util" data-act="reset">クリア</button>
+  </div>
+  <div class="obsrow">
+    <span class="lab2">観測器を置く（S ⊆ {A,B,C,M}・学習時のみ）：</span>
+    <button data-obs="A">O_A</button><button data-obs="B">O_B</button><button data-obs="C">O_C</button><button data-obs="M">O_M</button>
+  </div>
+  <div class="stage" id="cstage"></div>
+  <div class="cmsg" id="cmsg"></div>
+</div>
+
+<div class="callout" style="--ca:#6366f1"><span class="lab">OFML の中心：操作型ごとのパラメータ共有 ＝ 転移の機構</span>
+<p>同じモジュール型 \(M_j\) が異なるプロトコル・異なる位置・異なる出現回数で現れても、<b>同一の予測成分 \(g_{\theta_j}\) を用いる</b>。このパラメータ共有こそがプロトコル間知識転移の唯一の機構である。プロトコル全体を単一のカテゴリ特徴や平坦な特徴ベクトルとして扱うブラックボックス代理モデルでは、この操作単位の共有構造は明示されない。</p></div>
+<div class="protoset" data-title="<b>重み共有のデモ</b>：あるモジュール型にカーソルを合わせると、全プロトコルの同一モジュールが同時に光る（＝同じ \(g_\theta\) を再利用）" data-protocols="A M O;B M O;A B M O;C A M O" data-cols="1"></div>
+<p class="phint">↑ 例：<code>M</code> にホバーすると、4 本すべてのプロトコルの <code>M</code> が同一成分として強調される。source で <code>M</code> を学べば、未知プロトコルの <code>M</code> にそのまま再利用できる。</p>
+
+<h3 class="sub">観測データからの学習</h3>
+<div class="callout" style="--ca:#f59e0b"><span class="lab">終端教師のみ（中間トレースは使わない）</span>
+<p>OFML は操作ごとの局所入出力 trace や中間潜在状態の教師信号を仮定しない。訓練時に直接与えられるのは測定器ノード出力をまとめた観測値だけであり、すべての予測成分 \(\{g_{\theta_j}\}\) は<b>プロトコル全体を通した観測予測誤差から同時に学習</b>される。</p></div>
+<div class="callout"><span class="lab">経験リスク最小化</span>
+<p>データ集合 \(\Dcal_n=\{(p_i,x_i,y_i)\}_{i=1}^n\) に対して</p>
+\[ \mathcal L_n(\theta) = \sum_{i=1}^n \ell_{p_i}\!\left(y_i,\ \Eval(p_i;H_\theta;x_i)\right) + \lambda\,\Omega(\theta), \qquad \widehat\theta_n\in\operatorname*{arg\,min}_{\theta\in\Theta}\mathcal L_n(\theta). \]
+<p>\(\ell_{p_i}\) は観測空間 \(\Ycal_{p_i}^{\mathrm{obs}}\) 上の損失（MSE・負の対数尤度など）、\(\Omega\) は正則化。学習済みモジュール集合を \(\widehat H_n=H_{\widehat\theta_n}\) と書く。</p></div>
+<div class="callout"><span class="lab">識別可能性は自明でない</span>
+<p>この目的は操作ごとの局所写像を直接教師あり学習するものではない。観測出力だけから各モジュール成分をどこまで識別できるかは自明でなく、<a class="xref" href="theory.html">理論</a>で局所入力被覆・目標関連識別可能性として扱う。</p></div>
+
+<h3 class="sub">不確実性付き予測と閉ループ選択</h3>
+<div class="callout"><span class="lab">不確実性分布 \(\Pi_n\)</span>
+<p>学習後のパラメータに関する不確実性を分布 \(\Pi_n(d\theta)\) で表す（完全/近似ベイズ事後、アンサンブル、リサンプリング等の抽象化）。点推定のみなら \(\Pi_n=\delta_{\widehat\theta_n}\)。</p></div>
+<div class="callout"><span class="lab">予測分布</span>
+<p>候補実験 \((p,x)\) に対し、任意の可測集合 \(B\subseteq\Ycal_p^{\mathrm{obs}}\) について</p>
+\[ P_n^{\mathrm{OFML}}(B\mid p,x) = \Pi_n\!\left(\{\theta:\ \Eval(p;H_\theta;x)\in B\}\right), \]
+<p>予測平均・共分散を \(\mu_n(p,x)=\E_{P_n^{\mathrm{OFML}}}[y]\)、\(\Sigma_n(p,x)=\Var_{P_n^{\mathrm{OFML}}}(y)\) と書く。</p></div>
+<div class="callout" style="--ca:#0f766e"><span class="lab">獲得関数と閉ループ選択</span>
+<p>予測分布から獲得関数 \(\alpha_n(a)=\alpha(a;P_n^{\mathrm{OFML}},\Pcal_{\mathrm{tar}})\) を計算し、次実験を \(a_{n+1}\in\operatorname*{arg\,max}_{a\in\Acal_n}\alpha_n(a)\) で選ぶ。観測 \(y_{n+1}=\Eval^\dagger(p_{n+1};x_{n+1})+\xi_{n+1}\) を得てデータを更新し、代理モデルを再学習・逐次更新する。</p></div>
+
+<h3 class="sub" style="margin-top:18px">能動学習ループ（不確実性付き予測 → 次点選択 → 実行・観測 → 更新）</h3>
+<p class="annot">この閉ループ選択を図にすると次のとおり（<a class="xref" href="index.html">Overview</a> の第 3 段面と同じ能動学習ループ）。</p>
+<figure class="fw" style="margin:6px 0 4px">
+<svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="能動学習ループ：代理モデル→次点選択→実行・観測→更新→反復">
+  <defs><marker id="mah" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#0f766e"/></marker></defs>
+  <style>
+    .ml{font-family:inherit;font-weight:800;font-size:15px;fill:#10151c;text-anchor:middle}
+    .ms{font-family:inherit;font-size:11px;fill:#5a6573;text-anchor:middle}
+    .mk{font-family:inherit;font-weight:800;font-size:9.5px;fill:#0f766e;letter-spacing:.04em}
+    .mc{stroke:#0f766e;stroke-width:2.4;fill:none}
+  </style>
+  <g class="mc"><line x1="322" y1="62" x2="436" y2="62" marker-end="url(#mah)" class="flow"/></g>
+  <g class="mc"><line x1="580" y1="98" x2="580" y2="200" marker-end="url(#mah)" class="flow"/></g>
+  <g class="mc"><line x1="438" y1="238" x2="324" y2="238" marker-end="url(#mah)" class="flow"/></g>
+  <g class="mc"><line x1="180" y1="202" x2="180" y2="100" marker-end="url(#mah)" class="flow"/></g>
+  <rect x="40" y="28" width="280" height="68" rx="12" fill="#f5f5ff" stroke="#6366f1" stroke-width="2"/>
+  <text x="58" y="47" class="mk">① 代理モデル</text><text x="180" y="70" class="ml">予測分布 Pₙ</text><text x="180" y="88" class="ms">平均 μₙ・不確実性 Σₙ</text>
+  <rect x="440" y="28" width="280" height="68" rx="12" fill="#fff" stroke="#0ea5a4" stroke-width="2"/>
+  <text x="458" y="47" class="mk">② 次点を選択</text><text x="580" y="70" class="ml">x* = argmax αₙ</text><text x="580" y="88" class="ms">予測分散が最大の候補</text>
+  <rect x="440" y="204" width="280" height="68" rx="12" fill="#fffaf0" stroke="#f59e0b" stroke-width="2"/>
+  <text x="458" y="223" class="mk">③ 実行・観測</text><text x="580" y="246" class="ml">target を実行</text><text x="580" y="264" class="ms">端末 yₙ₊₁ を観測</text>
+  <rect x="40" y="204" width="280" height="68" rx="12" fill="#f5f5ff" stroke="#6366f1" stroke-width="2"/>
+  <text x="58" y="223" class="mk">④ 更新</text><text x="180" y="246" class="ml">データ追加・再学習</text><text x="180" y="264" class="ms">Dₙ に (p, x, y) を追加</text>
+  <circle cx="380" cy="150" r="22" fill="none" stroke="#0ea5a4" stroke-width="2.4" class="ring" stroke-dasharray="6 10"/>
+  <text x="380" y="154" class="mk" text-anchor="middle">反復</text>
+</svg>
+</figure>
+<p class="phint">端末観測のみでも、予測分散が最大の点をクエリして target 上の残差を閉ループで補正する（<a class="xref" href="experiments.html#c2">主張 2</a>）。</p>
+
+<div class="callout" style="--ca:#94a3b8"><span class="lab">実験での具体化</span>
+<p>本実験では語彙は \(\{A,B,C,D,M\}\)＋埋め込み \(\text{embed}\)＋端末観測器 \(O\)。直列プロトコルなので実行は <code>s = embed(x); for op in steps[:-1]: s ← g_op(s); y = obs(s)</code> に帰着する（非残差 \(s_v = g_{\theta_{\tau_p(v)}}(z_v)\)）。主実装の不確実性は \(M=5\) の深層アンサンブル、MC-dropout / HMC は代替の \(\Pi_n\)。比較手法とアーキテクチャは <a class="xref" href="experiments.html#setup">Experiments の設定</a>を参照。</p></div>
+
+<p style="margin-top:24px"><a class="back" href="theory.html">Theoretical statement and proofs へ →</a></p>
+</div>
+
+<script>
+(function(){var ops=[],observed={},st=document.getElementById('cstage'),msg=document.getElementById('cmsg'),comp=document.getElementById('composer');
+ if(!comp)return;
+ function render(){
+   st.innerHTML=(window.__obsviz?window.__obsviz.drawChain(ops,observed):'');
+   comp.querySelectorAll('.obsrow button[data-obs]').forEach(function(b){b.classList.toggle('on',!!observed[b.getAttribute('data-obs')]);});
+   if(!ops.length){msg.innerHTML='上の <b>操作を追加</b> でプロトコルを作る。<b>後からクリックした操作が上流（x 側）に来る</b>（<code>O</code> は常に終端）— 例：A → B → M の順に押すと <b>M B A O</b>。<b>観測器を置く</b> で選んだ操作型の直後に観測器 <b>op ↓ O<sub>op</sub> → y<sub>op</sub></b> が横（下）に並ぶ（学習時のみ・並列非破壊）。';return;}
+   var seq=ops.join(' ')+' O';
+   var inner='embed(x)';ops.forEach(function(o){inner='g_'+o+'('+inner+')';});
+   var S=['A','B','C','M'].filter(function(o){return observed[o]&&ops.indexOf(o)>=0;});
+   var obsNote=S.length?(' 観測器 <b>'+S.map(function(o){return 'O_'+o;}).join('・')+'</b> を各出現位置の直後に配置し、補助損失 <code>Σ ‖O_op(s_op)−state*_op‖²</code> を端末損失に加える（並列・非破壊：<b>下流には流れ込まない</b>）。'):' 観測器はまだ無し（端末観測のみ）。';
+   msg.innerHTML='現在のプロトコル <b>p = '+seq+'</b>（'+ops.length+' 操作）。合成予測 <code>Eval(p;H_θ;x) = obs('+inner+')</code>。同型モジュールは他プロトコルと <b>同一の g<sub>θ</sub></b> を共有する（カーソルで強調）。'+obsNote;
+ }
+ comp.querySelector('.ops').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+   if(b.dataset.op){if(ops.length<8)ops.unshift(b.dataset.op);}  /* 後からクリックしたものが上流（O から遠い側）に来る */
+   else if(b.dataset.act==='undo')ops.shift();
+   else if(b.dataset.act==='reset')ops=[];
+   render();});
+ comp.querySelector('.obsrow').addEventListener('click',function(e){var b=e.target.closest('button[data-obs]');if(!b)return;var o=b.getAttribute('data-obs');observed[o]=!observed[o];render();});
+ if(window.__obsviz)window.__obsviz.wireHover(st);
+ render();
+})();
+
+</script><script src="lib/tex-svg.js" id="MathJax-script" async></script></body></html>

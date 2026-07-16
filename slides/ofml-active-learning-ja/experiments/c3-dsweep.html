@@ -1,0 +1,88 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>全代理 AL レース（depth-5, A B C M O）— OFML Experiments</title><link rel="stylesheet" href="../style.css"/>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],macros:{Mcal:"\\mathcal{M}",Pcal:"\\mathcal{P}",Xcal:"\\mathcal{X}",Zcal:"\\mathcal{Z}",Scal:"\\mathcal{S}",Obs:"\\operatorname{Obs}",E:"\\mathbb{E}",RMSE:"\\operatorname{RMSE}",NRMSE:"\\operatorname{NRMSE}",IVR:"\\mathrm{IVR}",SUR:"\\mathrm{SUR}",eps:"\\varepsilon",norm:["\\left\\lVert #1\\right\\rVert",1]},packages:{'[+]':['ams']}},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script src="../refs.js"></script><script src="../protoviz.js"></script><script src="../hovercard.js"></script><script src="../obsviz.js"></script></head><body>
+<nav class="sitenav"><div class="wrap"><a href="../index.html">Overview</a><a href="../background.html">Background</a><a href="../problem.html">Problem setting</a><a href="../method.html">Object-Flow Machine Learning</a><a href="../theory.html">Theoretical statement and proofs</a><a href="../experiments.html">Experiments</a><a href="../references.html">References</a></div></nav>
+<div class="topbar"><div class="wrap"><a class="back" href="../experiments.html">‹ Experiments</a><span class="crumb">主張 2 › 図（全代理 AL レース・depth-5）</span></div></div>
+
+<div class="wrap page">
+<p class="kicker"><span class="pill" style="--c:#0f766e">主張 2 · 閉ループ能動学習は非識別的な転移を修復する — 容量が許す限り</span></p>
+<h2>全代理 AL レース — depth-5 target <code>A B C M O</code> をゼロショット転移点から閉ループで修復する</h2>
+<p class="lead">主張 2 の<b>横断監査</b>。9 種の代理モデル（アンサンブル系・MC ドロップアウト・ベイズ NN・GP-NN）を<b>同一の depth-5 単一 target <code>A B C M O</code></b> の上で、<b>ゼロショット転移点（WARM=0, round 0）から</b> batch=1 の逐次能動学習に投入し、3 つの獲得則 <code>random / maxvar / ivr</code> をレースさせる。問いは 2 つ：(i) target 終端の能動観測は非識別的な転移を修復して誤差を床から引き剥がすか（<a class="xref" href="../theory.html#thm:ofml-active" data-ref="thm:ofml-active">定理 3</a>）、(ii) その修復は<b>どの代理でも起きるのか、それとも代理の事後機構が持つ容量に律速されるのか</b>。答えは後者だった — <b>閉ループ AL は転移を修復するが、代理の事後が使える構造（誤差と相関する分散）を持つ「容量が許す限り」において</b>。中心のコスト指標比較は <a class="xref" href="cost-indexed.html">図 2（コスト指標）</a>を参照。</p>
+
+<figure class="figbox"><img src="../figures/al_curves_grid_r10.png" alt="depth-5 A B C M O における 9 代理 × 3 獲得則の RMSE 低減曲線（round 0→10）"/><figcaption>図 A：<b>9 代理 × 3 獲得則</b>の test RMSE 低減曲線（round 0→10、3 seed 平均 ±SE）。round 0 の点線がゼロショット転移点。各獲得＝<span style="color:#6b7280">random（灰）</span>／<span style="color:#d97706">maxvar（橙）</span>／<span style="color:#2563eb">ivr（青）</span>。パネル題の色が判定（緑＝有効・橙＝部分的・赤＝無効）。<code>Ens M=30</code>／<code>Ens ANCHORED</code> では ivr/maxvar が random を明確に下回り、final を最良 0.44 付近まで押し下げる。<code>GPN learned-kernel</code>・<code>*-tempering</code> では 3 曲線が重なり獲得が効かない。クリックで拡大。</figcaption></figure>
+
+<figure class="figbox"><img src="../figures/al_intervention_sweep.png" alt="depth-5 AL 介入スイープの判定・機構診断・seed 対応 AUC 利得"/><figcaption>図 B：<b>粒子数を超えた介入スイープ</b>。<b>(A)</b> 判定表（順方向精度／事後機構／AL ターゲティング）。<b>(B)</b> GPN 学習カーネルは機構不変（PR512 6.92→6.89, v/rmse 0.98→1.02, corr(ivr,err) 0.02→0.02）＝カーネル表現力の問題ではない。<b>(C)</b> BNN fan-in はゼロショット転移を安定化（std 0.214→0.014, 15× tighter・平均も低下）。<b>(D)</b> BNN fan-in の AUC 対決（Δ+0.053/+0.092/+0.121）。<b>(E)</b> seed 対応 AUC 利得ランキング（0 超で random に勝つ）：Anchored MaxVar <b>+0.079</b>・IVR +0.065、Ens M=30 IVR <b>+0.052</b>、MCD IVR +0.029、BNN fan-in IVR +0.006、BNN baseline −0.062、GPN kernel / tempering ≈0。クリックで拡大。</figcaption></figure>
+
+<div class="qa">
+<div class="blk goal"><div class="h">実験目的（主張の要約）</div>
+<p>非識別的な順方向転移（terminal-only では消えない残差、<a class="xref" href="../experiments.html#c1">主張 1</a>の床）に対し、<b>target 終端を直接能動観測する閉ループ AL がどこまで誤差を床から引き剥がせるか</b>を、代理モデルを横断して測る。主張 2 の核は 2 段構え：(1) <b>修復は起きる</b> — 適切な代理では情報獲得（<code>ivr</code>=積分分散低減／<code>maxvar</code>=予測分散最大）が <code>random</code> に勝ち final NRMSE を床下へ押し下げる（<a class="xref" href="../theory.html#thm:ofml-active" data-ref="thm:ofml-active">定理 3</a>）。(2) <b>ただし容量に律速される</b> — 事後が「誤差と相関する分散」を持たない代理（機構不変の GPN 学習カーネル、順位ではなくスケールだけ動かす tempering）では、どの獲得則も random に勝てない。この 2 点を単一 target の上で 9 代理・3 seed で切り分ける。</p></div>
+
+<div class="blk setup"><div class="h">実験設定</div>
+<p>合成 GP 合成場ベンチマーク <code>gpcomp_bench_v2</code>、<b>深さ 5・単一 target <code>A B C M O</code></b>（操作 \(\{A,B,C,M\}\)＋終端 \(O\)）。学習は<b>ゼロショット転移点から開始</b>（<code>WARM=0</code>）：round 0 で target ラベルを一切見ず、<b>9 source × N_SRC=100 = 900 warm 行</b>で学習した合成モジュールを pushforward 特化して target を予測する（＝主張 1 の転移点）。以後 <b>12 取得ラウンド</b>を <code>batch=1</code> の逐次 AL で回し、各ラウンドで <code>random / maxvar / ivr</code> の 3 獲得則が取得プールから 1 点を選び、和集合で<b>ゼロから再学習</b>する。プールは <code>pool=400</code>、評価は <code>test=200</code>（ノイズ無・真値）、IVR 参照集合は <code>ref=32</code>（test・プールと互いに素）。<b>9 代理モデル × 3 獲得則 × 3 seed</b>。観測ノイズ \(\sigma=0.02\)。図 A の格子は round 0→10 を表示する（Ens/MCD 系は 12 ラウンド、BNN/GPN 診断ランは 12–15 ラウンドまで回して AUC を取る）。</p>
+<p class="annot">※ 図は生の <b>test RMSE</b> 表示だが、単一 target・自スケール正規化のため <b>RMSE(＝NRMSE 近似; 定数倍 \(s_\star\))</b>であり、AUC 利得と順位はスケール不変（<a class="xref" href="../experiments.html#c1">主張 1</a>の床基準で読むときは各 target の自スケール \(s_\star=\sqrt{\operatorname{mean}_x(f-\bar f)^2}\) で正規化した NRMSE と一致する）。リーク対策：test / pool / ref は互いに素な Sobol ストリーム、test はノイズ無、各ラウンドで完全再学習（warm-start 汚染なし）。</p></div>
+
+<div class="blk setup"><div class="h">モデル構成とメトリクス定義</div>
+<div class="tblwrap"><table class="data"><caption>9 代理モデル（同一 depth-5 target <code>A B C M O</code> 上で容量一致・ゼロショット転移点から AL）。判定は図 B(A) の色に対応。</caption>
+<thead><tr><th style="text-align:left">系統</th><th style="text-align:left">代理</th><th style="text-align:left">事後・不確実性機構</th><th style="text-align:left">主要設定</th><th style="text-align:left">判定</th></tr></thead>
+<tbody>
+<tr><td style="text-align:left" rowspan="2">アンサンブル</td><td style="text-align:left"><code>OFML-Ens (M=30)</code></td><td style="text-align:left">深層アンサンブル（種のみ 30 メンバ, bootstrap なし）</td><td style="text-align:left">合成ネット, latent_dim=10, hidden=32</td><td style="text-align:left"><b>有効</b></td></tr>
+<tr><td style="text-align:left"><code>Anchored-Ens</code></td><td style="text-align:left">アンカー付きアンサンブル（anchor→近似ベイズ事後）</td><td style="text-align:left">メンバごと独立事前アンカー正則化</td><td style="text-align:left"><b>有効</b></td></tr>
+<tr><td style="text-align:left">MC ドロップアウト</td><td style="text-align:left"><code>OFML-MCD (S=400)</code></td><td style="text-align:left">dropout-VI（S=400 前向きサンプル）</td><td style="text-align:left">合成ネット, hidden=32</td><td style="text-align:left">部分的</td></tr>
+<tr><td style="text-align:left" rowspan="3">ベイズ NN</td><td style="text-align:left"><code>BNN fan-in (NTK)</code></td><td style="text-align:left">mean-field VI ＋ fan-in（NTK）スケール初期化</td><td style="text-align:left">事前 fan-in scaling（転移を 15× 安定化）</td><td style="text-align:left">部分的</td></tr>
+<tr><td style="text-align:left"><code>BNN baseline</code></td><td style="text-align:left">mean-field VI（標準初期化）</td><td style="text-align:left">—</td><td style="text-align:left">無効</td></tr>
+<tr><td style="text-align:left"><code>BNN tempering</code></td><td style="text-align:left">事後 tempering（温度スケール）</td><td style="text-align:left">scale not rank（順位不変）</td><td style="text-align:left">無効</td></tr>
+<tr><td style="text-align:left" rowspan="3">GP-NN</td><td style="text-align:left"><code>GPN baseline</code></td><td style="text-align:left">RFF 近似カーネル（L=24）</td><td style="text-align:left">random Fourier features</td><td style="text-align:left">基準</td></tr>
+<tr><td style="text-align:left"><code>GPN learned-kernel</code></td><td style="text-align:left">学習カーネル（ARD+amp, L=96）</td><td style="text-align:left">表現力↑だが PR/v/corr 不変</td><td style="text-align:left">無効</td></tr>
+<tr><td style="text-align:left"><code>GPN tempering</code></td><td style="text-align:left">事後 tempering（温度スケール）</td><td style="text-align:left">no help（scale not rank）</td><td style="text-align:left">無効</td></tr>
+</tbody></table></div>
+<p>各獲得則 \(a\in\{\text{random},\text{maxvar},\IVR\}\) のラウンド \(r\) での誤差を \(\eps^a(r)=\sqrt{\operatorname{mean}_x(\mu^a_r-f)^2}\,/\,s_\star\)（マクロ NRMSE、\(s_\star\) は自スケール）とする。<b>主指標は seed 対応の IVR AUC 利得</b>：\[ \Delta_{\IVR}=\E_{\text{seed}}\!\Big[\tfrac1R\textstyle\sum_{r=1}^{R}\eps^{\text{rand}}(r)-\tfrac1R\sum_{r=1}^{R}\eps^{\IVR}(r)\Big],\qquad \text{win率}=\frac{\#\{\text{seed}:\ \bar\eps^{\text{rand}}-\bar\eps^{\IVR}>0\}}{3}. \] \(\Delta_{\IVR}>0\) は「IVR がラウンド平均で random に勝つ」＝閉ループ AL が修復に寄与、win率はその seed 頑健性。<code>maxvar</code> も同様に定義。<b>最良 final</b> は round 終端での 3 獲得則中の最小 NRMSE。獲得は <code>maxvar</code>＝標本予測分散最大、<code>ivr</code>＝rank-1 Cohn ALC スコア \(\sum_{R}\operatorname{cov}_{rc}^2/(\operatorname{var}_c+\sigma^2)\)（\(\sigma^2=0.02^2\)、参照集合 \(|\mathrm{ref}|=32\)）。全域の分散消失は雑音付き \(\IVR/\SUR\) の収束理論（<a class="xref" href="../theory.html#thm:cx-main" data-ref="thm:cx-main">定理 2</a>）に対応する。</p></div>
+
+<div class="blk setup"><div class="h">使用プロトコル（付録 A）</div>
+<div class="protoset" data-kind="source" data-title="<b>depth-5 source（9 本：単体＋両順序の全ペア、各 N_SRC=100）</b>" data-protocols="A M O;B M O;C M O;A B M O;B A M O;A C M O;C A M O;B C M O;C B M O" data-cols="1"></div>
+<div class="protoset" data-kind="target" data-title="<b>depth-5 target（単一・全操作を順序込みで結合）</b>" data-protocols="A B C M O"></div>
+<div class="tblwrap"><table class="data" style="min-width:520px"><caption>AL ランのデータ生成（単一 target <code>A B C M O</code>、WARM=0）</caption>
+<thead><tr><th style="text-align:left">要素</th><th style="text-align:left">値</th><th style="text-align:left">性質</th></tr></thead>
+<tbody>
+<tr><td style="text-align:left">source 学習（warm 行）</td><td style="text-align:left">9 source × N_SRC=100 = 900 点</td><td style="text-align:left">ノイズ有 \(\sigma=0.02\)、round 0 の転移に使用</td></tr>
+<tr><td style="text-align:left">target ラベル（round 0）</td><td style="text-align:left">0 点（<code>WARM=0</code>）</td><td style="text-align:left">ゼロショット転移点＝主張 1 の転移</td></tr>
+<tr><td style="text-align:left">取得プール</td><td style="text-align:left">400 点/target</td><td style="text-align:left">test・ref と互いに素</td></tr>
+<tr><td style="text-align:left">test</td><td style="text-align:left">200 点/target</td><td style="text-align:left">ノイズ無（真値）</td></tr>
+<tr><td style="text-align:left">IVR 参照</td><td style="text-align:left">32 点/target</td><td style="text-align:left">test・プールと互いに素</td></tr>
+<tr><td style="text-align:left">取得ラウンド</td><td style="text-align:left">12（batch=1、各ラウンド完全再学習）</td><td style="text-align:left">3 seed、9 代理 × 3 獲得則</td></tr>
+</tbody></table></div>
+<p class="phint">モジュール型にカーソルを合わせると、共有される同一操作が source と target で強調される（＝重み共有）。単一 target <code>A B C M O</code> が 9 source の操作を順序込みで全て結合していること（＝転移可能な構成）が見える。</p></div>
+
+<div class="blk result"><div class="h">実験結果</div>
+<p><b>閉ループ AL は「使える事後」を持つ代理でのみ random に勝つ。</b> アンサンブル系（<code>Ens M=30</code>・<code>Anchored-Ens</code>）で <code>ivr/maxvar</code> が最も明確に random を下回り、<code>Ens M=30</code> IVR は <b>+0.052（3/3 seed）</b>で final を <b>0.44</b> まで押し下げる。<code>Anchored-Ens</code> は anchor→ベイズ化で MaxVar <b>+0.079</b>・IVR +0.065（各 2/3）。<code>OFML-MCD</code> は +0.029（2/3）で部分的。一方 <code>tempering</code> 系（順位ではなくスケールだけ動かす）と <code>GPN learned-kernel</code>（機構不変）は獲得が効かず、3 曲線が重なる。</p>
+<div class="tblwrap"><table class="data"><caption>表 — 全代理 AL レース（depth-5 <code>A B C M O</code>、3 seed、WARM=0）。IVR AUC 利得 \(\Delta_{\IVR}\)（seed 対応、win率併記）・最良 final RMSE(≈NRMSE)。最良 final・最大利得を強調。<code>Anchored-Ens</code> は MaxVar も併記。</caption>
+<thead><tr><th>系統</th><th>代理</th><th>IVR AUC 利得（win/seed）</th><th>最良 final RMSE(≈NRMSE)</th><th>判定</th></tr></thead>
+<tbody>
+<tr><td rowspan="2">アンサンブル</td><td><b>OFML-Ens (M=30)</b></td><td><b>+0.052</b>（3/3）</td><td class="best">0.44</td><td>有効</td></tr>
+<tr><td>Anchored-Ens</td><td>+0.065（2/3）・MaxVar <span class="best">+0.079</span>（2/3）</td><td>0.52</td><td>有効</td></tr>
+<tr><td>MC ドロップアウト</td><td>OFML-MCD (S=400)</td><td>+0.029（2/3）</td><td>0.57</td><td>部分的</td></tr>
+<tr><td rowspan="3">ベイズ NN</td><td>BNN fan-in (NTK)</td><td>+0.006（2/3）</td><td>0.82</td><td>部分的</td></tr>
+<tr><td>BNN baseline</td><td>−0.062（1/3）</td><td>0.73</td><td>無効</td></tr>
+<tr><td>BNN tempering</td><td>≈0.000（0/3, no help）</td><td>0.68</td><td>無効</td></tr>
+<tr><td rowspan="3">GP-NN</td><td>GPN baseline</td><td>≈0.00（round-10 +0.027, AUC≈0）</td><td>0.70</td><td>基準</td></tr>
+<tr><td>GPN learned-kernel</td><td>0.000（≈0, corr(ivr,err)≈0）</td><td>0.74</td><td>無効</td></tr>
+<tr><td>GPN tempering</td><td>0.000（0/3, no help）</td><td>0.72</td><td>無効</td></tr>
+</tbody></table></div>
+<p><b>介入診断（図 B）。</b> なぜ効く／効かないかは事後機構で決まる。<b>anchoring</b> はアンサンブルを近似ベイズ化し（anchor→Bayes）AL ターゲティングを活性化。<b>fan-in（NTK）</b> はゼロショット転移を <b>15× tighter</b>（std 0.214→0.014）＋平均も低下させ、AUC を負から勝ちへ反転（Δ +0.053/+0.092/+0.121）。逆に <b>tempering</b> は事後を温度スケールするだけで順位を動かさず（scale not rank）、<b>GPN learned-kernel</b> は表現力を上げても機構が不変（PR512 6.92→6.89・v/rmse 0.98→1.02・corr(ivr,err) 0.02→0.02）＝カーネル表現力の問題ではなく、IVR 信号が誤差と無相関のため獲得が効かない。</p></div>
+
+<div class="blk disc"><div class="h">考察 — 主張をどう支えるか</div>
+<p>この横断監査は主張 2 の 2 段構えをそのまま可視化する。<b>第 1 段（修復は起きる）</b>：ゼロショット転移点（round 0）から target 終端を能動観測すると、<code>Ens</code>／<code>Anchored-Ens</code>／<code>MCD</code> で誤差が単調に低下し、<code>Ens M=30</code> IVR は 3/3 seed で random に勝ち final 0.44 に達する — 非識別的な terminal-only 残差（<a class="xref" href="../experiments.html#c1">主張 1</a>の床）が、能動観測で床下へ引き剥がされる（<a class="xref" href="../theory.html#thm:ofml-active" data-ref="thm:ofml-active">定理 3</a> の target 終端能動補正）。<b>第 2 段（容量律速）</b>：修復は無条件ではない。閉ループ AL が効くのは<b>事後が「誤差と相関する分散」を持つ代理に限る</b>。tempering は順位を動かさず、GPN 学習カーネルは機構不変（corr(ivr,err)≈0）で、どの獲得則も random に勝てない。つまり <b>「閉ループ能動学習は非識別的な転移を修復する — 容量が許す限り」</b>の後半節が、代理を跨いだ介入スイープで定量的に裏づけられる。anchoring / fan-in のように事後容量を上げる介入は AL を活性化し、tempering のように順位を変えない介入は無効、という切り分けが判定表（図 B(A)）に整理されている。</p>
+<p>中心のコスト指標での位置づけ（\(b=0\) 転移・\(b>0\) 適応・エイリアシング床の統合）は <a class="xref" href="cost-indexed.html">図 2</a>、識別可能性の階数監査は <a class="xref" href="c2-tradeoff.html">Φ/Ψ 監査</a>、terminal-only の失敗集合は <a class="xref" href="c2-failures.html">表 1（C1–C6）</a>、順方向転移の詳細は <a class="xref" href="c1-fig1.html">図 1a</a> を参照。</p>
+<p class="annot">※ 限界：final RMSE は図 A の曲線（round 終端・最良獲得則）からの読み取りで、単一 target 上の RMSE(≈NRMSE)。AUC 利得は 3 seed のみ（win率は n/3 の粗い離散量）で、BNN/GPN 診断ランはラウンド数が 12–15 と不揃い（図 B 脚注参照）。<code>GPN baseline</code> の round-10 IVR +0.027 は AUC では ≈0 に均され、seed 分散内の変動。tempering の 0.000 は「random と統計的に区別できない」の意で厳密なゼロではない。介入スイープは depth-5 単一 target に限定し、depth 依存や複数 target の相互作用は評価していない。</p></div>
+</div>
+
+<div class="callout"><span class="lab">理論との対応</span>
+<p>ゼロショット転移点（round 0）は、pushforward で target に特化した合成転移＝主張 1 の識別可能性（<a class="xref" href="../theory.html#prop:ofml-linear" data-ref="prop:ofml-linear">命題 4</a>・ブリッジ <a class="xref" href="../theory.html#lem:ofml-bridge" data-ref="lem:ofml-bridge">補題 6</a>）の帰結。ここから target 終端を能動観測して<b>終端応答一致性</b>を回復するのが <a class="xref" href="../theory.html#thm:ofml-active" data-ref="thm:ofml-active">定理 3（target active correction）</a>で、非識別残差の rescue は <a class="xref" href="../theory.html#prop:ofml-rescue" data-ref="prop:ofml-rescue">命題 5</a>。IVR が誤差を床下へ駆動できる根拠は、全台 \(\lambda\) 上の雑音付き \(\IVR/\SUR\) による潜在関数分散の<b>全域消失</b>（<a class="xref" href="../theory.html#thm:cx-main" data-ref="thm:cx-main">定理 2</a>）— ただしこれは<b>事後分散が真の誤差を追随している</b>ときに限る。tempering や機構不変の学習カーネルはこの前提（分散–誤差整合）を満たさず、\(\SUR\) 型の分散消失が誤差消失に翻訳されない。この「容量が許す限り」という上限は、深さ・被覆に対する識別限界（<a class="xref" href="../theory.html#prop:ofml-depth-limit" data-ref="prop:ofml-depth-limit">命題 6</a>）とも整合する。</p></div>
+
+<div class="qa" style="margin-top:16px"><div class="blk"><div class="h">この実験が支える主張</div><div><a class="claimcard" href="../experiments.html#c2" style="--c:#0f766e;display:block;border-top-width:4px"><span class="cn">2</span><div class="ct" style="margin-top:8px">転移が失敗しても、構造の優位で能動学習が誤差を早く下げる</div><p>b=0 で識別が破れても、target 終端を能動観測すれば誤差は床を割り、合成的 OFML は非構造ベースラインより速く適応する。</p></a></div></div></div>
+
+<p style="margin-top:22px"><a class="back" href="../experiments.html">‹ Experiments へ戻る</a></p>
+</div>
+
+<script>
+(function(){var lb=document.createElement('div');lb.className='lightbox';lb.innerHTML='<div class="hint">クリック / Esc で閉じる</div><img alt=""/>';document.body.appendChild(lb);var im=lb.querySelector('img');document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.figbox img');if(t){im.src=t.currentSrc||t.src;lb.classList.add('open');document.body.style.overflow='hidden';return;}if(e.target.closest&&e.target.closest('.lightbox')){lb.classList.remove('open');document.body.style.overflow='';}});document.addEventListener('keydown',function(e){if(e.key==='Escape'){lb.classList.remove('open');document.body.style.overflow='';}});})();
+</script><script src="../lib/tex-svg.js" id="MathJax-script" async></script></body></html>

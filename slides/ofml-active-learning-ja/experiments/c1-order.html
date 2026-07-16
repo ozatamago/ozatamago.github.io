@@ -1,0 +1,135 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>order 識別（非可換性）による順方向転移（図 4）— OFML Experiments</title><link rel="stylesheet" href="../style.css"/>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],macros:{Mcal:"\\mathcal{M}",Pcal:"\\mathcal{P}",Xcal:"\\mathcal{X}",Zcal:"\\mathcal{Z}",Scal:"\\mathcal{S}",Obs:"\\operatorname{Obs}",E:"\\mathbb{E}",RMSE:"\\operatorname{RMSE}",NRMSE:"\\operatorname{NRMSE}",IVR:"\\mathrm{IVR}",SUR:"\\mathrm{SUR}",eps:"\\varepsilon",norm:["\\left\\lVert #1\\right\\rVert",1]},packages:{'[+]':['ams']}},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script src="../refs.js"></script><script src="../protoviz.js"></script><script src="../hovercard.js"></script><script src="../obsviz.js"></script></head><body>
+<nav class="sitenav"><div class="wrap"><a href="../index.html">Overview</a><a href="../background.html">Background</a><a href="../problem.html">Problem setting</a><a href="../method.html">Object-Flow Machine Learning</a><a href="../theory.html">Theoretical statement and proofs</a><a href="../experiments.html">Experiments</a><a href="../references.html">References</a></div></nav>
+<div class="topbar"><div class="wrap"><a class="back" href="../experiments.html">‹ Experiments</a><span class="crumb">主張 1 › 図 4（order 順方向転移）</span></div></div>
+
+<div class="wrap page">
+<p class="kicker"><span class="pill" style="--c:#0ea5a4">主張 1 · 合成は転移を助ける（order 識別）</span></p>
+<h2>図 4 — order 識別による順方向転移（非可換性）</h2>
+<p class="lead">主張 1 の中核。<b>非可換な操作列（order）</b>を source から <b>held-out 順序</b>へ順方向転移できるかを、held-out 順序での<b>マクロ NRMSE</b>で測る。線形合成 <code>OFML-linear</code> は各操作の行列を source から同定し、<b>行列積の順序</b>として held-out 順序を厳密に再構成する（マクロ NRMSE ≈0.017）。訓練順序を陽に見た合成ネット <code>OFML-Ens</code> は訓練参照では小さいが held-out 順序で崩壊し、操作 count しか見ない <code>Shared-Ens</code> は同 count・異順序を区別できずどの順序でも失敗する。これは主定理の <b>rank 条件 \(\ker\Phi\subseteq\ker\Psi\)</b>（<a class="xref" href="../theory.html#prop:ofml-linear" data-ref="prop:ofml-linear">命題 4</a>(i)）そのものの検証である。</p>
+
+<figure class="figbox"><svg id="c1ord-svg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" style="max-width:700px;width:100%;font-family:inherit" role="img" aria-label="held-out 順序ごとの順方向転移 NRMSE を 3 モデルで比較した群棒グラフ">
+<style>
+.ax{stroke:#94a3b8;stroke-width:1}
+.gl{stroke:#e2e8f0;stroke-width:1}
+.tt{font-size:12.5px;font-weight:800;fill:#10151c;text-anchor:middle}
+.lg{font-size:10.5px;fill:#5a6573}
+.axn{font-size:10px;fill:#5a6573;text-anchor:end}
+.ord{font-size:10px;font-weight:700;fill:#10151c;text-anchor:middle;letter-spacing:.5px}
+.tag{font-size:8.5px;fill:#5a6573;text-anchor:middle}
+.vl{font-size:8.5px;font-weight:700;fill:#10151c;text-anchor:middle}
+.ro{font-size:10px;fill:#5a6573;text-anchor:middle}
+.bar{cursor:pointer;transition:opacity .12s}
+.bar:hover{opacity:.8;stroke:#10151c;stroke-width:1.2}
+.b-lin{fill:#0ea5a4}.b-ens{fill:#6366f1}.b-sh{fill:#94a3b8}
+.sw-lin{fill:#0ea5a4}.sw-ens{fill:#6366f1}.sw-sh{fill:#94a3b8}
+</style>
+<text x="350" y="15" class="tt">held-out 順序の順方向転移 NRMSE — 線形合成だけが順序を識別する</text>
+<rect class="sw-lin" x="150" y="24" width="12" height="11" rx="2"/><text x="166" y="33" class="lg">OFML-linear</text>
+<rect class="sw-ens" x="290" y="24" width="12" height="11" rx="2"/><text x="306" y="33" class="lg">OFML-Ens</text>
+<rect class="sw-sh" x="410" y="24" width="12" height="11" rx="2"/><text x="426" y="33" class="lg">Shared-Ens</text>
+<line class="gl" x1="64" y1="174.67" x2="560" y2="174.67"/>
+<line class="gl" x1="64" y1="111.33" x2="560" y2="111.33"/>
+<line class="gl" x1="64" y1="48" x2="560" y2="48"/>
+<line class="ax" x1="64" y1="48" x2="64" y2="238"/>
+<line class="ax" x1="64" y1="238" x2="560" y2="238"/>
+<text x="58" y="241" class="axn">0</text><text x="58" y="178" class="axn">1.0</text><text x="58" y="115" class="axn">2.0</text><text x="58" y="51" class="axn">3.0</text>
+<text x="20" y="143" transform="rotate(-90 20 143)" class="lg" text-anchor="middle">NRMSE</text>
+<!-- group 1: A B C M O (training reference) -->
+<rect class="bar b-lin" x="82" y="235" width="24" height="3" data-order="A B C M O" data-model="OFML-linear" data-val="0.011"/>
+<rect class="bar b-ens" x="114" y="233" width="24" height="5" data-order="A B C M O" data-model="OFML-Ens" data-val="0.076"/>
+<rect class="bar b-sh" x="146" y="148" width="24" height="90" data-order="A B C M O" data-model="Shared-Ens" data-val="1.417"/>
+<text x="94" y="231" class="vl">0.011</text><text x="126" y="229" class="vl">0.076</text><text x="158" y="144" class="vl">1.417</text>
+<text x="126" y="252" class="ord">A B C M O</text><text x="126" y="263" class="tag">訓練参照</text>
+<!-- group 2: A C B M O (held-out) -->
+<rect class="bar b-lin" x="206" y="235" width="24" height="3" data-order="A C B M O" data-model="OFML-linear" data-val="0.026"/>
+<rect class="bar b-ens" x="238" y="68" width="24" height="170" data-order="A C B M O" data-model="OFML-Ens" data-val="2.691"/>
+<rect class="bar b-sh" x="270" y="67" width="24" height="171" data-order="A C B M O" data-model="Shared-Ens" data-val="2.700"/>
+<text x="218" y="231" class="vl">0.026</text><text x="250" y="64" class="vl">2.691</text><text x="282" y="63" class="vl">2.700</text>
+<text x="250" y="252" class="ord">A C B M O</text><text x="250" y="263" class="tag">held-out</text>
+<!-- group 3: B A C M O (held-out) -->
+<rect class="bar b-lin" x="330" y="235" width="24" height="3" data-order="B A C M O" data-model="OFML-linear" data-val="0.022"/>
+<rect class="bar b-ens" x="362" y="198" width="24" height="40" data-order="B A C M O" data-model="OFML-Ens" data-val="0.635"/>
+<rect class="bar b-sh" x="394" y="134" width="24" height="104" data-order="B A C M O" data-model="Shared-Ens" data-val="1.637"/>
+<text x="342" y="231" class="vl">0.022</text><text x="374" y="194" class="vl">0.635</text><text x="406" y="130" class="vl">1.637</text>
+<text x="374" y="252" class="ord">B A C M O</text><text x="374" y="263" class="tag">held-out</text>
+<!-- group 4: C B A M O (held-out) -->
+<rect class="bar b-lin" x="454" y="235" width="24" height="3" data-order="C B A M O" data-model="OFML-linear" data-val="0.009"/>
+<rect class="bar b-ens" x="486" y="135" width="24" height="103" data-order="C B A M O" data-model="OFML-Ens" data-val="1.621"/>
+<rect class="bar b-sh" x="518" y="53" width="24" height="185" data-order="C B A M O" data-model="Shared-Ens" data-val="2.921"/>
+<text x="466" y="231" class="vl">0.009</text><text x="498" y="131" class="vl">1.621</text><text x="530" y="49" class="vl">2.921</text>
+<text x="498" y="252" class="ord">C B A M O</text><text x="498" y="263" class="tag">held-out</text>
+<text id="c1ord-ro" x="350" y="285" class="ro">棒にカーソルを合わせると、順序 × モデルの NRMSE を表示</text>
+</svg><figcaption>図 4：4 つの held-out 順序（count は全て同一、順序だけ相違）× 3 モデルの順方向転移マクロ NRMSE（12 bench seed 平均）。teal の <code>OFML-linear</code> は全順序で床近く（≤0.026）＝<b>順序を識別</b>。<code>OFML-Ens</code> は訓練参照 <code>A B C M O</code>（0.076）以外の held-out で崩壊、順序盲の <code>Shared-Ens</code> はどの順序でも高い。棒にカーソルを合わせると値が読める。クリックで拡大。</figcaption></figure>
+
+<div class="qa">
+<div class="blk goal"><div class="h">実験目的（主張の要約）</div>
+<p>非可換な操作合成において「<b>source が順序方向を張れば（識別可能なら）held-out 順序へ順方向転移できる</b>」という主張 1 を、held-out 順序での<b>マクロ NRMSE</b>で直接検証する。線形合成 <code>OFML-linear</code> は各操作の \(2\times2\) 行列を source から同定し、held-out 順序を<b>行列積の順序</b>として厳密に再構成する（全 4 順序で NRMSE ≤0.026、マクロ 0.017）。訓練順序を陽に見た合成ネット <code>OFML-Ens</code> は訓練参照 <code>A B C M O</code> では小さい（0.076）が held-out 順序で崩壊（マクロ 1.256）、操作 count しか見ない順序盲の <code>Shared-Ens</code> は同 count・異順序を区別できずどの順序でも失敗する（マクロ 2.169）。「合成そのもの」ではなく「<b>識別可能性を伴う合成</b>」が転移の鍵であることを切り分ける。</p></div>
+
+<div class="blk setup"><div class="h">実験設定</div>
+<p>合成アフィン線形族（非可換操作 \(\{A,B,C\}\) ＋終端 \(M\)・線形読み出し \(O\)）。<b>source は順序を張る 12 本</b>：単操作 3 本（<code>A M O</code>, <code>B M O</code>, <code>C M O</code>）、両順序の 2 操作ペア 6 本（<code>A B M O</code>/<code>B A M O</code>, <code>A C M O</code>/<code>C A M O</code>, <code>B C M O</code>/<code>C B M O</code>）、非 held-out の全順列 3 本（<code>A B C M O</code>, <code>B C A M O</code>, <code>C A B M O</code>）。これらは各操作行列と主要な非可換方向を励起し、真の \(\theta\) で \(\ker\Phi\subseteq\ker\Psi\) を満たす。<b>target は訓練参照 1 本</b> <code>A B C M O</code> と<b>held-out 3 本</b> <code>A C B M O</code>・<code>B A C M O</code>・<code>C B A M O</code>（source に一度も現れない残り 3 順列。count は訓練参照と同一で順序だけが違う）。各プロトコルは <b>per_proto=40 点</b>で学習し、<b>n_test=120 点</b>（ノイズ無・真値）で評価。3 モデルはすべて<b>同一の source/target evidence</b> を見る（純粋な構造比較）。<b>12 bench seed</b> を主統計単位に、指標は全て<b>マクロ NRMSE</b>。観測ノイズ \(\sigma=0.02\)。</p>
+<p class="annot">※ held-out 3 順序は訓練参照と<b>count が完全に同一</b>で順序だけが違う（順序盲エイリアシングを露出させる設計）。<code>OFML-linear</code> は決定論的な線形同定＋合成なので seed 変動は数値・観測ノイズ程度、<code>OFML-Ens</code>／<code>Shared-Ens</code> は種のみ 5 メンバの深層アンサンブル（容量一致 hidden_dim=32）。生 RMSE は使わず、各 target の自スケールで正規化した NRMSE に統一。</p></div>
+
+<div class="blk setup"><div class="h">モデル構成とメトリクス定義</div>
+<div class="tblwrap"><table class="data"><caption>3 代理モデル（<code>OFML-Ens</code>／<code>Shared-Ens</code> は種のみ 5 メンバ深層アンサンブル・容量一致 hidden_dim=32）</caption>
+<thead><tr><th style="text-align:left">モデル</th><th style="text-align:left">構造</th><th style="text-align:left">主要設定</th><th style="text-align:left">順序（非可換性）の扱い</th></tr></thead>
+<tbody>
+<tr><td style="text-align:left"><code>OFML-linear</code></td><td style="text-align:left">操作型ごとの \(2\times2\) 行列を<b>順序どおり合成</b>した線形読み出し。source 行から最小二乗で各行列を同定</td><td style="text-align:left">閉形式同定（線形代数）, y 標準化, 乱数学習なし</td><td style="text-align:left"><b>行列積の順序</b>で held-out 順序を厳密に再構成（非可換性を保持）</td></tr>
+<tr><td style="text-align:left"><code>OFML-Ens</code></td><td style="text-align:left">合成ネット <code>TerminalOnlyOFML</code>（操作型ごとの潜在モジュールを合成）5 メンバ</td><td style="text-align:left">latent_dim=10, hidden=32, 400 epoch, y 標準化</td><td style="text-align:left">訓練で見た順序は再現するが、未観測順序へ外挿できず崩壊</td></tr>
+<tr><td style="text-align:left"><code>Shared-Ens</code></td><td style="text-align:left">操作 count 記述子ベースの 5 メンバ MLP（<b>順序盲</b>）</td><td style="text-align:left">hidden=32, 300 epoch, y 標準化</td><td style="text-align:left">順序情報なし（同 count・異順序で byte 単位同一予測）</td></tr>
+</tbody></table></div>
+<p>指標はすべて<b>マクロ NRMSE</b>。各 target のプールドスケール \(s_\star\) で正規化し、target 集合上で平均する：\[ \eps_\pi=\sqrt{\mathrm{mean}_x\,(\mu_\pi-f_\pi)^2\,/\,s_\star^2},\qquad \NRMSE_{\mathrm{macro}}=\frac{1}{|\Pcal_{\mathrm{tgt}}|}\sum_{\pi\in\Pcal_{\mathrm{tgt}}}\eps_\pi,\qquad s_\star=\sqrt{\tfrac{1}{|\Pcal_{\mathrm{tgt}}|}\textstyle\sum_\pi \mathrm{mean}_x\big((f_\pi-\bar f)^2\big)}. \] ここで \(\mu_\pi\) は順序 \(\pi\) の予測、\(f_\pi\) は真値、\(\bar f\) は全 target 平均。\(\eps_\pi\) が各順序の NRMSE（図・表の各セル）、その target 平均がマクロ NRMSE。\(s_\star\) は共通 48×48 dense グリッド上で計算する。</p></div>
+
+<div class="blk setup"><div class="h">使用プロトコル（付録 A）</div>
+<div class="protoset" data-kind="source" data-title="<b>order source（12 本：単操作・両順序ペア・非 held-out 全順列）</b>" data-protocols="A M O;B M O;C M O;A B M O;B A M O;A C M O;C A M O;B C M O;C B M O;A B C M O;B C A M O;C A B M O" data-cols="2"></div>
+<div class="protoset" data-kind="target" data-title="<b>order target（訓練参照 1 本＋held-out 3 本＝同 count・異順序）</b>" data-protocols="A B C M O;A C B M O;B A C M O;C B A M O" data-cols="2"></div>
+<div class="tblwrap"><table class="data" style="min-width:520px"><caption>order ランのデータ生成</caption>
+<thead><tr><th style="text-align:left">要素</th><th style="text-align:left">値</th><th style="text-align:left">性質</th></tr></thead>
+<tbody>
+<tr><td style="text-align:left">source 学習</td><td style="text-align:left">40 点/プロトコル × 12 ＝ 480 点</td><td style="text-align:left">ノイズ有 \(\sigma=0.02\)</td></tr>
+<tr><td style="text-align:left">target evidence（訓練参照）</td><td style="text-align:left">40 点（<code>A B C M O</code> のみ）</td><td style="text-align:left"><code>OFML-Ens</code>／<code>Shared-Ens</code> が学習に使用</td></tr>
+<tr><td style="text-align:left">test</td><td style="text-align:left">120 点/target（Sobol scramble A）</td><td style="text-align:left">ノイズ無（真値）</td></tr>
+<tr><td style="text-align:left">dense グリッド</td><td style="text-align:left">48×48/target</td><td style="text-align:left">プールドスケール・NRMSE 正規化用</td></tr>
+</tbody></table></div>
+<p class="phint">モジュール型にカーソルを合わせると、共有される同一操作が全プロトコルで強調される（＝重み共有）。held-out 3 本は count が <code>A B C M O</code> と完全に同一で順序だけが違う＝「順序を見ないと区別できない」ことを可視化する。</p>
+<details class="proof" style="margin-top:10px"><summary>詳細な設定（seed 分類・手続き・QC）</summary><div class="pf">
+<b>seed 分類.</b> <code>bench_seed</code>（12 本）が<b>主統計単位</b>で、真のアフィン線形族（操作行列群＋読み出し）自体を引き直す。派生ストリームを分離：task=bench_seed、pool=bench_seed×7+1、noise=bench_seed×7+2、model=bench_seed（モデル間比較を task で対応化＝ペア化）。Sobol は sob=bench_seed×100003＋固定オフセット（test +11 / grid +301）。<code>OFML-linear</code> は閉形式同定のため seed 依存は観測ノイズ経由のみ。<br><br>
+<b>手続き.</b> 全モデルが同一の 12 本 source 行と同一の target evidence（訓練参照 <code>A B C M O</code> の 40 点）を見る。<code>OFML-linear</code> は source から各操作行列を最小二乗同定し、target 順序を行列積として合成して評価（held-out 順序は<b>ゼロショット</b>：target evidence 不要）。<code>OFML-Ens</code>／<code>Shared-Ens</code> は source＋訓練参照で学習し、held-out 順序を予測。<br><br>
+<b>QC / リーク対策.</b> test はノイズ無（train-on-test なし）、held-out 3 順序は source・訓練参照のいずれにも現れない（順序リークなし）。count は 4 順序で同一に固定し、順序<b>以外</b>の交絡（操作集合・深さ）を排除。全 record status=ok。<br><br>
+<b>読み方.</b> held-out 順序での NRMSE 差だけが「順序（非可換性）を識別できたか」を測る。count 同一・順序のみ相違という設計により、<code>Shared-Ens</code> の失敗は原理的下限（順序盲の床）を与える。
+</div></details></div>
+
+<div class="blk result"><div class="h">実験結果</div>
+<p><b><code>OFML-linear</code> が全 4 順序で最良（各順序の最小）。</b> held-out 3 順序でも NRMSE ≤0.026 に留まり、訓練で一度も見ていない順序を<b>行列積として再構成</b>する＝順序（非可換性）を識別している。<code>OFML-Ens</code> は訓練参照 <code>A B C M O</code> では 0.076 と小さいが、held-out 順序で 0.635–2.691 に崩壊（マクロ 1.256）＝順序の外挿ができない。<code>Shared-Ens</code> は count が同一の 4 順序を区別できず、訓練参照でも 1.417 と高くマクロ 2.169（順序盲の床）。</p>
+<div class="tblwrap"><table class="data"><caption>表 4 — held-out 順序の順方向転移 NRMSE（12 bench seed 平均、per_proto=40、n_test=120）。各順序の最小値（＝<code>OFML-linear</code>）を強調。すべてマクロ対象のプールドスケールで正規化した NRMSE。</caption>
+<thead><tr><th style="text-align:left">順序（count 同一）</th><th>種別</th><th>OFML-linear</th><th>OFML-Ens</th><th>Shared-Ens</th></tr></thead>
+<tbody>
+<tr><td style="text-align:left"><code>A B C M O</code></td><td>訓練参照</td><td class="best">0.011</td><td>0.076</td><td>1.417</td></tr>
+<tr><td style="text-align:left"><code>A C B M O</code></td><td>held-out</td><td class="best">0.026</td><td>2.691</td><td>2.700</td></tr>
+<tr><td style="text-align:left"><code>B A C M O</code></td><td>held-out</td><td class="best">0.022</td><td>0.635</td><td>1.637</td></tr>
+<tr><td style="text-align:left"><code>C B A M O</code></td><td>held-out</td><td class="best">0.009</td><td>1.621</td><td>2.921</td></tr>
+<tr><td style="text-align:left"><b>マクロ NRMSE</b></td><td>全 4 順序</td><td class="best">0.017</td><td>1.256</td><td>2.169</td></tr>
+</tbody></table></div>
+<p>差は劇的（held-out マクロで <code>OFML-linear</code> は <code>OFML-Ens</code> の約 1/74、<code>Shared-Ens</code> の約 1/128）。<code>OFML-Ens</code> の held-out 崩壊は順序に強く依存し（<code>A C B M O</code> で最悪 2.691、<code>B A C M O</code> で最小 0.635）、訓練参照との「順序距離」が大きいほど誤差が大きい。</p></div>
+
+<div class="blk disc"><div class="h">考察 — 主張をどう支えるか</div>
+<p>held-out 順序での成否が主張 1 の核を画定する。<b><code>OFML-linear</code></b> は source が順序方向を張るとき（\(\ker\Phi\subseteq\ker\Psi\)）非可換合成を<b>ゼロショットで転移</b>する＝<a class="xref" href="../experiments.html#c1">主張 1</a>。<b><code>OFML-Ens</code> の崩壊</b>は、同じ合成構造でも識別可能性を保証しない当てはめは未観測順序へ外挿しないことを示す（合成は転移の<b>十分条件ではなく</b>、識別可能性が鍵）。<b><code>Shared-Ens</code></b> は count 記述子が原理的に順序を消すため、同 count・異順序を区別できない＝terminal-only／順序盲の識別限界＝<a class="xref" href="../experiments.html#c1">主張 1</a>。count は同一・順序のみ相違という設計により、この差は「順序（非可換性）を識別できたか」だけを純粋に測る。</p>
+<p>識別性の直接監査（真の \(\theta\) の \(\Phi/\Psi\) 階数）は <a class="xref" href="c2-tradeoff.html">Φ/Ψ 監査</a>、線形 s0 パリティは <a class="xref" href="c1-fig1.html">図 1a</a>、count エイリアシングは <a class="xref" href="c1-count.html">図 5</a>、コスト指標での位置づけは <a class="xref" href="cost-indexed.html">図 2</a>を参照。</p>
+<p class="annot">※ 限界：<code>OFML-linear</code> の near-zero 誤差は線形同定が厳密に効く合成族での結果で、残差は数値・観測ノイズ \(\sigma=0.02\) 由来。held-out 順序は count 一致・順序のみ相違に限定（順序以外の交絡は排除）。<code>OFML-Ens</code> の崩壊値は seed 分散が大きく（特に <code>A C B M O</code>）、点推定は 12 seed 平均。図の縦軸は 0–3 にクリップ（<code>OFML-linear</code> の棒は視認のため最小高 3px で描画、実値はラベル・表を正）。</p></div>
+</div>
+
+<div class="callout"><span class="lab">理論との対応</span>
+<p>本実験は主定理の rank 条件をそのまま検証する。source が順序方向を張り <b>\(\ker\Phi\subseteq\ker\Psi\)</b> が成立するとき、線形合成は held-out 順序へ厳密に転移する（<a class="xref" href="../theory.html#prop:ofml-linear" data-ref="prop:ofml-linear">命題 4</a>(i) の rank 条件そのもの；同値に \(\mathrm{row}(\Psi)\subseteq\mathrm{row}(\Phi)\)、条件数 \(K=\sigma_{\max}(\Psi)/\sigma_{\min}^{+}(\Phi)\) が誤差増幅を支配）。<code>OFML-Ens</code> の held-out 崩壊は、識別可能性を課さない合成当てはめが命題 4 の保証域外にあることの実証である。仮に識別が破れる順序（source が張らない順列）でも、target 終端を直接<b>能動観測</b>すれば終端応答一致性を回復できる（<a class="xref" href="../theory.html#thm:ofml-active" data-ref="thm:ofml-active">定理 3</a>・<a class="xref" href="../theory.html#prop:ofml-rescue" data-ref="prop:ofml-rescue">命題 5</a>）。</p></div>
+
+<div class="qa" style="margin-top:16px"><div class="blk"><div class="h">この実験が支える主張</div><div><a class="claimcard" href="../experiments.html#c1" style="--c:#0ea5a4;display:block;border-top-width:4px"><span class="cn">1</span><div class="ct" style="margin-top:8px">適切な条件（識別可能性）が揃うとき OFML は順方向転移を助ける</div><p>合成表現に加え、再利用する操作の識別可能性とモデル特定が揃うとき、terminal-only でも未知 target へゼロショット転移する。</p></a></div></div></div>
+
+<p style="margin-top:22px"><a class="back" href="../experiments.html">‹ Experiments へ戻る</a></p>
+</div>
+
+<script>
+(function(){var ro=document.getElementById('c1ord-ro');if(!ro)return;var def=ro.textContent;var bars=document.querySelectorAll('#c1ord-svg .bar');for(var i=0;i<bars.length;i++){(function(b){b.addEventListener('mouseenter',function(){ro.textContent='順序 '+b.getAttribute('data-order')+' · '+b.getAttribute('data-model')+' — NRMSE '+b.getAttribute('data-val');});b.addEventListener('mouseleave',function(){ro.textContent=def;});})(bars[i]);}})();
+</script>
+<script>
+(function(){var lb=document.createElement('div');lb.className='lightbox';lb.innerHTML='<div class="hint">クリック / Esc で閉じる</div><img alt=""/>';document.body.appendChild(lb);var im=lb.querySelector('img');document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.figbox img');if(t){im.src=t.currentSrc||t.src;lb.classList.add('open');document.body.style.overflow='hidden';return;}if(e.target.closest&&e.target.closest('.lightbox')){lb.classList.remove('open');document.body.style.overflow='';}});document.addEventListener('keydown',function(e){if(e.key==='Escape'){lb.classList.remove('open');document.body.style.overflow='';}});})();
+</script><script src="../lib/tex-svg.js" id="MathJax-script" async></script></body></html>

@@ -1,0 +1,160 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Object-Flow Machine Learning: Operation-Level Surrogate Modeling for Laboratory Workflows</title><link rel="stylesheet" href="style.css"/>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],macros:{Mcal:"\\mathcal{M}",Pcal:"\\mathcal{P}",Xcal:"\\mathcal{X}",Ycal:"\\mathcal{Y}",Zcal:"\\mathcal{Z}",Scal:"\\mathcal{S}",Qcal:"\\mathcal{Q}",Ccal:"\\mathcal{C}",Ucal:"\\mathcal{U}",Acal:"\\mathcal{A}",Dcal:"\\mathcal{D}",Hcal:"\\mathcal{H}",Gcal:"\\mathcal{G}",Tcal:"\\mathcal{T}",Rcal:"\\mathcal{R}",E:"\\mathbb{E}",R:"\\mathbb{R}",N:"\\mathbb{N}",Eval:"\\operatorname{Eval}",Pa:"\\operatorname{Pa}",Anc:"\\operatorname{Anc}",Obs:"\\operatorname{Obs}",Var:"\\operatorname{Var}",Cov:"\\operatorname{Cov}",RMSE:"\\operatorname{RMSE}",AUC:"\\operatorname{AUC}",argmax:"\\operatorname*{arg\\,max}",norm:["\\left\\lVert #1\\right\\rVert",1],abs:["\\left\\lvert #1\\right\\rvert",1]},packages:{'[+]':['ams']}},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script src="refs.js"></script><script src="protoviz.js"></script><script src="hovercard.js"></script><script src="obsviz.js"></script></head><body>
+<nav class="sitenav"><div class="wrap"><a class="on" href="index.html">Overview</a><a href="background.html">Background</a><a href="problem.html">Problem setting</a><a href="method.html">Object-Flow Machine Learning</a><a href="theory.html">Theoretical statement and proofs</a><a href="experiments.html">Experiments</a><a href="references.html">References</a></div></nav>
+
+<header class="hero"><div class="wrap">
+  <span class="eyebrow">AAAI 2027 · 論文オーバービュー · インタラクティブ</span>
+  <h1>Object-Flow Machine Learning:<br/>Operation-Level Surrogate Modeling for Laboratory Workflows</h1>
+  <p class="tag">実験プロトコルを、単一の識別子や平坦な特徴ベクトルではなく、<b>実験対象・操作列・測定器</b>からなる構造化入力として扱う。同じ操作型に対応する予測成分をプロトコル間で<b>共有</b>することで、少数の<b>終端観測</b>から未知プロトコルへゼロショット転移し、<b>能動学習</b>で閉ループ補正する。完全な機構シミュレータと単一ブラックボックス代理モデルの中間に位置する、<b>プロトコル構造を保存した代理モデリング</b>である。任意の相互参照はホバーでプレビュー、クリックで該当箇所へ。</p>
+  <div class="badges"><span class="badge">構造化代理モデル</span><span class="badge">プロトコル間知識転移</span><span class="badge">終端観測のみ</span><span class="badge">能動学習（MaxVar / IVR）</span><span class="badge">GP · 深層アンサンブル · BNN</span></div>
+</div></header>
+
+<section><div class="wrap">
+  <p class="kicker">全体像</p>
+  <h2>3 段階：source で学び、未知プロトコルへ再結合し、target で補正する</h2>
+  <p class="lead">同じ操作型の予測成分（同色）を複数プロトコルで共有する。これがプロトコル間知識転移の唯一の機構である。source protocols で共有モジュールを学習し（①）、それらを未知の target protocol へ組み替えてゼロショット予測し（②）、target 上で終端観測を追加しながら能動学習で閉ループ補正する（③）。</p>
+  <figure class="fw" style="margin:22px 0 0">
+  <svg viewBox="0 0 1000 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="OFML の3段階：source プロトコルでの事前学習、ゼロショットのプロトコル間予測、target 上の能動学習">
+    <defs>
+      <marker id="ah" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#0f766e"/></marker>
+      <marker id="ahb" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#0f766e"/></marker>
+      <marker id="aho" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#e07a3c"/></marker>
+    </defs>
+    <style>
+      .pt{font-family:inherit;font-weight:800;font-size:13px;fill:#10151c}
+      .ps{font-family:inherit;font-size:10.5px;fill:#5a6573}
+      .nl{font-family:inherit;font-weight:800;font-size:15px;fill:#10151c;text-anchor:middle}
+      .io{font-family:inherit;font-style:italic;font-weight:700;font-size:13px;fill:#5a6573}
+      .cap{font-family:inherit;font-size:10.5px;fill:#5a6573;text-anchor:middle}
+      .capb{font-family:inherit;font-weight:800;font-size:11px;fill:#10151c;text-anchor:middle}
+      .gl{font-family:inherit;font-weight:800;font-size:10px;fill:#0f766e;text-anchor:middle}
+      .gs{font-family:inherit;font-size:9px;fill:#5a6573;text-anchor:middle}
+      .bt{font-family:inherit;font-weight:700;font-size:9.5px;fill:#10151c;text-anchor:middle}
+      .panel{fill:#fcfdfe;stroke:#cbd5e1;stroke-width:1.4;stroke-dasharray:4 4}
+      .conn{stroke:#0f766e;stroke-width:1.8;fill:none}
+    </style>
+    <rect class="panel" x="6" y="16" width="292" height="308" rx="12"/>
+    <rect class="panel" x="360" y="16" width="296" height="308" rx="12"/>
+    <rect class="panel" x="712" y="16" width="282" height="308" rx="12"/>
+    <circle cx="26" cy="40" r="11" fill="#0f766e"/><text x="26" y="44.5" class="nl" fill="#fff" font-size="12">1</text>
+    <text x="44" y="44" class="pt">事前学習：source protocols</text>
+    <text x="16" y="64" class="ps">簡単なプロトコルから共有モジュール群を学習</text>
+    <text x="18" y="171" class="io">x</text>
+    <line class="conn flow" x1="30" y1="166" x2="41" y2="166" marker-end="url(#ah)"/>
+    <rect x="42" y="148" width="40" height="34" rx="9" fill="#dbeafe" stroke="#2563eb" stroke-width="1.8" class="pulseA"/><text x="62" y="170" class="nl">A</text>
+    <line class="conn flow" x1="82" y1="166" x2="117" y2="166" marker-end="url(#ah)"/>
+    <rect x="118" y="148" width="40" height="34" rx="9" fill="#eef1f4" stroke="#64748b" stroke-width="1.8" class="pulseM"/><text x="138" y="170" class="nl">M</text>
+    <line class="conn flow" x1="158" y1="166" x2="193" y2="166" marker-end="url(#ah)"/>
+    <rect x="194" y="148" width="40" height="34" rx="9" fill="#e5e7eb" stroke="#475569" stroke-width="1.8" class="pulseO"/><text x="214" y="170" class="nl">O</text>
+    <line class="conn flow" x1="234" y1="166" x2="247" y2="166" marker-end="url(#ah)"/>
+    <text x="250" y="171" class="io">y₁</text>
+    <circle r="4" cy="166" cx="45" fill="#0ea5a4" class="t1"/>
+    <text x="18" y="261" class="io">x</text>
+    <line class="conn flow" x1="30" y1="256" x2="41" y2="256" marker-end="url(#ah)"/>
+    <rect x="42" y="238" width="40" height="34" rx="9" fill="#dcfce7" stroke="#16a34a" stroke-width="1.8"/><text x="62" y="260" class="nl">B</text>
+    <line class="conn flow" x1="82" y1="256" x2="117" y2="256" marker-end="url(#ah)"/>
+    <rect x="118" y="238" width="40" height="34" rx="9" fill="#eef1f4" stroke="#64748b" stroke-width="1.8" class="pulseM"/><text x="138" y="260" class="nl">M</text>
+    <line class="conn flow" x1="158" y1="256" x2="193" y2="256" marker-end="url(#ah)"/>
+    <rect x="194" y="238" width="40" height="34" rx="9" fill="#e5e7eb" stroke="#475569" stroke-width="1.8" class="pulseO"/><text x="214" y="260" class="nl">O</text>
+    <line class="conn flow" x1="234" y1="256" x2="247" y2="256" marker-end="url(#ah)"/>
+    <text x="250" y="261" class="io">y₂</text>
+    <circle r="4" cy="256" cx="45" fill="#0ea5a4" class="t2"/>
+    <line x1="138" y1="182" x2="138" y2="238" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="2 3"/>
+    <line x1="214" y1="182" x2="214" y2="238" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="2 3"/>
+    <text x="176" y="214" class="gs">重み共有</text>
+    <text x="16" y="300" class="ps">同色＝共有される同一モジュール型</text>
+    <text x="329" y="150" class="gl">再利用</text>
+    <line class="conn" x1="303" y1="166" x2="355" y2="166" stroke-width="3" marker-end="url(#ahb)"/>
+    <text x="329" y="184" class="gs">modules</text>
+    <circle cx="380" cy="40" r="11" fill="#0f766e"/><text x="380" y="44.5" class="nl" fill="#fff" font-size="12">2</text>
+    <text x="398" y="44" class="pt">プロトコル間予測（zero-shot）</text>
+    <text x="368" y="64" class="ps">学習済みモジュールを未知プロトコルへ再結合</text>
+    <text x="372" y="181" class="io">x</text>
+    <line class="conn flow" x1="384" y1="176" x2="393" y2="176" marker-end="url(#ah)"/>
+    <rect x="394" y="158" width="38" height="34" rx="9" fill="#dbeafe" stroke="#2563eb" stroke-width="1.8" class="pulseA"/><text x="413" y="180" class="nl">A</text>
+    <line class="conn flow" x1="432" y1="176" x2="455" y2="176" marker-end="url(#ah)"/>
+    <rect x="456" y="158" width="38" height="34" rx="9" fill="#dcfce7" stroke="#16a34a" stroke-width="1.8" class="pulseB"/><text x="475" y="180" class="nl">B</text>
+    <line class="conn flow" x1="494" y1="176" x2="517" y2="176" marker-end="url(#ah)"/>
+    <rect x="518" y="158" width="38" height="34" rx="9" fill="#eef1f4" stroke="#64748b" stroke-width="1.8" class="pulseM"/><text x="537" y="180" class="nl">M</text>
+    <line class="conn flow" x1="556" y1="176" x2="579" y2="176" marker-end="url(#ah)"/>
+    <rect x="580" y="158" width="38" height="34" rx="9" fill="#e5e7eb" stroke="#475569" stroke-width="1.8" class="pulseO"/><text x="599" y="180" class="nl">O</text>
+    <line class="conn flow" x1="618" y1="176" x2="629" y2="176" marker-end="url(#ah)"/>
+    <text x="632" y="181" class="io">ŷ</text>
+    <circle r="4" cy="176" cx="397" fill="#0ea5a4" class="t3"/>
+    <text x="508" y="240" class="capb">target protocol：A → B → M → O</text>
+    <text x="508" y="262" class="cap">target ラベルは 0 枚 — モジュールは同定済み</text>
+    <text x="684" y="150" class="gl">hard</text>
+    <line class="conn" x1="660" y1="166" x2="708" y2="166" stroke-width="3" marker-end="url(#ahb)"/>
+    <text x="684" y="184" class="gs">protocol</text>
+    <circle cx="732" cy="40" r="11" fill="#0f766e"/><text x="732" y="44.5" class="nl" fill="#fff" font-size="12">3</text>
+    <text x="750" y="44" class="pt">target 上の能動学習</text>
+    <text x="720" y="64" class="ps">情報量が最大の点をクエリして補正</text>
+    <rect x="722" y="104" width="120" height="46" rx="10" fill="#fff" stroke="#e07a3c" stroke-width="1.8"/>
+    <text x="782" y="122" class="bt">代理モデル</text><text x="782" y="136" class="bt">(平均＋不確実性)</text>
+    <rect x="866" y="104" width="120" height="46" rx="10" fill="#fff" stroke="#e07a3c" stroke-width="1.8"/>
+    <text x="926" y="122" class="bt">次点 x* を選択</text><text x="926" y="136" class="bt">(予測分散 最大)</text>
+    <rect x="866" y="212" width="120" height="46" rx="10" fill="#fff" stroke="#e07a3c" stroke-width="1.8"/>
+    <text x="926" y="230" class="bt">target を実行</text><text x="926" y="244" class="bt">端末 y を観測</text>
+    <rect x="722" y="212" width="120" height="46" rx="10" fill="#fff" stroke="#e07a3c" stroke-width="1.8"/>
+    <text x="782" y="230" class="bt">共有モジュール</text><text x="782" y="244" class="bt">を更新</text>
+    <g class="conn" stroke="#e07a3c">
+      <line x1="844" y1="127" x2="862" y2="127" marker-end="url(#aho)"/>
+      <line x1="926" y1="152" x2="926" y2="209" marker-end="url(#aho)"/>
+      <line x1="864" y1="235" x2="846" y2="235" marker-end="url(#aho)"/>
+      <line x1="782" y1="209" x2="782" y2="152" marker-end="url(#aho)"/>
+    </g>
+    <circle cx="854" cy="181" r="16" fill="none" stroke="#0ea5a4" stroke-width="2" class="ring"/>
+    <text x="854" y="185" class="gl" font-size="9">反復</text>
+    <text x="853" y="292" class="cap">ゼロショット誤差 → クエリごとに縮小</text>
+  </svg>
+  </figure>
+  <div class="fwlegend">
+    <span><i style="background:#dbeafe;border-color:#2563eb"></i>操作 A</span>
+    <span><i style="background:#dcfce7;border-color:#16a34a"></i>操作 B</span>
+    <span><i style="background:#eef1f4;border-color:#64748b"></i>共有ミキサ M</span>
+    <span><i style="background:#e5e7eb;border-color:#475569"></i>端末観測器 O</span>
+  </div>
+  <div class="protorow" style="margin-top:26px">
+    <div class="frame" style="margin:0">実世界の対象は<b>プロトコル</b>である。その抽象は<b>型付き有向非巡回グラフ（DAG）上の共有モジュールの合成</b>であり、各操作型に学習可能な予測成分 \(g_{\theta_j}\) を割り当てる。学習信号は<b>終端測定器ノードの出力</b>だけ — 中間トレースは学習にも評価にも使わない。<a class="xref" href="method.html">→ 手法の詳細</a></div>
+    <ul class="cando">
+      <li><b>点クエリではなくプロトコル全体を扱う。</b> 実験設定 \(x\) と終端測定値 \(y\) を、1 つの構造化された応答として学習する。</li>
+      <li><b>操作単位で知識を再利用する。</b> 同じ操作型が異なるプロトコル・位置・出現回数で現れても、同一の予測成分を共有する。</li>
+      <li><b>未知プロトコルへゼロショット転移する。</b> 識別可能性が満たされれば、source の観測誤差が target の誤差を制御する（<a class="xref" href="theory.html#ass:transfer-diagnostics">知識転移上界</a>）。</li>
+      <li><b>能動学習で閉ループ補正する。</b> 予測不確実性から次の実験 \((p,x)\) を選び、終端観測を追加して残差を補正する。</li>
+      <li><b>自律実験の代理モデル基盤。</b> 完全な機構モデルと単一ブラックボックスの中間に位置する構造化代理モデリング。</li>
+    </ul>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <p class="kicker">実験の主張</p>
+  <h2>実験は 2 つの主張に分解される</h2>
+  <p class="lead">継続的な surrogate 性能を、target ラベルの累積取得コスト \(b\) に対する<b>マクロ NRMSE</b> 曲線で測る。\(b=0\) が<b>順方向転移</b>、\(b>0\) が<b>能動適応</b>。各カードをクリックすると、その主張を支える実験ページ（実験目的・実験設定・実験結果・考察）へ移動する。すべての実験は <b>terminal-only</b>（各プロトコル実行につき単一の終端スカラー \(y\) のみを観測）で、中間観測アブレーション（主張 1 の 1-C）でのみ学習中に観測器を段階導入する。</p>
+  <div class="claimgrid">
+    <a class="claimcard" href="experiments.html#c1" style="--c:#0ea5a4"><span class="cn">1</span><div class="ct">転移（b=0）：条件が揃えば OFML は転移を助ける</div><p>プロトコルを共有操作モジュールの<b>合成</b>として扱い、再利用する操作の<b>識別可能性</b>とモデル特定が揃うとき、terminal-only でも未知 target へゼロショット転移する。破れれば失敗し、学習中の<b>中間観測</b>で条件を回復できる。</p><div class="figs">支える実験：図 1a · 図 4（order）· 図 5（count）· Φ/Ψ 監査 · 表 1 · 中間観測（図 6–9）</div><span class="go">主張を支える実験へ →</span></a>
+    <a class="claimcard" href="experiments.html#c2" style="--c:#0f766e"><span class="cn">2</span><div class="ct">能動学習（b&gt;0）：転移が失敗しても構造の優位で誤差を早く下げる</div><p>\(b=0\) で識別が破れても、target 終端を能動観測すれば誤差は<b>記述子エイリアシング床</b>を割り、合成的 OFML は非構造ベースラインより速く適応する（<span class="m">s7</span>: ≈0.84→≈0.24）。情報獲得がランダムに勝つ。</p><div class="figs">支える実験：図 2（コスト指標曲線）· 表 2 · S4（全代理 AL）</div><span class="go">主張を支える実験へ →</span></a>
+  </div>
+  <div class="resultbar" style="margin-top:20px">端末観測のみの OFML は、操作写像が終端観測から識別可能なときゼロショット転移し（主張 1）、識別が破れても target の能動学習が構造の優位を生かして誤差を早く下げる（主張 2）。</div>
+</div></section>
+
+<section><div class="wrap">
+  <p class="kicker">理論の骨子</p>
+  <h2>\(C(\mathcal{X})\) 値ベイズ能動学習の一致性 — 4 ステップ</h2>
+  <p class="lead">旧 OFML 転移上界を主定理から外し、正しい \(C(\mathcal{X})\) 値事後に対する<b>能動学習一致性</b>を一次貢献として据える。各ステップをクリックすると <a class="xref" href="theory.html">Theoretical statement and proofs</a> の該当箇所へ移動する。相互参照はホバーでプレビュー。</p>
+  <div class="steps">
+    <a class="stepcard" href="theory.html#prop:common-moment-convergence"><b>① 共通事後モーメント収束（Proposition）</b><p>Banach 値 Lévy 上方収束により事後平均・二次モーメントが一様収束し \(\mu_n\to\mu_\infty\)、\(v_n\to v_\infty\)（\(C(\mathcal{X})\) で）。ガウス過程更新に依存しない。</p><span class="go">該当する結果と証明へ →</span></a>
+    <div class="downarrow">↓</div>
+    <a class="stepcard" href="theory.html#lem:supermartingale"><b>② 残差不確実性の上マルチンゲール（Lemma）</b><p>\(H_n=\int v_n\,d\lambda\) は非負上マルチンゲールで、選択点の一段階期待低減量が獲得関数に一致 \(D_n=\Delta^{\mathrm{IVR}}_n(X_{n+1})\)、ゆえに \(\sup_x\Delta^{\mathrm{IVR}}_n(x)\to0\)。</p><span class="go">該当する結果と証明へ →</span></a>
+    <div class="downarrow">↓</div>
+    <a class="stepcard star" href="theory.html#thm:cx-main"><b>③ 雑音付き IVR/SUR 一致性（主定理）</b><p>線形予測子下界＋全台測度の小球質量で \(\left\lVert v_n\right\rVert_\infty\to0\)、ゆえに \(G=\mu_\infty\)、\(\left\lVert\mu_n-G\right\rVert_\infty\to0\)（固定雑音でも潜在関数分散が全域で消失）。</p><span class="go">該当する結果と証明へ →</span></a>
+    <div class="downarrow">↓</div>
+    <a class="stepcard" href="theory.html#thm:ofml-active"><b>④ OFML target active correction（Theorem）</b><p>固定 target protocol を pushforward で \(C(\mathbb{X})\) 値化し、Lipschitz bridge で仮定を discharge。転移識別が破れても target 終端の直接能動観測で終端応答一致性を回復。</p><span class="go">該当する結果と証明へ →</span></a>
+  </div>
+</div></section>
+
+<footer><div class="wrap">Yusuke Ozaki. <i>Object-Flow Machine Learning: Active Learning Framework Utilizing Protocols Information.</i> AAAI 2027 投稿原稿。· 図は原稿から抽出。全体像の図はインタラクティブ版として再作成。統計値・表・主張は <a href="experiments.html">Experiments</a>、定理と証明は <a href="theory.html">Theory</a> を参照。</div></footer>
+
+<script>
+
+</script><script src="lib/tex-svg.js" id="MathJax-script" async></script></body></html>
