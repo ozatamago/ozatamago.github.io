@@ -110,6 +110,7 @@ button.card {
 }
 .badge.kind-slides { background: var(--accent); }
 .badge.kind-web { background: #2563eb; }
+.badge.kind-pdf { background: #dc2626; }
 .badge.kind-image { background: #16a34a; }
 .badge.kind-video, .badge.kind-audio { background: #9333ea; }
 .badge.kind-project { background: #0d9488; }

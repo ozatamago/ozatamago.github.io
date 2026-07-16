@@ -44,7 +44,7 @@
     // this Japanese page reuses it, only the surrounding text is localized.
     const BASE = "/slides/";
     const PAGELANG = "ja"; // 言語非依存の項目 + 日本語版のみを表示
-    const ICON = { slides: "📑", web: "🖥️", image: "🖼️", video: "🎬", audio: "🎧", file: "📦", project: "📁" };
+    const ICON = { slides: "📑", web: "🖥️", pdf: "📄", image: "🖼️", video: "🎬", audio: "🎧", file: "📦", project: "📁" };
     function esc(s) { return (s || "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
     function asset(p) { return /^(https?:)?\//.test(p) ? p : BASE + p; }
 
