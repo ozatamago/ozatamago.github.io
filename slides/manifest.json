@@ -45,8 +45,9 @@
       "id": "lip-ucb",
       "title": "LiP-UCB: Cumulative Regret of Lipschitz Bandits with Lipschitz Propagation",
       "kind": "web",
+      "locked": true,
       "listed": true,
-      "file": "data/lipucb-lipschitz-bandits.bundle",
+      "file": "data/lipucb-lipschitz-bandits.enc",
       "date": "TMLR (under review)",
       "summary": "Interactive companion to the LiP-UCB paper — Piyavskii–Shubert upper envelopes, Lipschitz-propagated confidence intervals, animated 1D & 2D demos, regret experiments, and the theory achieving the minimax cumulative-regret rate for noisy Lipschitz bandits."
     }
