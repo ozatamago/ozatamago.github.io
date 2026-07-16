@@ -1,12 +1,12 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>order 識別（非可換性）による順方向転移（図 4）— OFML Experiments</title><link rel="stylesheet" href="../style.css"/>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>order 識別（非可換性）による順方向転移（図 3b）— OFML Experiments</title><link rel="stylesheet" href="../style.css"/>
 <script>window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],macros:{Mcal:"\\mathcal{M}",Pcal:"\\mathcal{P}",Xcal:"\\mathcal{X}",Zcal:"\\mathcal{Z}",Scal:"\\mathcal{S}",Obs:"\\operatorname{Obs}",E:"\\mathbb{E}",RMSE:"\\operatorname{RMSE}",NRMSE:"\\operatorname{NRMSE}",IVR:"\\mathrm{IVR}",SUR:"\\mathrm{SUR}",eps:"\\varepsilon",norm:["\\left\\lVert #1\\right\\rVert",1]},packages:{'[+]':['ams']}},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
 <script src="../refs.js"></script><script src="../protoviz.js"></script><script src="../hovercard.js"></script><script src="../obsviz.js"></script></head><body>
 <nav class="sitenav"><div class="wrap"><a href="../index.html">Overview</a><a href="../background.html">Background</a><a href="../problem.html">Problem setting</a><a href="../method.html">Object-Flow Machine Learning</a><a href="../theory.html">Theoretical statement and proofs</a><a href="../experiments.html">Experiments</a><a href="../references.html">References</a></div></nav>
-<div class="topbar"><div class="wrap"><a class="back" href="../experiments.html">‹ Experiments</a><span class="crumb">主張 1 › 図 4（order 順方向転移）</span></div></div>
+<div class="topbar"><div class="wrap"><a class="back" href="../experiments.html">‹ Experiments</a><span class="crumb">主張 1 › 図 3b（order 順方向転移）</span></div></div>
 
 <div class="wrap page">
 <p class="kicker"><span class="pill" style="--c:#0ea5a4">主張 1 · 合成は転移を助ける（order 識別）</span></p>
-<h2>図 4 — order 識別による順方向転移（非可換性）</h2>
+<h2>図 3b — order 識別による順方向転移（非可換性）</h2>
 <p class="lead">主張 1 の中核。<b>非可換な操作列（order）</b>を source から <b>held-out 順序</b>へ順方向転移できるかを、held-out 順序での<b>マクロ NRMSE</b>で測る。線形合成 <code>OFML-linear</code> は各操作の行列を source から同定し、<b>行列積の順序</b>として held-out 順序を厳密に再構成する（マクロ NRMSE ≈0.017）。訓練順序を陽に見た合成ネット <code>OFML-Ens</code> は訓練参照では小さいが held-out 順序で崩壊し、操作 count しか見ない <code>Shared-Ens</code> は同 count・異順序を区別できずどの順序でも失敗する。これは主定理の <b>rank 条件 \(\ker\Phi\subseteq\ker\Psi\)</b>（<a class="xref" href="../theory.html#prop:ofml-linear" data-ref="prop:ofml-linear">命題 4</a>(i)）そのものの検証である。</p>
 
 <figure class="figbox"><svg id="c1ord-svg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" style="max-width:700px;width:100%;font-family:inherit" role="img" aria-label="held-out 順序ごとの順方向転移 NRMSE を 3 モデルで比較した群棒グラフ">
@@ -61,7 +61,7 @@
 <text x="466" y="231" class="vl">0.009</text><text x="498" y="131" class="vl">1.621</text><text x="530" y="49" class="vl">2.921</text>
 <text x="498" y="252" class="ord">C B A M O</text><text x="498" y="263" class="tag">held-out</text>
 <text id="c1ord-ro" x="350" y="285" class="ro">棒にカーソルを合わせると、順序 × モデルの NRMSE を表示</text>
-</svg><figcaption>図 4：4 つの held-out 順序（count は全て同一、順序だけ相違）× 3 モデルの順方向転移マクロ NRMSE（12 bench seed 平均）。teal の <code>OFML-linear</code> は全順序で床近く（≤0.026）＝<b>順序を識別</b>。<code>OFML-Ens</code> は訓練参照 <code>A B C M O</code>（0.076）以外の held-out で崩壊、順序盲の <code>Shared-Ens</code> はどの順序でも高い。棒にカーソルを合わせると値が読める。クリックで拡大。</figcaption></figure>
+</svg><figcaption>図 3b：4 つの held-out 順序（count は全て同一、順序だけ相違）× 3 モデルの順方向転移マクロ NRMSE（12 bench seed 平均）。teal の <code>OFML-linear</code> は全順序で床近く（≤0.026）＝<b>順序を識別</b>。<code>OFML-Ens</code> は訓練参照 <code>A B C M O</code>（0.076）以外の held-out で崩壊、順序盲の <code>Shared-Ens</code> はどの順序でも高い。棒にカーソルを合わせると値が読める。クリックで拡大。</figcaption></figure>
 
 <div class="qa">
 <div class="blk goal"><div class="h">実験目的（主張の要約）</div>
@@ -115,7 +115,7 @@
 
 <div class="blk disc"><div class="h">考察 — 主張をどう支えるか</div>
 <p>held-out 順序での成否が主張 1 の核を画定する。<b><code>OFML-linear</code></b> は source が順序方向を張るとき（\(\ker\Phi\subseteq\ker\Psi\)）非可換合成を<b>ゼロショットで転移</b>する＝<a class="xref" href="../experiments.html#c1">主張 1</a>。<b><code>OFML-Ens</code> の崩壊</b>は、同じ合成構造でも識別可能性を保証しない当てはめは未観測順序へ外挿しないことを示す（合成は転移の<b>十分条件ではなく</b>、識別可能性が鍵）。<b><code>Shared-Ens</code></b> は count 記述子が原理的に順序を消すため、同 count・異順序を区別できない＝terminal-only／順序盲の識別限界＝<a class="xref" href="../experiments.html#c1">主張 1</a>。count は同一・順序のみ相違という設計により、この差は「順序（非可換性）を識別できたか」だけを純粋に測る。</p>
-<p>識別性の直接監査（真の \(\theta\) の \(\Phi/\Psi\) 階数）は <a class="xref" href="c2-tradeoff.html">Φ/Ψ 監査</a>、線形 s0 パリティは <a class="xref" href="c1-fig1.html">図 1a</a>、count エイリアシングは <a class="xref" href="c1-count.html">図 5</a>、コスト指標での位置づけは <a class="xref" href="cost-indexed.html">図 2</a>を参照。</p>
+<p>識別性の直接監査（真の \(\theta\) の \(\Phi/\Psi\) 階数）は <a class="xref" href="c2-tradeoff.html">Φ/Ψ 監査</a>、線形 s0 パリティは <a class="xref" href="c1-fig1.html">図 3a</a>、count エイリアシングは <a class="xref" href="c1-count.html">図 3c</a>、コスト指標での位置づけは <a class="xref" href="cost-indexed.html">図 2</a>を参照。</p>
 <p class="annot">※ 限界：<code>OFML-linear</code> の near-zero 誤差は線形同定が厳密に効く合成族での結果で、残差は数値・観測ノイズ \(\sigma=0.02\) 由来。held-out 順序は count 一致・順序のみ相違に限定（順序以外の交絡は排除）。<code>OFML-Ens</code> の崩壊値は seed 分散が大きく（特に <code>A C B M O</code>）、点推定は 12 seed 平均。図の縦軸は 0–3 にクリップ（<code>OFML-linear</code> の棒は視認のため最小高 3px で描画、実値はラベル・表を正）。</p></div>
 </div>
 

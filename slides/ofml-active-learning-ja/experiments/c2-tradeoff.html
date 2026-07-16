@@ -27,7 +27,7 @@
 
 <div class="qa">
 <div class="blk goal"><div class="h">実験目的（主張の要約）</div>
-<p>「識別可能な操作の再結合 \(\Rightarrow\) 順方向転移が成功する」という主張 1 の条件を、<b>真の \(\theta\) における \(\Phi/\Psi\) の階数関係で直接検証</b>する。\(r^{\mathrm{id}}\) が 0 かどうか（＝ \(\ker\Phi\subseteq\ker\Psi\) か）で、その target が source だけから識別できるかが決まり、これが <a class="xref" href="c1-fig1.html">図 1a</a> の順方向転移 NRMSE をそのまま予言することを示す。決定論的（seed なし）な理論–実験ブリッジ。</p></div>
+<p>「識別可能な操作の再結合 \(\Rightarrow\) 順方向転移が成功する」という主張 1 の条件を、<b>真の \(\theta\) における \(\Phi/\Psi\) の階数関係で直接検証</b>する。\(r^{\mathrm{id}}\) が 0 かどうか（＝ \(\ker\Phi\subseteq\ker\Psi\) か）で、その target が source だけから識別できるかが決まり、これが <a class="xref" href="c1-fig1.html">図 3a</a> の順方向転移 NRMSE をそのまま予言することを示す。決定論的（seed なし）な理論–実験ブリッジ。</p></div>
 
 <div class="blk setup"><div class="h">実験設定</div>
 <p>合成アフィン線形族 <code>_lin_truth</code>（非可換操作 A/B/C/D/M ＋線形読み出し、パラメータ 23 次元）。各シナリオ（source/target の組）で、真の \(\theta\) におけるパラメータ Jacobian を source 行にわたって積んで \(\Phi\)、target 終端 \((p_\star,q)\) にわたって積んで \(\Psi\) とする。指標は \(r^{\mathrm{id}}=\norm{\Psi(I-P_{\mathrm{row}}(\Phi))}_F/\norm{\Psi}_F\)（\(P_{\mathrm{row}}(\Phi)\) は \(\Phi\) の行空間への射影）と \(K=\sigma_{\max}(\Psi)/\sigma_{\min}^{+}(\Phi)\)（\(\sigma_{\min}^{+}\) は \((\ker\Phi)^\perp\) 上の最小特異値）。さらに<b>操作型ごとの source 階数</b> \(\{A,B,C,D,M\}\) を記録し、どの操作方向が source で励起されていないかを見る。純粋に線形代数的な計算で、乱数・学習を含まない。</p>
@@ -46,7 +46,7 @@
 
 <div class="blk disc"><div class="h">考察 — 主張をどう支えるか</div>
 <p>この監査は主張 1 の適用範囲（転移が成功する条件と失敗する条件の境界）を階数で厳密に画定する。<b>\(r^{\mathrm{id}}=0\)（識別可能）</b>なら合成は転移し（主張 1、s0）、<b>\(r^{\mathrm{id}}>0\)</b>なら terminal-only ではゼロショットで消せない（<a class="xref" href="../experiments.html#c1">主張 1</a>、s1）。失敗は<b>probe 設計の核</b>から生じる：s1 は操作 D が全 source に不在（\(\ker\Phi\setminus\ker\Psi\)）、s7 の三体相互作用も単色・二色 probe の核から同様に \(r^{\mathrm{id}}>0\) を生む。s4 は残差が小さくても \(K\) が大きく、識別が逼迫する領域で余剰容量が同定を不安定化するという直感を定量化する。</p>
-<p>順方向転移そのものの結果は <a class="xref" href="c1-fig1.html">図 1a（線形 s0 パリティ）</a>・<a class="xref" href="c1-order.html">図 4（order）</a>・<a class="xref" href="c1-count.html">図 5（count）</a>、失敗集合の全体像は <a class="xref" href="c2-failures.html">表 1（C1–C6）</a>、コスト指標での位置づけは <a class="xref" href="cost-indexed.html">図 2</a>を参照。</p></div>
+<p>順方向転移そのものの結果は <a class="xref" href="c1-fig1.html">図 3a（線形 s0 パリティ）</a>・<a class="xref" href="c1-order.html">図 3b（order）</a>・<a class="xref" href="c1-count.html">図 3c（count）</a>、失敗集合の全体像は <a class="xref" href="c2-failures.html">表 1（C1–C6）</a>、コスト指標での位置づけは <a class="xref" href="cost-indexed.html">図 2</a>を参照。</p></div>
 </div>
 
 <div class="callout"><span class="lab">理論との対応</span>

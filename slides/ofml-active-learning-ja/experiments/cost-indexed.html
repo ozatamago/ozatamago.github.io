@@ -1,22 +1,22 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>コスト指標での順方向転移＋適応（図2・表2）— OFML Experiments</title><link rel="stylesheet" href="../style.css"/>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>コスト指標での順方向転移＋適応（図2・図4・表2）— OFML Experiments</title><link rel="stylesheet" href="../style.css"/>
 <script>window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],macros:{Mcal:"\\mathcal{M}",Pcal:"\\mathcal{P}",Xcal:"\\mathcal{X}",Zcal:"\\mathcal{Z}",Scal:"\\mathcal{S}",Obs:"\\operatorname{Obs}",E:"\\mathbb{E}",RMSE:"\\operatorname{RMSE}",NRMSE:"\\operatorname{NRMSE}",IVR:"\\mathrm{IVR}",SUR:"\\mathrm{SUR}",eps:"\\varepsilon",norm:["\\left\\lVert #1\\right\\rVert",1]},packages:{'[+]':['ams']}},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
 <script src="../refs.js"></script><script src="../protoviz.js"></script><script src="../hovercard.js"></script><script src="../obsviz.js"></script></head><body>
 <nav class="sitenav"><div class="wrap"><a href="../index.html">Overview</a><a href="../background.html">Background</a><a href="../problem.html">Problem setting</a><a href="../method.html">Object-Flow Machine Learning</a><a href="../theory.html">Theoretical statement and proofs</a><a href="../experiments.html">Experiments</a><a href="../references.html">References</a></div></nav>
-<div class="topbar"><div class="wrap"><a class="back" href="../experiments.html">‹ Experiments</a><span class="crumb">中心結果 › 図 2・表 2（コスト指標）</span></div></div>
+<div class="topbar"><div class="wrap"><a class="back" href="../experiments.html">‹ Experiments</a><span class="crumb">中心結果 › 図 2・図 4・表 2（コスト指標）</span></div></div>
 
 <div class="wrap page">
 <p class="kicker"><span class="pill" style="--c:#0f766e">中心結果 · 順方向転移＋ターゲット適応</span></p>
 <h2>図 2 — コスト指標での順方向転移とターゲット適応</h2>
 <p class="lead">本節の中心結果。<b>単一のコスト指標曲線</b>が実験全体の物語を統合する：横軸は target ラベルの<b>累積取得コスト</b> \(b\)、縦軸は<b>マクロ NRMSE</b>（各 target の自スケールで正規化した誤差）。\(b=0\) が<b>順方向転移</b>（主張 1）、\(b>0\) が<b>能動的ターゲット適応</b>（主張 2）、そして曲線が張り付く水準が<b>記述子エイリアシング床</b>（terminal-only／順序盲の限界、主張 1）である。3 つの代理モデルを<b>同一の均衡 Sobol スケジュール</b>で比較し、構造だけを切り分ける。</p>
 
-<figure class="figbox"><img src="../figures/fig2_cost_indexed_full.png" alt="図2 コスト指標の構造曲線（depth-3/5）と OFML-Ens の獲得利得"/><figcaption>図 2：<b>(2a)</b> depth-3・depth-5 のコスト指標マクロ NRMSE 曲線（12 bench seed 平均 ±SE）。OFML-Ens（青）が最良、count 記述子の Shared-Ens（橙）は<b>エイリアシング床</b>（赤破線）に張り付く＝実質「平均を予測」。Independent-Ens（灰）はその中間。<b>(2b)</b> OFML-Ens のみ：モデル駆動獲得（MaxVar / IVR）がランダムに勝つコスト指標 AULC 利得（seed 対応ブートストラップ、全て正）。クリックで拡大。</figcaption></figure>
+<figure class="figbox"><img src="../figures/fig2_cost_indexed_full.png" alt="図2 コスト指標の構造曲線（depth-3/depth-5）"/><figcaption>図 2：depth-3・depth-5 のコスト指標マクロ NRMSE 曲線 \(\varepsilon_m(b)\)（12 bench seed 平均 ±SE）。OFML-Ens（青）が最良、count 記述子の Shared-Ens（橙）は<b>エイリアシング床</b>（赤破線）に張り付く＝実質「平均を予測」。Independent-Ens（灰）はその中間。\(b=0\) が順方向転移、\(b>0\) がターゲット適応。獲得利得は図 4。クリックで拡大。</figcaption></figure>
 
 <div class="qa">
 <div class="blk goal"><div class="h">実験目的（主張の要約）</div>
 <p>同一の固定スケジュール下で、コスト指標マクロ NRMSE 曲線 \(\eps_m(b)\) が (i) \(b=0\) の<b>順方向転移</b>、(ii) \(b>0\) の<b>ターゲット適応</b>、(iii) 予算到達時 \(b=B\) の<b>固定予算誤差</b>を、<b>記述子エイリアシング床</b>を基準として同時に示すことを確認する。合成的な <code>OFML-Ens</code> は転移も適応も最良で、順序を無視する count 記述子 <code>Shared-Ens</code> はエイリアシング床に張り付く（＝平均予測）。さらに <code>OFML-Ens</code> では<b>モデル駆動獲得</b>（MaxVar / IVR）がランダム取得に勝つ。</p></div>
 
 <div class="blk setup"><div class="h">実験設定</div>
-<p>合成 GP 合成場ベンチマーク <code>gpcomp_factory.build_bench(depth, bench_seed)</code>。<b>2 つの深さ</b>：depth-3（操作 \(\{A,B\}\)）と depth-5（\(\{A,B,C,M\}\)）。各深さの target は<b>操作数が同じで順序だけ異なる</b>2 本にして順序盲エイリアシングを露出させる。3 つの代理モデルはすべて<b>種のみ 5 メンバの深層アンサンブル</b>（bootstrap なし）で<b>容量一致</b>（hidden_dim=32）：<code>Independent-Ens</code>（target ごとに独立学習、コスト 0 は source 平均へフォールバック）、<code>Shared-Ens</code>（操作 count 記述子ベース、順序盲）、<code>OFML-Ens</code>（合成ネット、latent_dim=10）。各コスト \(b=0..B\) で<b>ゼロから完全再学習</b>。<b>構造スケジュール</b>（均衡 Sobol、両 target 同一 evidence）で図 2a、<code>OFML-Ens</code> のみ random / maxvar / ivr で図 2b。<b>予算 \(B=200\)</b>、<b>12 bench seed（200–211）</b>を主統計単位に。観測ノイズ \(\sigma=0.02\)。</p>
+<p>合成 GP 合成場ベンチマーク <code>gpcomp_factory.build_bench(depth, bench_seed)</code>。<b>2 つの深さ</b>：depth-3（操作 \(\{A,B\}\)）と depth-5（\(\{A,B,C,M\}\)）。各深さの target は<b>操作数が同じで順序だけ異なる</b>2 本にして順序盲エイリアシングを露出させる。3 つの代理モデルはすべて<b>種のみ 5 メンバの深層アンサンブル</b>（bootstrap なし）で<b>容量一致</b>（hidden_dim=32）：<code>Independent-Ens</code>（target ごとに独立学習、コスト 0 は source 平均へフォールバック）、<code>Shared-Ens</code>（操作 count 記述子ベース、順序盲）、<code>OFML-Ens</code>（合成ネット、latent_dim=10）。各コスト \(b=0..B\) で<b>ゼロから完全再学習</b>。<b>構造スケジュール</b>（均衡 Sobol、両 target 同一 evidence）で図 2、<code>OFML-Ens</code> のみ random / maxvar / ivr で図 4。<b>予算 \(B=200\)</b>、<b>12 bench seed（200–211）</b>を主統計単位に。観測ノイズ \(\sigma=0.02\)。</p>
 <p class="annot">※ 前版からの主要な是正：(1) <b>NRMSE 化</b>（各 target の自スケールで正規化。生 RMSE は廃止）。(2) <b>参照集合リーク修正</b> — IVR/MaxVar の参照プールを test/取得プールと<b>互いに素な Sobol ストリーム</b>（scramble A/B/C）から構成（以前は test の部分標本 = 透過的リーク）。(3) <b>seed 交絡の解消</b> — 1 本の固定関数（SEED=200）の 12 反復ではなく、<code>bench_seed</code> で真のベンチマーク自体を 12 回引き直す（task/pool/noise/model/acq ストリームを分離し、モデル間比較を task で対応化）。</p></div>
 
 <div class="blk setup"><div class="h">モデル構成とメトリクス定義</div>
@@ -47,13 +47,13 @@
 <details class="proof" style="margin-top:10px"><summary>詳細な設定（seed 分類・手続き・QC・計算）</summary><div class="pf">
 <b>seed 分類.</b> <code>bench_seed</code>（200–211 の 12 本）が<b>主統計単位</b>で、真のベンチマークモジュール自体を引き直す（＝12 個の関数ドロー。1 関数の 12 反復ではない）。派生ストリームを分離：task=bench_seed、pool=bench_seed×7+1、noise=bench_seed×7+2、model=bench_seed、acq=bench_seed×7+3（モデル間比較を task で対応化＝ペア化）。Sobol は sob=bench_seed×100003＋固定オフセット（test +11 / pool +101 / ref +201 / 構造スケジュール +301）。<br><br>
 <b>手続き.</b> 各累積コスト \(c=0..B\) で train＋取得済みの和集合に対し<b>ゼロから完全再学習</b>（warm-start なし）。構造スケジュール＝2 target を交互に取る固定の均衡 Sobol interleave で、全モデルが同一の source 行・同一の target evidence を見る（＝純粋な構造比較）。獲得（<code>OFML-Ens</code> のみ）：maxvar＝標本分散最大、ivr＝rank-1 Cohn ALC スコア \(\sum_R \mathrm{cov}_{rc}^2/(\mathrm{var}_c+\sigma^2)\)（\(\sigma^2=0.02^2\)）。選択点は最近傍で取得プールから除去。<br><br>
-<b>統計.</b> 図 2a の帯は ±1 SE（std/√n）、図 2b は seed 対応パーセンタイルブートストラップ（n_boot=10⁴、95%、win_frac 併記）。<br><br>
+<b>統計.</b> 図 2 の帯は ±1 SE（std/√n）、図 4 は seed 対応パーセンタイルブートストラップ（n_boot=10⁴、95%、win_frac 併記）。<br><br>
 <b>QC / リーク対策.</b> test / pool / ref / スケジュールは<b>互いに素な Sobol ストリーム</b>、test はノイズ無（train-on-test なし）、完全再学習でウォームスタート汚染なし。ベンチマーク工場は bench_seed=200 で既存ベンチと byte 単位一致を assert。144 record すべて status=ok（失敗 0）。<br><br>
 <b>計算.</b> 合計 CPU 時間 ≈199 h（ProcessPool 24 worker で実時間 ≈8.3 h）。OFML-Ens の 201 コスト完全再学習が支配的。
 </div></details></div>
 
 <div class="blk result"><div class="h">実験結果</div>
-<p><b>構造曲線（図 2a）。</b> <code>OFML-Ens</code> が両深さで最良、<code>Shared-Ens</code> は<b>エイリアシング床</b>に張り付く（順序を見ないため 2 本の異順序 target を区別できず、実質「平均を予測」）。<code>Independent-Ens</code> はその中間（コスト 0 は source 平均、以後は各 target で独立学習）。</p>
+<p><b>構造曲線（図 2）。</b> <code>OFML-Ens</code> が両深さで最良、<code>Shared-Ens</code> は<b>エイリアシング床</b>に張り付く（順序を見ないため 2 本の異順序 target を区別できず、実質「平均を予測」）。<code>Independent-Ens</code> はその中間（コスト 0 は source 平均、以後は各 target で独立学習）。</p>
 <div class="tblwrap"><table class="data"><caption>表 2 — コスト指標メトリクス（構造スケジュール、12 seed 平均、予算 \(B=200\)）。\(\eps(0)\)＝順方向転移誤差、\(\bar J(B)\)＝コスト指標 AULC \(\frac1B\int_0^B\eps\,db\)、\(\eps(B)\)＝固定予算誤差。すべてマクロ NRMSE。各深さの床は記述子エイリアシング床。</caption>
 <thead><tr><th>深さ（床）</th><th>モデル</th><th>\(\eps(0)\)</th><th>\(\bar J(B)\)</th><th>\(\eps(B)\)</th></tr></thead>
 <tbody>
@@ -64,16 +64,17 @@
 <tr><td>Shared-Ens</td><td>1.212</td><td>0.916</td><td>0.872</td></tr>
 <tr><td><b>OFML-Ens</b></td><td>1.112</td><td class="best">0.537</td><td class="best">0.366</td></tr>
 </tbody></table></div>
-<p><b>獲得利得（図 2b、<code>OFML-Ens</code> のみ）。</b> モデル駆動獲得はランダムに勝つ（コスト指標 AULC 利得 \(\bar J(\text{random})-\bar J(\text{acq})\)、seed 対応ブートストラップ 95%）：depth-3 MaxVar <b>+0.078</b>（12/12 seed で正）・IVR <b>+0.092</b>（12/12）、depth-5 MaxVar <b>+0.081</b>（10/12）・IVR <b>+0.073</b>（11/12）。参照集合リークを修正した上でも利得は残る。</p></div>
+<figure class="figbox"><img src="../figures/fig4_acquisition_gain.png" alt="図4 OFML-Ens の情報獲得利得（depth-3/depth-5 × MaxVar/IVR）"/><figcaption>図 4：<code>OFML-Ens</code> のみ。モデル駆動獲得（MaxVar / IVR）がランダム取得に勝つコスト指標 AULC 利得 \(\bar J(\text{random})-\bar J(\text{acq})\)（&gt;0 で勝ち・95% seed 対応ブートストラップ・per-seed 散布点付き）。全 4 条件で正。クリックで拡大。</figcaption></figure>
+<p><b>獲得利得（図 4、<code>OFML-Ens</code> のみ）。</b> モデル駆動獲得はランダムに勝つ（コスト指標 AULC 利得 \(\bar J(\text{random})-\bar J(\text{acq})\)、seed 対応ブートストラップ 95%）：depth-3 MaxVar <b>+0.077</b>（12/12 seed で正）・IVR <b>+0.092</b>（12/12）、depth-5 MaxVar <b>+0.081</b>（10/12）・IVR <b>+0.071</b>（11/12）。参照集合リークを修正した上でも利得は残る。</p></div>
 
 <div class="blk disc"><div class="h">考察 — 主張をどう支えるか</div>
 <p>1 枚の曲線が 2 主張を束ねる。<b>\(b=0\)（順方向転移）</b>：合成的な <code>OFML-Ens</code> が最良で、順序盲の <code>Shared-Ens</code> は最初からエイリアシング床＝<a class="xref" href="../experiments.html#c1">主張 1</a>。<b>床（張り付き）</b>：count 記述子は同数・異順序 target を原理的に区別できず、terminal-only の識別限界を示す＝<a class="xref" href="../experiments.html#c1">主張 1</a>。<b>\(b>0\)（適応）＋獲得利得</b>：target 終端を直接能動観測すると誤差が床を大きく下回り、情報獲得がランダムに勝つ＝<a class="xref" href="../experiments.html#c2">主張 2</a>。エイリアシング床という<b>共通の基準線</b>を導入したことで「どのモデルがいつ床を割るか」を一目で読める。</p>
-<p>順方向転移の詳細（線形 s0 パリティ・順序・count）は <a class="xref" href="c1-fig1.html">図 1a</a>／<a class="xref" href="c1-order.html">図 4</a>／<a class="xref" href="c1-count.html">図 5</a>、識別可能性の直接監査は <a class="xref" href="c2-tradeoff.html">Φ/Ψ 監査</a>、terminal-only の失敗集合は <a class="xref" href="c2-failures.html">表 1（C1–C6）</a>を参照。</p>
-<p class="annot">※ 限界：図 2b の獲得利得は <code>OFML-Ens</code> のみ（Independent/Shared-Ens は設計上 acquisition 比較なし）。<code>Independent-Ens</code> のコスト 0 は定数（source 大域平均）で学習転移ではない。図 2a の帯は ±1 SE でブートストラップ CI ではない。エイリアシング床・sup 誤差は 48×48 dense グリッド近似、マクロ NRMSE は 256 test 点上の評価。</p></div>
+<p>順方向転移の詳細（線形 s0 パリティ・順序・count）は <a class="xref" href="c1-fig1.html">図 3a</a>／<a class="xref" href="c1-order.html">図 3b</a>／<a class="xref" href="c1-count.html">図 3c</a>、識別可能性の直接監査は <a class="xref" href="c2-tradeoff.html">Φ/Ψ 監査</a>、terminal-only の失敗集合は <a class="xref" href="c2-failures.html">表 1（C1–C6）</a>を参照。</p>
+<p class="annot">※ 限界：図 4 の獲得利得は <code>OFML-Ens</code> のみ（Independent/Shared-Ens は設計上 acquisition 比較なし）。<code>Independent-Ens</code> のコスト 0 は定数（source 大域平均）で学習転移ではない。図 2 の帯は ±1 SE でブートストラップ CI ではない。エイリアシング床・sup 誤差は 48×48 dense グリッド近似、マクロ NRMSE は 256 test 点上の評価。</p></div>
 </div>
 
 <div class="callout"><span class="lab">理論との対応</span>
-<p>コスト指標曲線は主定理の構造をそのまま可視化する。<b>\(b=0\)</b> の順方向転移は識別可能性（rank 条件 \(\ker\Phi\subseteq\ker\Psi\)、<a class="xref" href="../theory.html#prop:ofml-linear" data-ref="prop:ofml-linear">命題 4</a>）に依存。<b>エイリアシング床</b>は転移診断の残差（<a class="xref" href="../theory.html#ass:transfer-diagnostics" data-ref="ass:transfer-diagnostics">仮定 8：C1–C5</a>）に対応。<b>\(b>0\) で床を割る収束</b>は、全台 \(\lambda\) 上の雑音付き \(\IVR/\SUR\) による潜在関数分散の全域消失（<a class="xref" href="../theory.html#thm:cx-main" data-ref="thm:cx-main">定理 2</a>）と、pushforward で特化した <a class="xref" href="../theory.html#thm:ofml-active" data-ref="thm:ofml-active">target active correction（定理 3）</a>・<a class="xref" href="../theory.html#prop:ofml-rescue" data-ref="prop:ofml-rescue">rescue（命題 5）</a>。図 2b の獲得利得は、獲得関数のランキングではなくボトルネック（被覆／容量）の診断として読む。</p></div>
+<p>コスト指標曲線は主定理の構造をそのまま可視化する。<b>\(b=0\)</b> の順方向転移は識別可能性（rank 条件 \(\ker\Phi\subseteq\ker\Psi\)、<a class="xref" href="../theory.html#prop:ofml-linear" data-ref="prop:ofml-linear">命題 4</a>）に依存。<b>エイリアシング床</b>は転移診断の残差（<a class="xref" href="../theory.html#ass:transfer-diagnostics" data-ref="ass:transfer-diagnostics">仮定 8：C1–C5</a>）に対応。<b>\(b>0\) で床を割る収束</b>は、全台 \(\lambda\) 上の雑音付き \(\IVR/\SUR\) による潜在関数分散の全域消失（<a class="xref" href="../theory.html#thm:cx-main" data-ref="thm:cx-main">定理 2</a>）と、pushforward で特化した <a class="xref" href="../theory.html#thm:ofml-active" data-ref="thm:ofml-active">target active correction（定理 3）</a>・<a class="xref" href="../theory.html#prop:ofml-rescue" data-ref="prop:ofml-rescue">rescue（命題 5）</a>。図 4 の獲得利得は、獲得関数のランキングではなくボトルネック（被覆／容量）の診断として読む。</p></div>
 
 <div class="qa" style="margin-top:16px"><div class="blk"><div class="h">この実験が支える主張</div><div><a class="claimcard" href="../experiments.html#c2" style="--c:#0f766e;display:block;border-top-width:4px"><span class="cn">2</span><div class="ct" style="margin-top:8px">転移が失敗しても、構造の優位で能動学習が誤差を早く下げる</div><p>b=0 で識別が破れても、target 終端を能動観測すれば誤差は床を割り、合成的 OFML は非構造ベースラインより速く適応する。</p></a></div></div></div>
 

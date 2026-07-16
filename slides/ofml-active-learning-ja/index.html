@@ -132,7 +132,7 @@
   <h2>実験は 2 つの主張に分解される</h2>
   <p class="lead">継続的な surrogate 性能を、target ラベルの累積取得コスト \(b\) に対する<b>マクロ NRMSE</b> 曲線で測る。\(b=0\) が<b>順方向転移</b>、\(b>0\) が<b>能動適応</b>。各カードをクリックすると、その主張を支える実験ページ（実験目的・実験設定・実験結果・考察）へ移動する。すべての実験は <b>terminal-only</b>（各プロトコル実行につき単一の終端スカラー \(y\) のみを観測）で、中間観測アブレーション（主張 1 の 1-C）でのみ学習中に観測器を段階導入する。</p>
   <div class="claimgrid">
-    <a class="claimcard" href="experiments.html#c1" style="--c:#0ea5a4"><span class="cn">1</span><div class="ct">転移（b=0）：条件が揃えば OFML は転移を助ける</div><p>プロトコルを共有操作モジュールの<b>合成</b>として扱い、再利用する操作の<b>識別可能性</b>とモデル特定が揃うとき、terminal-only でも未知 target へゼロショット転移する。破れれば失敗し、学習中の<b>中間観測</b>で条件を回復できる。</p><div class="figs">支える実験：図 1a · 図 4（order）· 図 5（count）· Φ/Ψ 監査 · 表 1 · 中間観測（図 6–9）</div><span class="go">主張を支える実験へ →</span></a>
+    <a class="claimcard" href="experiments.html#c1" style="--c:#0ea5a4"><span class="cn">1</span><div class="ct">転移（b=0）：条件が揃えば OFML は転移を助ける</div><p>プロトコルを共有操作モジュールの<b>合成</b>として扱い、再利用する操作の<b>識別可能性</b>とモデル特定が揃うとき、terminal-only でも未知 target へゼロショット転移する。破れれば失敗し、学習中の<b>中間観測</b>で条件を回復できる。</p><div class="figs">支える実験：図 3a · 図 3b（order）· 図 3c（count）· Φ/Ψ 監査 · 表 1 · 中間観測（図 6–9）</div><span class="go">主張を支える実験へ →</span></a>
     <a class="claimcard" href="experiments.html#c2" style="--c:#0f766e"><span class="cn">2</span><div class="ct">能動学習（b&gt;0）：転移が失敗しても構造の優位で誤差を早く下げる</div><p>\(b=0\) で識別が破れても、target 終端を能動観測すれば誤差は<b>記述子エイリアシング床</b>を割り、合成的 OFML は非構造ベースラインより速く適応する（<span class="m">s7</span>: ≈0.84→≈0.24）。情報獲得がランダムに勝つ。</p><div class="figs">支える実験：図 2（コスト指標曲線）· 表 2 · S4（全代理 AL）</div><span class="go">主張を支える実験へ →</span></a>
   </div>
   <div class="resultbar" style="margin-top:20px">端末観測のみの OFML は、操作写像が終端観測から識別可能なときゼロショット転移し（主張 1）、識別が破れても target の能動学習が構造の優位を生かして誤差を早く下げる（主張 2）。</div>

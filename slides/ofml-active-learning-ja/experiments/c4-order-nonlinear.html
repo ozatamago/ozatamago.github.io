@@ -16,7 +16,7 @@
 <p>このページは主張 1「中間観測は識別可能性の限界を修復する」を、<b>非線形</b>意味論の order タスクで支える。学習時に中間状態を記録すると、端末観測のみでは欠けている識別信号を供給できる — ただしこれが効くのは操作を<b>合成的に表現できる</b>代理モデルのみであり、count 記述子のブラックボックスにも、真の写像を表現できない<b>誤特定線形</b>にも不活性である。図 8 は、<a class="xref" href="c4-order-linear.html">図 7（線形 order）</a>で確立した観測効果が非線形意味論下でも成立すること、さらに端末のみでは識別できなかった order 構造が<b>最小限（単一操作型）の中間観測</b>で大きく回復すること（完全観測は不要）を示す。</p></div>
 
 <div class="blk setup"><div class="h">実験設定</div>
-<p>図 4 の order 設計を、各観測サブセット \(S\subseteq\{A,B,C,M\}\)（全 \(2^4=16\) 通り）の下で<b>非線形意味論</b> <code>nonlinear_order</code> で再実行する。中間観測は<b>学習時のみ</b>使用し、評価は端末のみで行う（試料を変えない非破壊測定の類似）。報告は <code>traceablation2</code> プロトコルによる。source 12 プロトコル・target ホールドアウト order 3 本、観測ノイズ \(\sigma=0.02\)。指標は<b>ホールドアウト order 平均の per-proto NRMSE</b>（3 ホールドアウト order × 3 seed 平均、<b>16 サブセット</b>を掃引）で、観測なし \(\varnothing\) から完全観測 \(\{A,B,C,M\}\) までを比較する。表 3 は両端 \(\varnothing\) と全観測を要約し、本文で単一操作型の効果を注記する。</p>
+<p>図 3b の order 設計を、各観測サブセット \(S\subseteq\{A,B,C,M\}\)（全 \(2^4=16\) 通り）の下で<b>非線形意味論</b> <code>nonlinear_order</code> で再実行する。中間観測は<b>学習時のみ</b>使用し、評価は端末のみで行う（試料を変えない非破壊測定の類似）。報告は <code>traceablation2</code> プロトコルによる。source 12 プロトコル・target ホールドアウト order 3 本、観測ノイズ \(\sigma=0.02\)。指標は<b>ホールドアウト order 平均の per-proto NRMSE</b>（3 ホールドアウト order × 3 seed 平均、<b>16 サブセット</b>を掃引）で、観測なし \(\varnothing\) から完全観測 \(\{A,B,C,M\}\) までを比較する。表 3 は両端 \(\varnothing\) と全観測を要約し、本文で単一操作型の効果を注記する。</p>
 <p class="annot">※ 前版からの是正：(1) <b>NRMSE 化</b> — 各 target を自スケール（単位 y-std）へ正規化。本図の trace-ablation は元データが per-proto RMSE のため「RMSE（＝NRMSE 近似）」に相当し、値はそのまま NRMSE として解釈できる。(2) <b>誤特定線形の追加</b> — 非線形真値に対しミスマッチの <code>OFML-linear</code> を対照に加え、観測が「表現力のある代理にのみ効く」ことを露出させる。(3) <b>不確実性バックボーンの掃引</b> — 合成の骨格を共有したまま BNN / GP 出力層 / MC-Dropout / 決定論的点推定の 4 変種で頑健性を確認。</p></div>
 
 <div class="blk setup"><div class="h">モデル構成とメトリクス定義</div>
@@ -66,7 +66,7 @@
 <div class="blk disc"><div class="h">考察 — 主張をどう支えるか</div>
 <p>この結果は主張 1 を<b>3 つの誠実な非対称性</b>によって裏付ける。(i) count 記述子のブラックボックス（<code>Shared-Ens</code> / <code>Pooled-GP</code>）は同一の観測を得ても 1.0 前後にとどまる — order は count 特徴で表現できないため、観測を与えても識別が進まない。(ii) 非線形操作上の<b>誤特定された</b> <code>OFML-linear</code> はほぼ恩恵を受けない（0.494→0.529）— 観測が助けるのは、演算子が真の写像を表現できる代理モデルのみである。(iii) 4 つの合成 OFML はいずれも大きく改善し、しかも<b>改善の大半が単一操作型の観測で達成される</b>（完全観測は不要）。すなわち中間観測は万能薬ではなく、モデルが操作を<b>合成的に表現できるとき</b>にのみ識別信号として機能し、そのときは最小限の観測で足りる。</p>
 <p>単一操作型で十分という事実が理論と直結する：ホールドアウト order の識別を支配するのは bridge 係数 \(\Lambda_{p_\star,q}\) の<b>主要因</b>であり、これを一点抑えれば残りは合成構造が補間する。したがって全 \(\{A,B,C,M\}\) を観測しなくても大半が回復する。ただし非線形 order は<b>部分的にしか識別されない</b>：最良でも NRMSE ≈0.17（<code>OFML-BNN</code>）であって、<a class="xref" href="c4-order-linear.html">線形の ≈0.10（図 7）</a>には届かず、点推定の <code>OFML-MCD</code>/<code>OFML-nonlinear</code> は ≈0.33–0.36 に残差が残る。単一操作型スナップショットは非可換構造の主要因を回復するが全部ではない — これは誠実な残差限界である。</p>
-<p>order の順方向転移そのものは <a class="xref" href="c1-order.html">図 4（order）</a>、線形版の観測効果は <a class="xref" href="c4-order-linear.html">図 7（線形 order）</a>を参照。</p>
+<p>order の順方向転移そのものは <a class="xref" href="c1-order.html">図 3b（order）</a>、線形版の観測効果は <a class="xref" href="c4-order-linear.html">図 7（線形 order）</a>を参照。</p>
 <p class="annot">※ 限界：値は per-proto RMSE（各 target を単位 y-std に正規化した NRMSE 近似）で、16 サブセット × 3 seed × 3 ホールドアウト order の平均。表 3 は両端 \(\varnothing\)／全観測のみを示し、SE 帯・単一操作型サブセットの内訳は図 8 のアブレーション曲線に委ねる。<code>OFML-linear</code> の微増と count 記述子の微増は seed ノイズ程度で、いずれも「観測が効かない」ことの表れである。中間観測は<b>学習時のみ</b>で、評価は端末のみ（非破壊）。</p></div>
 </div>
 

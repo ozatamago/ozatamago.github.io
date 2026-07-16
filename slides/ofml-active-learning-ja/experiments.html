@@ -10,7 +10,7 @@
 <p class="lead">端末観測のみの OFML は、プロトコルを共有された操作写像の合成として学習し、それらの写像が端末観測から識別可能であるときゼロショット転移できる。同じ端末観測のみという制約は内在的な失敗モード（未知操作・意味論シフト・誤特定読み出し・target のみの高次相互作用）も露呈させる。target の能動学習が閉ループ補正を与えるが、ランダムに対するサンプル効率上の優位はボトルネック（被覆か容量か）に依存する。最後に、観測器を通じて学習中に中間状態を記録すること — 操作出力の部分集合であっても — はこれらの限界を修復し、それを活用できるのはプロトコル合成的な代理モデルのみである。</p>
 
 <div class="claimgrid" style="margin-top:8px">
-  <a class="claimcard" href="#c1" style="--c:#0ea5a4"><span class="cn">1</span><div class="ct">転移（b=0）：条件が揃えば OFML は転移を助ける</div><p>合成表現に加え、再利用する操作の識別可能性とモデル特定が揃うとき、terminal-only でも未知 target へゼロショット転移する。破れれば失敗し、中間観測で条件を回復できる。</p><div class="figs">図 1a · 図 4 · 図 5 · Φ/Ψ 監査 · 表 1 · 中間観測</div><span class="go">下の実験へ ↓</span></a>
+  <a class="claimcard" href="#c1" style="--c:#0ea5a4"><span class="cn">1</span><div class="ct">転移（b=0）：条件が揃えば OFML は転移を助ける</div><p>合成表現に加え、再利用する操作の識別可能性とモデル特定が揃うとき、terminal-only でも未知 target へゼロショット転移する。破れれば失敗し、中間観測で条件を回復できる。</p><div class="figs">図 3a · 図 3b · 図 3c · Φ/Ψ 監査 · 表 1 · 中間観測</div><span class="go">下の実験へ ↓</span></a>
   <a class="claimcard" href="#c2" style="--c:#0f766e"><span class="cn">2</span><div class="ct">能動学習（b&gt;0）：転移が失敗しても構造の優位で誤差を早く下げる</div><p>b=0 で識別が破れても、target 終端を能動観測すれば誤差は床を割り、合成的 OFML は非構造ベースラインより速く適応する。</p><div class="figs">図 2 · 表 2 · S4</div><span class="go">下の実験へ ↓</span></a>
 </div>
 
@@ -19,8 +19,8 @@
 <p class="kicker">中心結果</p>
 <h2>コスト指標での順方向転移とターゲット適応（図 2 / 表 2）</h2>
 <p class="lead">実験全体を束ねる中心結果。target ラベルの累積取得コスト \(b\) に対する<b>マクロ NRMSE</b> 曲線が、\(b=0\) の<b>順方向転移</b>（主張 1）・\(b>0\) の<b>能動適応</b>（主張 2）・張り付き水準＝<b>記述子エイリアシング床</b>（terminal-only 限界、主張 1）を 1 枚で示す。3 モデル（Independent-Ens / Shared-Ens / OFML-Ens）を同一の均衡 Sobol スケジュールで比較（12 bench seed、予算 200、<b>全指標 NRMSE</b>）。</p>
-<figure class="fw" style="margin:16px 0 6px"><img src="figures/fig2_curves_only.png" alt="コスト指標曲線 depth-3/5：b=0 転移・b>0 適応・エイリアシング床"/><figcaption>コスト指標曲線（depth-3・depth-5、12 bench seed 平均 ±SE）。<b>b=0＝順方向転移</b>（OFML が順序盲 Shared-Ens＝<b>エイリアシング床</b>より下）、<b>b&gt;0＝ターゲット適応</b>（OFML-Ens が最速で降下）。1 枚で 2 主張を示す。</figcaption></figure>
-<div class="expgrid"><a class="expcard" href="experiments/cost-indexed.html" style="--c:#0f766e"><div class="id">図 2 · 表 2 · 中心結果</div><h4>コスト指標曲線＋獲得利得（depth-3 / depth-5）</h4><p class="ck"><b>検証：</b> 同一スケジュール下で、順方向転移・適応・固定予算誤差をエイリアシング床基準で同時に読めるか？獲得はランダムに勝つか？</p><p class="rs"><b>結果：</b> <code>OFML-Ens</code> が転移・適応とも最良（depth-3 AULC 0.281／誤差(B) 0.131）、順序盲 <code>Shared-Ens</code> はエイリアシング床（≈0.77–0.85）に張り付く＝平均予測。MaxVar/IVR はランダムに勝つ。</p><span class="go">中心結果ページへ →</span></a></div>
+<figure class="fw" style="margin:16px 0 6px"><img src="figures/fig2_cost_indexed_full.png" alt="図2 コスト指標曲線 depth-3/5：b=0 転移・b>0 適応・エイリアシング床"/><figcaption>コスト指標曲線（depth-3・depth-5、12 bench seed 平均 ±SE）。<b>b=0＝順方向転移</b>（OFML が順序盲 Shared-Ens＝<b>エイリアシング床</b>より下）、<b>b&gt;0＝ターゲット適応</b>（OFML-Ens が最速で降下）。1 枚で 2 主張を示す。</figcaption></figure>
+<div class="expgrid"><a class="expcard" href="experiments/cost-indexed.html" style="--c:#0f766e"><div class="id">図 2 · 図 4 · 表 2 · 中心結果</div><h4>コスト指標曲線＋獲得利得（depth-3 / depth-5）</h4><p class="ck"><b>検証：</b> 同一スケジュール下で、順方向転移・適応・固定予算誤差をエイリアシング床基準で同時に読めるか？獲得はランダムに勝つか？</p><p class="rs"><b>結果：</b> <code>OFML-Ens</code> が転移・適応とも最良（depth-3 AULC 0.281／誤差(B) 0.131）、順序盲 <code>Shared-Ens</code> はエイリアシング床（≈0.77–0.85）に張り付く＝平均予測。MaxVar/IVR はランダムに勝つ。</p><span class="go">中心結果ページへ →</span></a></div>
 </section>
 
 <!-- ===================== SETUP ===================== -->
@@ -68,9 +68,9 @@
 <p class="tsub">プロトコルを共有操作モジュールの合成として扱い、再利用する操作が識別可能でモデルが正しく特定されるとき、terminal-only でも未知 target へゼロショット転移する。条件が破れれば失敗し、学習時の中間観測で条件を回復できる。</p>
 <h4 style="font-weight:800;margin:16px 0 6px;color:#0ea5a4">1-A 転移の存在（線形・非線形・order・count）</h4>
 <div class="expgrid">
-  <a class="expcard" href="experiments/c1-fig1.html" style="--c:#0ea5a4"><div class="id">図 1a · 存在証明</div><h4>線形 s0 パリティ（存在証明）</h4><p class="ck"><b>検証：</b> 端末 \(y\) のみで学習し、未知プロトコルをゼロショット予測できるか？</p><p class="rs"><b>結果（NRMSE）：</b> 容量一致 <code>OFML-linear</code> が \(s0\) を <b>0.042</b> で近完全に再結合、順序盲 <code>Shared-Ens</code> は <b>1.300</b>（エイリアシング平均）、<code>OFML-Ens</code> 1.158。</p><span class="go">実験ページへ →</span></a>
-  <a class="expcard" href="experiments/c1-order.html" style="--c:#0ea5a4"><div class="id">図 4 · order</div><h4>order 識別可能性（非可換性）</h4><p class="ck"><b>検証：</b> 操作数が同じで順序だけ異なる未知順序へ転移できるか？</p><p class="rs"><b>結果（NRMSE）：</b> <code>OFML-linear</code> のみ全 held-out 順序で低い（macro <b>0.017</b>）、<code>OFML-Ens</code> 1.256・<code>Shared-Ens</code> 2.169 は順序盲で失敗。</p><span class="go">実験ページへ →</span></a>
-  <a class="expcard" href="experiments/c1-count.html" style="--c:#0ea5a4"><div class="id">図 5 · count</div><h4>count 識別（反復外挿 \(C^k M O\)）</h4><p class="ck"><b>検証：</b> 訓練で高々 1 回の操作を \(k\) 回反復して外挿できるか？</p><p class="rs"><b>結果（NRMSE）：</b> <code>OFML-linear</code> は \(k\)=4 でも <b>0.082</b>、<code>Shared-Ens</code> は count 盲で <b>1.983</b> へ発散。</p><span class="go">実験ページへ →</span></a>
+  <a class="expcard" href="experiments/c1-fig1.html" style="--c:#0ea5a4"><div class="id">図 3a · 存在証明</div><h4>線形 s0 パリティ（存在証明）</h4><p class="ck"><b>検証：</b> 端末 \(y\) のみで学習し、未知プロトコルをゼロショット予測できるか？</p><p class="rs"><b>結果（NRMSE）：</b> 容量一致 <code>OFML-linear</code> が \(s0\) を <b>0.042</b> で近完全に再結合、順序盲 <code>Shared-Ens</code> は <b>1.300</b>（エイリアシング平均）、<code>OFML-Ens</code> 1.158。</p><span class="go">実験ページへ →</span></a>
+  <a class="expcard" href="experiments/c1-order.html" style="--c:#0ea5a4"><div class="id">図 3b · order</div><h4>order 識別可能性（非可換性）</h4><p class="ck"><b>検証：</b> 操作数が同じで順序だけ異なる未知順序へ転移できるか？</p><p class="rs"><b>結果（NRMSE）：</b> <code>OFML-linear</code> のみ全 held-out 順序で低い（macro <b>0.017</b>）、<code>OFML-Ens</code> 1.256・<code>Shared-Ens</code> 2.169 は順序盲で失敗。</p><span class="go">実験ページへ →</span></a>
+  <a class="expcard" href="experiments/c1-count.html" style="--c:#0ea5a4"><div class="id">図 3c · count</div><h4>count 識別（反復外挿 \(C^k M O\)）</h4><p class="ck"><b>検証：</b> 訓練で高々 1 回の操作を \(k\) 回反復して外挿できるか？</p><p class="rs"><b>結果（NRMSE）：</b> <code>OFML-linear</code> は \(k\)=4 でも <b>0.082</b>、<code>Shared-Ens</code> は count 盲で <b>1.983</b> へ発散。</p><span class="go">実験ページへ →</span></a>
 </div>
 <h4 style="font-weight:800;margin:16px 0 6px;color:#6366f1">1-B 条件と限界（識別可能性の監査・失敗集合）</h4>
 <div class="expgrid">
@@ -93,7 +93,7 @@
 <p class="tsub">b=0 で識別が破れても、target 終端を直接能動観測すれば誤差は床を割る。合成的 OFML は構造の優位で no-sharing ベースラインより速く適応し、情報獲得（MaxVar/IVR）がランダムに勝つ。</p>
 <h4 style="font-weight:800;margin:16px 0 6px;color:#0f766e">2-A コスト指標の適応＋獲得利得</h4>
 <div class="expgrid">
-  <a class="expcard" href="experiments/cost-indexed.html" style="--c:#0f766e"><div class="id">図 2 · 表 2 · 中心結果</div><h4>コスト指標曲線＋獲得利得（depth-3 / depth-5）</h4><p class="ck"><b>検証：</b> 順方向転移・適応・固定予算誤差をエイリアシング床基準で同時に読めるか？獲得はランダムに勝つか？</p><p class="rs"><b>結果（NRMSE）：</b> <code>OFML-Ens</code> が転移・適応とも最良（depth-3 AULC 0.281／誤差(B) 0.131）、順序盲 <code>Shared-Ens</code> は床に張り付く。MaxVar/IVR はランダムに勝つ。</p><span class="go">中心結果ページへ →</span></a>
+  <a class="expcard" href="experiments/cost-indexed.html" style="--c:#0f766e"><div class="id">図 2 · 図 4 · 表 2 · 中心結果</div><h4>コスト指標曲線＋獲得利得（depth-3 / depth-5）</h4><p class="ck"><b>検証：</b> 順方向転移・適応・固定予算誤差をエイリアシング床基準で同時に読めるか？獲得はランダムに勝つか？</p><p class="rs"><b>結果（NRMSE）：</b> <code>OFML-Ens</code> が転移・適応とも最良（depth-3 AULC 0.281／誤差(B) 0.131）、順序盲 <code>Shared-Ens</code> は床に張り付く。MaxVar/IVR はランダムに勝つ。</p><span class="go">中心結果ページへ →</span></a>
 </div>
 <h4 style="font-weight:800;margin:16px 0 6px;color:#0f766e">2-B 全代理 AL レース（depth-5）</h4>
 <div class="expgrid">

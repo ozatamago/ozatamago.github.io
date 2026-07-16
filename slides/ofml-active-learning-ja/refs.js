@@ -40,7 +40,7 @@ window.__CITES__={
 // and every target page is under <root>/experiments/, so "../figures/<name>" resolves relative
 // to the referenced page regardless of where the link sits.
 window.__FIGMAP__={
-"c1-fig1.html":{name:"fig1_linear.png",cap:"図 1a — 線形ファミリの s0–s7 ゼロショット転移"},
+"c1-fig1.html":{name:"fig1_linear.png",cap:"図 3a — 線形ファミリの s0–s7 ゼロショット転移"},
 "c2-failures.html":{name:"fig1_nonlinear.png",cap:"図 1b — 非線形 s0–s7（正直な失敗を含む）"},
 "c3-dsweep.html":{name:"al_curves_grid_r10.png",cap:"図 — depth-5 での全代理 AL レース"},
 "c4-s0.html":{name:"fig1_nonlinear_s0_traceablation2.png",cap:"図 6 — s0 中間観測アブレーション"},
@@ -66,7 +66,7 @@ window.__PAGEMAP__={
 "theory.html":{title:"Theoretical statement and proofs",body:"C(X) 値ベイズ能動学習の一致性（定理 2）と、OFML の識別可能性（命題 4）・pushforward・能動補正（定理 3）・深さ限界（命題 6）。"},
 "experiments.html":{title:"Experiments",body:"コスト指標曲線で統一した 2 主張の検証。主張 1：転移（b=0）、主張 2：能動学習（b>0）。"},
 "references.html":{title:"References",body:"引用文献一覧（BOFN・pKGFN・自律実験・GP 転移など）。"},
-"c1-order.html":{title:"図 4 — order 識別（線形）",body:"操作の順序が結果を変える設定で、合成的 OFML が順序を捉えて転移するかを検証。順序盲ベースラインと対比する。"},
-"c1-count.html":{title:"図 5 — count 外挿",body:"訓練より多い操作回数（count）への外挿。count 記述子ベースラインに対する OFML の構造的優位を示す。"},
+"c1-order.html":{title:"図 3b — order 識別（線形）",body:"操作の順序が結果を変える設定で、合成的 OFML が順序を捉えて転移するかを検証。順序盲ベースラインと対比する。"},
+"c1-count.html":{title:"図 3c — count 外挿",body:"訓練より多い操作回数（count）への外挿。count 記述子ベースラインに対する OFML の構造的優位を示す。"},
 "c2-tradeoff.html":{title:"Φ/Ψ 監査 — 識別可能性の階数条件",body:"source/target 感度作用素 Φ・Ψ の階数監査で r_id=0 ⟺ ker Φ ⊆ ker Ψ を数値確認し、転移の成否境界を画定する。"}
 };

@@ -1,22 +1,22 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>線形 s0 パリティ（存在証明・図 1a）— OFML Experiments</title><link rel="stylesheet" href="../style.css"/>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>線形 s0 パリティ（存在証明・図 3a）— OFML Experiments</title><link rel="stylesheet" href="../style.css"/>
 <script>window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],macros:{Mcal:"\\mathcal{M}",Pcal:"\\mathcal{P}",Xcal:"\\mathcal{X}",Zcal:"\\mathcal{Z}",Scal:"\\mathcal{S}",Obs:"\\operatorname{Obs}",E:"\\mathbb{E}",RMSE:"\\operatorname{RMSE}",NRMSE:"\\operatorname{NRMSE}",IVR:"\\mathrm{IVR}",SUR:"\\mathrm{SUR}",eps:"\\varepsilon",norm:["\\left\\lVert #1\\right\\rVert",1]},packages:{'[+]':['ams']}},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
 <script src="../refs.js"></script><script src="../protoviz.js"></script><script src="../hovercard.js"></script><script src="../obsviz.js"></script></head><body>
 <nav class="sitenav"><div class="wrap"><a href="../index.html">Overview</a><a href="../background.html">Background</a><a href="../problem.html">Problem setting</a><a href="../method.html">Object-Flow Machine Learning</a><a href="../theory.html">Theoretical statement and proofs</a><a href="../experiments.html">Experiments</a><a href="../references.html">References</a></div></nav>
-<div class="topbar"><div class="wrap"><a class="back" href="../experiments.html">‹ Experiments</a><span class="crumb">主張 1 › 図 1a（線形 s0 パリティ・存在証明）</span></div></div>
+<div class="topbar"><div class="wrap"><a class="back" href="../experiments.html">‹ Experiments</a><span class="crumb">主張 1 › 図 3a（線形 s0 パリティ・存在証明）</span></div></div>
 
 <div class="wrap page">
 <p class="kicker"><span class="pill" style="--c:#0ea5a4">主張 1 · 合成は転移を助ける</span></p>
-<h2>図 1a — 線形族 s0 パリティ：合成的転移の存在証明</h2>
+<h2>図 3a — 線形族 s0 パリティ：合成的転移の存在証明</h2>
 <p class="lead">構造化された terminal-only 転移の<b>存在証明</b>。source プロトコルで学んだ操作知識を、同じ操作を<b>別の順序で</b>合成しただけの未知 target（s0）へゼロショットで再結合できるかを問う。合成ネット <code>OFML-linear</code> は s0 を<b>マクロ NRMSE 0.042</b>（自スケール正規化）で解き、潜在再結合が平均として近完全であることを示す。一方、順序を見ない count 記述子 <code>Shared-Ens</code> は同数・異順序の 2 target を区別できず、両者の平均を予測して<b>エイリアシング床</b>（NRMSE ≈1.3）に張り付く。ただし <code>OFML-linear</code> の 3 リスタート・アンサンブルは同一解へ収束し予測分散がほぼ消える（2σ 被覆 0%）＝<b>過信</b>であり、これは正直に明記する。</p>
 
-<figure class="figbox"><img src="../figures/fig1_linear.png" alt="図1a 線形族 s0–s7 の真値対予測グリッド（8モデル×12seed）"/><figcaption>図 1a：<b>線形族</b>のゼロショット転移グリッド。行＝シナリオ \(s0\)–\(s7\)、列＝8 手法、各セルは真値対予測の散布図とマクロ NRMSE（12 seed 平均）。<b>s0 行</b>で容量一致 <code>OFML-linear</code> のみが対角線に張り付く（潜在再結合が本質的なレジーム）。順序盲の <code>Shared-Ens</code> は s0 で異順序 2 target を同一に予測し、点群が横に広がる＝エイリアシング床。クリックで拡大。</figcaption></figure>
+<figure class="figbox"><img src="../figures/fig1_linear.png" alt="図1a 線形族 s0–s7 の真値対予測グリッド（8モデル×12seed）"/><figcaption>図 3a：<b>線形族</b>のゼロショット転移グリッド。行＝シナリオ \(s0\)–\(s7\)、列＝8 手法、各セルは真値対予測の散布図とマクロ NRMSE（12 seed 平均）。<b>s0 行</b>で容量一致 <code>OFML-linear</code> のみが対角線に張り付く（潜在再結合が本質的なレジーム）。順序盲の <code>Shared-Ens</code> は s0 で異順序 2 target を同一に予測し、点群が横に広がる＝エイリアシング床。クリックで拡大。</figcaption></figure>
 
 <div class="qa">
 <div class="blk goal"><div class="h">実験目的（主張の要約）</div>
 <p>プロトコルをカテゴリや操作数（count）記述子ではなく<b>共有操作モジュールの合成</b>として扱えば、source で学習した操作知識を未知の target へ再結合できる — これが主張 1「合成は転移を助ける」の<b>存在証明</b>である。s0 は識別残差 \(r^{\mathrm{id}}=0\)（\(\ker\Phi\subseteq\ker\Psi\)、<a class="xref" href="c2-tradeoff.html">Φ/Ψ 監査</a>参照）を満たす<b>識別可能な</b>再結合なので、理論上は転移が成功するはずである。本図はその予言が経験的に成立すること（合成ネットが近完全、順序盲ベースラインは床）を、マクロ NRMSE・2σ 被覆・予測 std の 3 指標で確認する。</p></div>
 
 <div class="blk setup"><div class="h">実験設定</div>
-<p>各手法を<b>共通 source 9 本</b>（端末 \(y\) のみ観測）で学習し、s0 の target 2 本を<b>ゼロショット</b>で予測する。s0 の 2 target は<b>操作の多重集合が同一で順序だけが逆</b>（<code>A B C M O</code> と <code>C B A M O</code>）で、順序盲エイリアシングを露出させる。source は各 <b>30 点</b>（<code>per_source=30</code>、学習ノイズ \(\sigma=0.02\)、計 270 点）、test は各 target <b>120 点</b>（<code>n_test=120</code>、ノイズ無＝真値）。統計単位は <b>12 seed</b>。グリッド（図 1a）の列は 8 手法だが、本ページの表は代表 3 モデル — 容量一致の合成 <code>OFML-linear</code>、順序盲 count の <code>Shared-Ens</code>、合成アンサンブル <code>OFML-Ens</code> — に絞って構造だけを切り分ける。指標はすべて<b>マクロ NRMSE</b>（各 target の自スケールで正規化。生 RMSE は用いない）。</p>
+<p>各手法を<b>共通 source 9 本</b>（端末 \(y\) のみ観測）で学習し、s0 の target 2 本を<b>ゼロショット</b>で予測する。s0 の 2 target は<b>操作の多重集合が同一で順序だけが逆</b>（<code>A B C M O</code> と <code>C B A M O</code>）で、順序盲エイリアシングを露出させる。source は各 <b>30 点</b>（<code>per_source=30</code>、学習ノイズ \(\sigma=0.02\)、計 270 点）、test は各 target <b>120 点</b>（<code>n_test=120</code>、ノイズ無＝真値）。統計単位は <b>12 seed</b>。グリッド（図 3a）の列は 8 手法だが、本ページの表は代表 3 モデル — 容量一致の合成 <code>OFML-linear</code>、順序盲 count の <code>Shared-Ens</code>、合成アンサンブル <code>OFML-Ens</code> — に絞って構造だけを切り分ける。指標はすべて<b>マクロ NRMSE</b>（各 target の自スケールで正規化。生 RMSE は用いない）。</p>
 <p class="annot">※ 正直な注記：<code>OFML-linear</code> の不確実性は 3 リスタート・アンサンブルの分散で与えるが、s0 は識別可能で最小化子が実質一意のため 3 メンバがほぼ同一解に収束し、予測 std ≈0 になる。結果として 2σ 被覆が 0%（＝誤差はほぼ 0 なのに区間が縮退して真値を「外す」）という<b>過信</b>が生じる。平均予測は近完全でも較正は破綻している点を強調する。</p></div>
 
 <div class="blk setup"><div class="h">モデル構成とメトリクス定義</div>
@@ -61,11 +61,11 @@
 <tr><td style="text-align:left">OFML-Ens</td><td>1.178</td></tr>
 <tr><td style="text-align:left">Shared-Ens</td><td>1.733</td></tr>
 </tbody></table></div>
-<p>グリッド平均は s1（未知操作）・s7（三体相互作用）など識別が破れる honest failures を含むため s0 パリティより悪化するが、それでも合成が非合成を凌駕する。個々の失敗の内訳は <a class="xref" href="c2-failures.html">表 1（C1–C6）</a>、順序・count 記述子に対する鋭い分離は <a class="xref" href="c1-order.html">図 4（order）</a>・<a class="xref" href="c1-count.html">図 5（count）</a>を参照。</p></div>
+<p>グリッド平均は s1（未知操作）・s7（三体相互作用）など識別が破れる honest failures を含むため s0 パリティより悪化するが、それでも合成が非合成を凌駕する。個々の失敗の内訳は <a class="xref" href="c2-failures.html">表 1（C1–C6）</a>、順序・count 記述子に対する鋭い分離は <a class="xref" href="c1-order.html">図 3b（order）</a>・<a class="xref" href="c1-count.html">図 3c（count）</a>を参照。</p></div>
 
 <div class="blk disc"><div class="h">考察 — 主張をどう支えるか</div>
 <p>線形族で <code>OFML-linear</code> が s0 をマクロ NRMSE 0.042 で解くことは、<b>操作順序・合成が本質的で、かつ構造が識別可能なレジーム</b>では合成が非合成ベースラインを大きく凌駕するという<b>存在証明</b>であり、主張 1 を直接支える。s0 が識別可能（\(r^{\mathrm{id}}=0\)、\(\ker\Phi\subseteq\ker\Psi\)）であることが転移成功の前提であり、その階数関係を真の \(\theta\) で直接測る監査が <a class="xref" href="c2-tradeoff.html">Φ/Ψ 識別可能性監査</a>である。対照的に、順序盲 count の <code>Shared-Ens</code> は同数・異順序 target を原理的に区別できずエイリアシング床に張り付く＝terminal-only 記述子の限界（<a class="xref" href="../experiments.html#c1">主張 1</a>）。</p>
-<p>本図は過大主張を避け、<b>正直な限界</b>も併記する：<code>OFML-linear</code> の 2σ 被覆 0% は識別可能レジームでアンサンブル分散を不確実性に用いることの落とし穴（過信）で、能動観測やベイズ較正なしには不確実性が信頼できない。合成の鋭い分離を較正込みで示す設定は <a class="xref" href="c1-order.html">図 4</a>・<a class="xref" href="c1-count.html">図 5</a>、コスト指標での順方向転移＋適応の統合は <a class="xref" href="cost-indexed.html">図 2</a>を参照。honest failures（未知操作 s1、三体 s7 など）は terminal-only の識別限界として <a class="xref" href="../experiments.html#c1">主張 1</a>で扱う。</p></div>
+<p>本図は過大主張を避け、<b>正直な限界</b>も併記する：<code>OFML-linear</code> の 2σ 被覆 0% は識別可能レジームでアンサンブル分散を不確実性に用いることの落とし穴（過信）で、能動観測やベイズ較正なしには不確実性が信頼できない。合成の鋭い分離を較正込みで示す設定は <a class="xref" href="c1-order.html">図 3b</a>・<a class="xref" href="c1-count.html">図 3c</a>、コスト指標での順方向転移＋適応の統合は <a class="xref" href="cost-indexed.html">図 2</a>を参照。honest failures（未知操作 s1、三体 s7 など）は terminal-only の識別限界として <a class="xref" href="../experiments.html#c1">主張 1</a>で扱う。</p></div>
 </div>
 
 <div class="callout"><span class="lab">理論との対応</span>
