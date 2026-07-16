@@ -1,55 +1,76 @@
 <!doctype html><html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Problem setting — OFML</title><link rel="stylesheet" href="style.css"/>
-<script>window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],macros:{Mcal:"\\mathcal{M}",Pcal:"\\mathcal{P}",Xcal:"\\mathcal{X}",Ycal:"\\mathcal{Y}",Zcal:"\\mathcal{Z}",Scal:"\\mathcal{S}",Qcal:"\\mathcal{Q}",Ccal:"\\mathcal{C}",Ucal:"\\mathcal{U}",Acal:"\\mathcal{A}",Dcal:"\\mathcal{D}",Hcal:"\\mathcal{H}",Gcal:"\\mathcal{G}",Tcal:"\\mathcal{T}",Rcal:"\\mathcal{R}",E:"\\mathbb{E}",R:"\\mathbb{R}",N:"\\mathbb{N}",Eval:"\\operatorname{Eval}",Pa:"\\operatorname{Pa}",Anc:"\\operatorname{Anc}",Obs:"\\operatorname{Obs}",Var:"\\operatorname{Var}",Cov:"\\operatorname{Cov}",RMSE:"\\operatorname{RMSE}",AUC:"\\operatorname{AUC}",argmax:"\\operatorname*{arg\\,max}",norm:["\\left\\lVert #1\\right\\rVert",1],abs:["\\left\\lvert #1\\right\\rvert",1]},packages:{'[+]':['ams']}},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],macros:{Mcal:"\\mathcal{M}",Pcal:"\\mathcal{P}",Xcal:"\\mathcal{X}",Ycal:"\\mathcal{Y}",Zcal:"\\mathcal{Z}",Scal:"\\mathcal{S}",Qcal:"\\mathcal{Q}",Ccal:"\\mathcal{C}",Ucal:"\\mathcal{U}",Acal:"\\mathcal{A}",Dcal:"\\mathcal{D}",Hcal:"\\mathcal{H}",Gcal:"\\mathcal{G}",Tcal:"\\mathcal{T}",Rcal:"\\mathcal{R}",E:"\\mathbb{E}",R:"\\mathbb{R}",N:"\\mathbb{N}",Eval:"\\operatorname{Eval}",Pa:"\\operatorname{Pa}",Anc:"\\operatorname{Anc}",Obs:"\\operatorname{Obs}",Var:"\\operatorname{Var}",Cov:"\\operatorname{Cov}",Law:"\\operatorname{Law}",supp:"\\operatorname{supp}",mean:"\\operatorname{mean}",RMSE:"\\operatorname{RMSE}",NRMSE:"\\operatorname{NRMSE}",IVR:"\\mathrm{IVR}",SUR:"\\mathrm{SUR}",AUC:"\\operatorname{AUC}",argmax:"\\operatorname*{arg\\,max}",norm:["\\left\\lVert #1\\right\\rVert",1],abs:["\\left\\lvert #1\\right\\rvert",1]},packages:{'[+]':['ams']}},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
 <script src="refs.js"></script><script src="protoviz.js"></script><script src="hovercard.js"></script><script src="obsviz.js"></script></head><body>
 <nav class="sitenav"><div class="wrap"><a href="index.html">Overview</a><a href="background.html">Background</a><a class="on" href="problem.html">Problem setting</a><a href="method.html">Object-Flow Machine Learning</a><a href="theory.html">Theoretical statement and proofs</a><a href="experiments.html">Experiments</a><a href="references.html">References</a></div></nav>
 
 <div class="wrap page">
 <p class="kicker">Problem setting</p>
 <h2>終端観測付きプロトコル構造化代理モデリング問題</h2>
-<p class="lead">OFML が解く対象を定義する。実験プロトコルの構造、真の潜在過程、測定器を通じた観測、および source から target への転移目的を、要点ごとに箱で示す（背景の地の文は補足のみ）。学習される代理モデルは <a class="xref" href="method.html">Object-Flow Machine Learning</a> で導入する。</p>
+<p class="lead">OFML が解く対象を定義する。プロトコル構造・真の潜在実行・観測モデル・<b>OFML 仮説クラス</b>・source→target 学習・<b>逐次行動とコスト指標目的</b>を要点ごとに箱で示す（地の文は補足のみ）。合成の重み共有アーキテクチャの詳細は <a class="xref" href="method.html">Object-Flow Machine Learning</a>、終端関数事後の一致性は <a class="xref" href="theory.html">Theoretical statement and proofs</a> で扱う。記号は実験の<a class="xref" href="experiments/cost-indexed.html">コスト指標評価</a>および理論と整合させる。</p>
 
-<h3 class="sub">プロトコル集合と操作語彙</h3>
+<!-- ==================== 3.1 ==================== -->
+<h3 class="sub">3.1 プロトコル語彙と型付き実行グラフ</h3>
 <div class="callout"><span class="lab">操作語彙とプロトコル集合</span>
-<p>共通する操作語彙を \(\Mcal=\{M_1,\ldots,M_m\}\) とする。各 \(M_j\) は分注・混合・加熱・培養・反応・読み出し準備など、再利用される操作型を表す。プロトコル集合を \(\Pcal\)、観測済みの source を \(\Pcal_{\mathrm{src}}\subseteq\Pcal\)、転移先の target を \(\Pcal_{\mathrm{tar}}\subseteq\Pcal\) とする。</p></div>
-<div class="callout"><span class="lab">型付き有向非巡回グラフ（DAG）と入力構成写像</span>
-<p>各プロトコル \(p\in\Pcal\) は型付き DAG \(p=(V_p,E_p,\tau_p,\iota_p)\)。\(V_p\) はノード集合、\(E_p\) は依存関係、\(\tau_p:V_p\to\{1,\ldots,m\}\) は操作型を割り当てる。ノード \(v\) の親集合を \(\Pa_p(v)\)、外部設計変数を \(x\in\Xcal_p\) とする。各ノードの局所入力は入力構成写像で構成される：</p>
-\[ \iota_{p,v}:\left(\prod_{u\in\Pa_p(v)}\Scal_{\tau_p(u)}\right)\times \Xcal_p \to \Zcal_{\tau_p(v)}. \]
-<p>ここで \(\Zcal_j\) は操作型 \(M_j\) の局所入力空間、\(\Scal_j\) はその操作後の潜在状態空間である。</p></div>
+<p>共通する操作語彙を \(\Mcal=\{M_1,\ldots,M_m\}\) とする。各 \(M_j\) は分注・混合・加熱・培養・反応・読み出し準備など、プロトコル間で再利用される操作型である。プロトコル集合を \(\Pcal\)、観測済みの source を \(\Pcal_{\mathrm{src}}\subseteq\Pcal\) とする（transfer 先の有限 target 集合は 3.4 で定義）。</p></div>
+<div class="callout"><span class="lab">型付き有向非巡回グラフ（DAG）と局所入力構成写像</span>
+<p>各プロトコル \(p\in\Pcal\) は型付き DAG \(p=(V_p,E_p,\tau_p,\iota_p)\)。\(V_p\) はノード集合、\(E_p\) は依存関係、\(\tau_p:V_p\to\{1,\ldots,m\}\) は各ノードに操作型を割り当てる。ノード \(v\) の親集合を \(\Pa_p(v)\)、外部設計変数を \(x\in\Xcal_p\) とする。操作型 \(M_j\) の局所入力空間を \(\Zcal_j\)、操作後の潜在状態空間を \(\Scal_j\) とし、各ノードの局所入力を組み立てる<b>入力構成写像</b>を一度だけ次で定める：</p>
+\[ \iota_{p,v}:\left(\prod_{u\in\Pa_p(v)}\Scal_{\tau_p(u)}\right)\times \Xcal_p \to \Zcal_{\tau_p(v)}. \]</div>
+<div class="callout"><span class="lab">真の潜在実行（プロトコル依存の真写像）</span>
+<p>各操作型 \(M_j\) の真の写像を、当該プロトコルに依存して \(F_{j,p}^\dagger:\Zcal_j\to\Scal_j\) と書く。DAG の位相順序に従い、設計変数 \(x\) から真の状態は次で定まる：</p>
+\[ z_v^\dagger(x) = \iota_{p,v}\!\left((s_u^\dagger(x))_{u\in\Pa_p(v)},\, x\right),\qquad s_v^\dagger(x) = F_{\tau_p(v),\,p}^\dagger\!\left(z_v^\dagger(x)\right). \]
+<p class="annot">※ 真写像を<b>プロトコル依存 \(F_{j,p}^\dagger\)</b> としたのは意図的である。OFML の<b>モデル</b>は同一操作型に単一モジュール \(g_{\theta_j}\) を共有する（3.3）が、<b>真実がその共有と一致するか</b>は転移が成立するための<b>条件</b>であって前提ではない（3.4 の C2、<a class="xref" href="theory.html#ass:transfer-diagnostics" data-ref="ass:transfer-diagnostics">仮定 8</a>）。意味論シフト s2 はこの条件を意図的に破る失敗モードである。</p></div>
 
-<h3 class="sub">プロトコル実行過程</h3>
-<div class="callout"><span class="lab">各操作型の真の写像</span>
-<p>各モジュール型 \(M_j\) に未知の真の写像 \(F_j^\dagger:\Zcal_j\to\Scal_j\) が対応する。同じモジュール型が異なるプロトコルに現れる場合、そのモジュールは<b>同じ操作的意味論</b>、すなわち同じ \(F_j^\dagger\) に従うと仮定する。</p></div>
-<div class="callout"><span class="lab">外部入力と再帰実行</span>
-<p>設計変数 \(x\) が与えられると、各ノードに外部入力 \(u_{p,v}(x)\in\Ucal_{\tau_p(v)}\) が対応する（外部入力を持たなければ一点集合）。DAG の位相順序に従い真の出力は</p>
-\[ z_v^\dagger(x) = \iota_{p,v}\!\left((s_u^\dagger(x))_{u\in\Pa_p(v)},\, u_{p,v}(x)\right),\qquad s_v^\dagger(x) = F_{\tau_p(v)}^\dagger\!\left(z_v^\dagger(x)\right). \]</div>
-<div class="callout"><span class="lab">測定器と観測可能ノード</span>
-<p>測定器として登録された操作型の添字集合を \(\Qcal\subseteq\{1,\ldots,m\}\) とする。観測可能ノード集合は</p>
-\[ \Obs(p)=\{v\in V_p:\tau_p(v)\in\Qcal\}. \]
-<p>任意の中間ノード出力が直接観測できるとは仮定しない。観測できるのはプロトコル中に明示的に含まれる測定器モジュールの出力のみである。</p></div>
-<div class="callout"><span class="lab">観測空間と観測データ</span>
-<p>観測空間を \(\Ycal_p^{\mathrm{obs}}=\prod_{q\in\Obs(p)}\Scal_{\tau_p(q)}\)、真の観測出力を \(\Eval^\dagger(p;x)=\left(s_q^\dagger(x)\right)_{q\in\Obs(p)}\) とする。観測データは</p>
-\[ \Dcal_n=\{(p_i,x_i,y_i)\}_{i=1}^n,\qquad y_i = \Eval^\dagger(p_i;x_i)+\xi_i, \]
-<p>\(\xi_i\) は観測空間 \(\Ycal_{p_i}^{\mathrm{obs}}\) 上の観測ノイズ。</p></div>
+<!-- ==================== 3.2 ==================== -->
+<h3 class="sub">3.2 観測モデル</h3>
+<div class="callout"><span class="lab">観測器語彙と観測可能ノード</span>
+<p>測定器を操作語彙とは<b>別の観測器語彙</b> \(\Qcal=\{Q_1,\ldots,Q_r\}\) として分離する。各観測器 \(Q_q\) は、それが置かれたノードの潜在状態を読み出す真の読み出し写像 \(h_q^\dagger:\Scal_{j}\to\Ycal_q\) を持つ。プロトコル \(p\) の観測可能ノード集合を \(\Obs(p)\subseteq V_p\)（観測器が置かれたノード）とする。任意の中間ノード出力が直接観測できるとは仮定せず、観測できるのは明示的に置かれた観測器の出力のみである。</p>
+<p class="annot">※ 観測器を操作語彙から分けることで、将来の複数観測器・観測器ごとのコスト・中間測定・非破壊/破壊測定の拡張が自然になる。本論文の主設定では \(\Qcal=\{q_{\mathrm{term}}\}\)、\(\Ycal_{q_{\mathrm{term}}}=\R\)（単一の終端スカラー観測器）。</p></div>
+<div class="callout"><span class="lab">観測空間と雑音観測</span>
+<p>観測空間を \(\Ycal_p^{\mathrm{obs}}=\prod_{q\in\Obs(p)}\Ycal_q\)、真の観測出力を \(\Eval^\dagger(p;x)=\left(h_q^\dagger(s_{v(q)}^\dagger(x))\right)_{q\in\Obs(p)}\) とする（\(v(q)\) は観測器 \(q\) が置かれたノード）。観測データは</p>
+\[ y_i = \Eval^\dagger(p_i;x_i)+\xi_i,\qquad \E[\xi_i\mid \cdot]=0, \]
+<p>\(\xi_i\) は観測空間 \(\Ycal_{p_i}^{\mathrm{obs}}\) 上の条件付き不偏・有限分散雑音（理論の <a class="xref" href="theory.html#ass:finite-variance" data-ref="ass:finite-variance">仮定 4</a>）。</p></div>
 <div class="callout" style="--ca:#f59e0b"><span class="lab">主設定：terminal-only observation</span>
-<p>本研究の主設定では各プロトコルで \(\Obs(p)=\{q_p^{\mathrm{term}}\}\)、観測データは<b>終端測定器ノードの出力のみ</b>を含む。途中段階で観測を追加する場合も、中間状態そのものではなく、その位置に置いた測定器モジュールの出力を観測するものとして表す。この点で OFML は、中間ノード出力を直接利用する function network 型ベイズ最適化<a class="cite" data-cite="astudillo2021bofn">[bofn]</a>や、ノード単位の部分評価を前提とする pKGFN<a class="cite" data-cite="buathong2024pkgfn">[pKGFN]</a>とは異なる。</p></div>
+<p>本研究の主設定では各プロトコルで \(\Obs(p)=\{q_p^{\mathrm{term}}\}\)、観測データは<b>終端測定器ノードの出力（単一スカラー \(y\)）のみ</b>を含む。学習中に途中段階を観測する場合も、中間状態そのものではなく、その位置に置いた観測器モジュールの出力として表す。この点で OFML は、中間ノード出力を直接利用する function network 型ベイズ最適化<a class="cite" data-cite="astudillo2021bofn">[bofn]</a>や、ノード単位の部分評価を前提とする pKGFN<a class="cite" data-cite="buathong2024pkgfn">[pKGFN]</a>とは異なる。</p></div>
 
-<h3 class="sub">Source-to-target protocol transfer</h3>
-<div class="callout"><span class="lab">source と target</span>
-<p>初期データ \(\Dcal_n\) は主に source \(\Pcal_{\mathrm{src}}\) から得られる。転移・予測・追加実験の対象を target \(\Pcal_{\mathrm{tar}}\subseteq\Pcal\) と書く（一つに限らない — 観測に応じて次に試すプロトコルが変わりうるため）。典型的な zero-shot transfer では \(\Pcal_{\mathrm{tar}}\cap\Pcal_{\mathrm{src}}=\emptyset\)。</p></div>
-<div class="callout"><span class="lab">target 関数と転移目的</span>
-<p>各 \(p\in\Pcal_{\mathrm{tar}}\) の真の target 関数を \(f_p^\dagger(x)=\Eval^\dagger(p;x)\) とする。目的は source の観測と（必要に応じて）少数の target 観測から \(\{f_p^\dagger:p\in\Pcal_{\mathrm{tar}}\}\) を予測すること。データは \(\Dcal_n=\Dcal_{\mathrm{src}}\cup \Dcal_{\mathrm{tar},n}\) と分け、zero-shot では \(\Dcal_{\mathrm{tar},n}=\emptyset\)、few-shot / active correction では逐次増える。</p></div>
+<!-- ==================== 3.3 ==================== -->
+<h3 class="sub">3.3 OFML 仮説クラス</h3>
+<div class="callout"><span class="lab">共有操作モジュールと合成予測器</span>
+<p>各操作型 \(M_j\) に学習される<b>共有モジュール</b> \(g_{\theta_j}:\Zcal_j\to\Scal_j\) を割り当てる。観測器 \(Q_q\) の<b>読み出しヘッド</b> \(h_q\) も学習対象とし、全学習成分（操作モジュール＋観測器ヘッド）を \(\theta\in\Theta\) と束ねる（主設定の終端読み出しは固定のスカラー測定、1-C の中間観測器ヘッドは学習可能）。真の実行と同じ位相順序で合成し、予測器を</p>
+\[ \Eval(p;\theta;x)=\bigl(h_q(s_{v(q)}^{\theta}(x))\bigr)_{q\in\Obs(p)},\quad s_v^{\theta}(x)=g_{\tau_p(v)}\!\bigl(\iota_{p,v}((s_u^{\theta}(x))_{u\in\Pa_p(v)},x);\theta\bigr) \]
+<p>と定める。<b>同一操作型に単一パラメータ \(\theta_j\) を共有する</b>ことが OFML の帰納バイアスであり、これが順序・出現回数（count）を無視する非構造ベースライン（Shared-Ens／Independent-Ens）との違いを与える。合成アーキテクチャの詳細は <a class="xref" href="method.html">Object-Flow Machine Learning</a>。</p></div>
+<div class="callout"><span class="lab">パラメータ不確実性と終端関数への pushforward</span>
+<p>モジュールパラメータの不確実性分布を \(\Pi_n^\theta\) とする。これは exact posterior・SMC・deep ensemble を同一視するものではなく、いずれも共通して提供する「<b>終端関数サンプル</b>」のインターフェースを定義するためのものである。各 target \(p\) について pushforward \(T_p(\theta)(x)=\Eval(p;\theta;x)\) により終端関数の分布</p>
+\[ \Pi_n^{G}=(T_p)_{\#}\,\Pi_n^\theta,\qquad \widehat f_{n,p}(x)=\mu_{n,p}(x)=\E_{\theta\sim\Pi_n^\theta}\!\left[\Eval(p;\theta;x)\right] \]
+<p>を得る。予測はこの<b>事後平均 \(\mu_{n,p}\)</b>、能動学習の獲得はこの分布の分散に基づく。\(\Pi_n^{G}\) は理論が一致性を論じる \(C(\Xcal)\) 値事後 \(\Law(G\mid\Hcal_n)\)（<a class="xref" href="theory.html#lem:ofml-pushforward" data-ref="lem:ofml-pushforward">補題 5</a>）に対応する。</p></div>
 
-<h3 class="sub">Closed-loop target correction</h3>
-<div class="callout"><span class="lab">候補実験と観測更新</span>
-<p>追加実験が許されるとき、候補集合 \(\Ccal_n\subseteq\{(p,x):p\in\Pcal_{\mathrm{tar}}\}\) から \(c_n=(p_n,x_n)\) を選び、観測 \(y_n=\Eval^\dagger(p_n;x_n)+\xi_n\) を得て \(\Dcal_{n+1}=\Dcal_n\cup\{(p_n,x_n,y_n)\}\) と更新する。本論文の実験では主張を明確にするため、各エピソードで単一の target \(\Pcal_{\mathrm{tar}}=\{p_\star\}\) を固定して評価する。</p></div>
+<!-- ==================== 3.4 ==================== -->
+<h3 class="sub">3.4 Source-to-target 学習</h3>
+<div class="callout"><span class="lab">source / target データの分離</span>
+<p>データを source と target に分ける：</p>
+\[ \Dcal_n=\Dcal_{\mathrm{src}}\cup\Dcal_{\mathrm{tar},n},\qquad \Dcal_{\mathrm{tar},0}=\emptyset. \]
+<p>\(\Dcal_{\mathrm{src}}\) は target のコスト計上より前に固定された source 観測、\(\Dcal_{\mathrm{tar},n}\) は逐次追加される target 観測である。\(n=0\) は source 事前学習後・target 観測なし（zero-shot 転移）、\(n\ge1\) は target 適応に対応する。source 取得費は全モデル共通の <b>sunk cost</b> として扱い、コスト軸には含めない。</p></div>
+<div class="callout"><span class="lab">有限 target 集合と転移目的</span>
+<p>転移・評価の対象を<b>有限 target プロトコル集合</b> \(\Pcal_\star=\{p_1,\ldots,p_K\}\subseteq\Pcal\) とする（典型的に \(\Pcal_\star\cap\Pcal_{\mathrm{src}}=\emptyset\)）。各 \(p\in\Pcal_\star\) の真の target 関数は \(f_p^\dagger(x)=\Eval^\dagger(p;x)\)。目的は source と（必要に応じて）少数の target 観測から \(\{f_p^\dagger:p\in\Pcal_\star\}\) を予測することである。</p>
+<p class="annot">※ 単一 target は \(K=1\) の特殊例。本論文の Figure 2 は \(\Pcal_\star=\{\mathrm{ABO},\mathrm{BAO}\}\)（あるいは \(\{\mathrm{ABCMO},\mathrm{CBAMO}\}\)）の 2 target を同時評価する。2 target を用いることで、順序を無視する Shared-Ens の<b>記述子エイリアシング床</b> \(F_{\mathrm{alias}}\)（<a class="xref" href="experiments/cost-indexed.html">コスト指標</a>）が定義できる。</p></div>
+<div class="callout"><span class="lab">転移条件 C2（意味論の共有）</span>
+<p>OFML のモデルは常に \(g_{\theta_j}\) を共有するが、転移が成立するのは<b>真実がその共有と一致するとき</b>である。共有意味論条件を</p>
+\[ F_{j,p}^\dagger=F_j^\dagger\quad\text{(relevant }p\text{ について)} \]
+<p>と条件 C2 で表す。これが破れると（意味論シフト s2）zero-shot 転移は失敗しうる。転移可否の完全な診断 C1–C5 は <a class="xref" href="theory.html#ass:transfer-diagnostics" data-ref="ass:transfer-diagnostics">仮定 8</a>、線形の rank 条件は <a class="xref" href="theory.html#prop:ofml-linear" data-ref="prop:ofml-linear">命題 4</a> を参照。</p></div>
 
-<h3 class="sub">学習目的</h3>
-<div class="callout"><span class="lab">第一の目的：target 上の予測誤差</span>
-<p>任意の予測器 \(\widehat f_n\) に対し、target 上の予測誤差を</p>
-\[ \mathcal E_{\mathrm{tar}}(\widehat f_n) = \left( \frac{1}{|\Pcal_{\mathrm{tar}}|}\sum_{p\in\Pcal_{\mathrm{tar}}} \E_{x\sim\nu_p}\!\left[\,\norm{\widehat f_n(p,x)-f_p^\dagger(x)}^2\right] \right)^{1/2} \]
-<p>と定義する（\(\nu_p\) は target \(p\) 上の評価分布）。\(\Pcal_{\mathrm{tar}}=\{p_\star\}\) なら単一 target 上の予測誤差に帰着する。</p></div>
-<div class="callout"><span class="lab">第二の目的：予算内で誤差を効率よく下げる</span>
-<p>限られた追加実験予算のもとで \(\mathcal E_{\mathrm{tar}}(\widehat f_n)\) を効率よく下げること。これが <a class="xref" href="experiments.html#c2">能動学習</a>の評価軸となる。</p></div>
+<!-- ==================== 3.5 ==================== -->
+<h3 class="sub">3.5 逐次行動とコスト指標目的</h3>
+<div class="callout"><span class="lab">履歴・行動・方策</span>
+<p>観測履歴を \(\Hcal_n=\sigma(\Dcal_{\mathrm{src}},\Dcal_{\mathrm{tar},n})\)、行動を \(a_n=(p_n,x_n,q_n)\)（対象プロトコル・設計点・観測器）とし、次の行動は履歴に基づいて選ばれる：\(a_{n+1}=\pi_n(\Hcal_n)\)。候補集合は</p>
+\[ \Acal_n\subseteq\bigsqcup_{p\in\Pcal_\star}\{p\}\times\Xcal_p \]
+<p>（実験では有限 pool、理論では compact 連続領域）。本論文の主設定では \(p_n\in\Pcal_\star\)、\(q_n=q_{\mathrm{term}}\)、単位コスト \(c(a_n)=1\)。これは理論の \(\Pi_n=\Law(G\mid\Hcal_n)\)（<a class="xref" href="theory.html#thm:ofml-active" data-ref="thm:ofml-active">定理 3</a>）と接続する。</p></div>
+<div class="callout"><span class="lab">累積 target コストと予算</span>
+<p>累積 target 取得コストを</p>
+\[ B_n=\sum_{i=1}^{n}c(a_i),\qquad \text{単位コストのとき } B_n=n,\quad B_0=0. \]
+<p>\(B_0=0\) は source 事前学習費を含まない<b>条件付きの target コスト</b>である（source は全モデル共通の sunk cost）。</p></div>
+<div class="callout"><span class="lab">コスト指標の学習目的（統一）</span>
+<p>プールドスケール \(s_\star=\sqrt{\sum_{p\in\Pcal_\star} w_p\,\mean((f_p^\dagger-\bar f)^2)}\)（等重み \(w_p=1/K\)）で正規化した、累積コスト \(b\) におけるマクロ target 誤差を</p>
+\[ \varepsilon_m(b)=\left(\sum_{p\in\Pcal_\star} w_p\;\E_{x\sim\nu_p}\!\left[\tfrac{\norm{\mu_{n,p}(x)-f_p^\dagger(x)}^2}{s_\star^2}\right]\right)^{1/2},\qquad \bar J(B)=\frac1B\int_0^B\varepsilon_m(b)\,db \]
+<p>と定義する（\(\nu_p\)＝target \(p\) 上の評価分布、実験では有限 test set で近似、\(\bar J\) は台形則）。OFML の目的は予算 \([0,B]\) 全体で \(\varepsilon_m(b)\) を小さくすることに<b>統一</b>される：\(\varepsilon_m(0)\) は<a class="xref" href="experiments.html#c1">順方向転移</a>（\(b=0\)）、\(\varepsilon_m(b),\,b>0\) は<a class="xref" href="experiments.html#c2">target 適応</a>を測り、\(\bar J(B)\) と端点 \(\varepsilon_m(0)/\varepsilon_m(B)\) を併記する。</p></div>
 
 <p style="margin-top:24px"><a class="back" href="method.html">Object-Flow Machine Learning へ →</a></p>
 </div>
