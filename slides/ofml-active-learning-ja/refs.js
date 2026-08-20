@@ -59,7 +59,8 @@ window.__CLAIMMAP__={
 // internal .xref link (not just theorem/claim/figure anchors) previews on hover
 // (Wikipedia-style). More specific previews (data-ref, #anchor, figure) win first.
 window.__PAGEMAP__={
-"index.html":{title:"Overview",body:"論文全体の要約。OFML は実験プロトコルを共有操作モジュールの合成として学習し、terminal-only 観測から順方向転移と閉ループ能動補正を行う。"},
+"hardware.html":{title:"Hardware integration",body:"OFML の枠組みを Tecan Fluent 自律実験系（液体ハンドラ＋ODTC＋Magellan）に接続した予備デモ。色素混合 ColorMix タスクで、終端の測定値のみから能動学習を実機実行。"},
+""index.html":{title:"Overview",body:"論文全体の要約。OFML は実験プロトコルを共有操作モジュールの合成として学習し、terminal-only 観測から順方向転移と閉ループ能動補正を行う。"},
 "background.html":{title:"Background",body:"自律実験と代理モデリングの文脈。終端観測のみが生む誤差帰属のあいまいさと、中間観測による解消をインタラクティブに示す。"},
 "problem.html":{title:"Problem setting",body:"プロトコルを操作の DAG、観測を終端スカラーとして定式化。順方向転移（b=0）と能動学習（b>0）の評価軸を定義する。"},
 "method.html":{title:"Object-Flow Machine Learning",body:"操作型ごとの共有モジュールを合成して代理を構成する手法。潜在状態の受け渡し・終端読み出し・能動学習方策（MaxVar/IVR）。"},

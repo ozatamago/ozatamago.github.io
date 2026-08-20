@@ -1,19 +1,19 @@
 <!doctype html><html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Object-Flow Machine Learning: Operation-Level Surrogate Modeling for Laboratory Workflows</title><link rel="stylesheet" href="style.css"/>
 <script>window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],macros:{Mcal:"\\mathcal{M}",Pcal:"\\mathcal{P}",Xcal:"\\mathcal{X}",Ycal:"\\mathcal{Y}",Zcal:"\\mathcal{Z}",Scal:"\\mathcal{S}",Qcal:"\\mathcal{Q}",Ccal:"\\mathcal{C}",Ucal:"\\mathcal{U}",Acal:"\\mathcal{A}",Dcal:"\\mathcal{D}",Hcal:"\\mathcal{H}",Gcal:"\\mathcal{G}",Tcal:"\\mathcal{T}",Rcal:"\\mathcal{R}",E:"\\mathbb{E}",R:"\\mathbb{R}",N:"\\mathbb{N}",Eval:"\\operatorname{Eval}",Pa:"\\operatorname{Pa}",Anc:"\\operatorname{Anc}",Obs:"\\operatorname{Obs}",Var:"\\operatorname{Var}",Cov:"\\operatorname{Cov}",RMSE:"\\operatorname{RMSE}",AUC:"\\operatorname{AUC}",argmax:"\\operatorname*{arg\\,max}",norm:["\\left\\lVert #1\\right\\rVert",1],abs:["\\left\\lvert #1\\right\\rvert",1]},packages:{'[+]':['ams']}},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
 <script src="refs.js"></script><script src="protoviz.js"></script><script src="hovercard.js"></script><script src="obsviz.js"></script></head><body>
-<nav class="sitenav"><div class="wrap"><a class="on" href="index.html">Overview</a><a href="background.html">Background</a><a href="problem.html">Problem setting</a><a href="method.html">Object-Flow Machine Learning</a><a href="theory.html">Theoretical statement and proofs</a><a href="experiments.html">Experiments</a><a href="references.html">References</a></div></nav>
+<nav class="sitenav"><div class="wrap"><a class="on" href="index.html">Overview</a><a href="background.html">Background</a><a href="problem.html">Problem setting</a><a href="method.html">Object-Flow Machine Learning</a><a href="theory.html">Theoretical statement and proofs</a><a href="experiments.html">Experiments</a><a href="hardware.html">Hardware integration</a><a href="references.html">References</a></div></nav>
 
 <header class="hero"><div class="wrap">
   <span class="eyebrow">AAAI 2027 · 論文オーバービュー · インタラクティブ</span>
   <h1>Object-Flow Machine Learning:<br/>Operation-Level Surrogate Modeling for Laboratory Workflows</h1>
-  <p class="tag">実験プロトコルを、単一の識別子や平坦な特徴ベクトルではなく、<b>実験対象・操作列・測定器</b>からなる構造化入力として扱う。同じ操作型に対応する予測成分をプロトコル間で<b>共有</b>することで、少数の<b>終端観測</b>から未知プロトコルへゼロショット転移し、<b>能動学習</b>で閉ループ補正する。完全な機構シミュレータと単一ブラックボックス代理モデルの中間に位置する、<b>プロトコル構造を保存した代理モデリング</b>である。任意の相互参照はホバーでプレビュー、クリックで該当箇所へ。</p>
-  <div class="badges"><span class="badge">構造化代理モデル</span><span class="badge">プロトコル間知識転移</span><span class="badge">終端観測のみ</span><span class="badge">能動学習（MaxVar / IVR）</span><span class="badge">GP · 深層アンサンブル · BNN</span></div>
+  <p class="tag">実験プロトコルを、単一の識別子や平坦な特徴ベクトルではなく、<b>実験対象・操作列・測定器</b>からなる構造化入力として扱う。同じ操作型に対応する予測成分をプロトコル間で<b>共有</b>することで、少数の<b>終端の測定値</b>から未知プロトコルへゼロショット転移し、<b>能動学習</b>で閉ループ補正する。完全な機構シミュレータと単一ブラックボックス代理モデルの中間に位置する、<b>プロトコル構造を保存した代理モデリング</b>である。任意の相互参照はホバーでプレビュー、クリックで該当箇所へ。</p>
+  <div class="badges"><span class="badge">構造化代理モデル</span><span class="badge">プロトコル間知識転移</span><span class="badge">終端の測定値のみ</span><span class="badge">能動学習（MaxVar / IVR）</span><span class="badge">GP · 深層アンサンブル · BNN</span></div>
 </div></header>
 
 <section><div class="wrap">
   <p class="kicker">全体像</p>
   <h2>3 段階：source で学び、未知プロトコルへ再結合し、target で補正する</h2>
-  <p class="lead">同じ操作型の予測成分（同色）を複数プロトコルで共有する。これがプロトコル間知識転移の唯一の機構である。source protocols で共有モジュールを学習し（①）、それらを未知の target protocol へ組み替えてゼロショット予測し（②）、target 上で終端観測を追加しながら能動学習で閉ループ補正する（③）。</p>
+  <p class="lead">同じ操作型の予測成分（同色）を複数プロトコルで共有する。これがプロトコル間知識転移の唯一の機構である。source protocols で共有モジュールを学習し（①）、それらを未知の target protocol へ組み替えてゼロショット予測し（②）、target 上で終端の測定値を追加しながら能動学習で閉ループ補正する（③）。</p>
   <figure class="fw" style="margin:22px 0 0">
   <svg viewBox="0 0 1000 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="OFML の3段階：source プロトコルでの事前学習、ゼロショットのプロトコル間予測、target 上の能動学習">
     <defs>
@@ -116,12 +116,12 @@
     <span><i style="background:#e5e7eb;border-color:#475569"></i>端末観測器 O</span>
   </div>
   <div class="protorow" style="margin-top:26px">
-    <div class="frame" style="margin:0">実世界の対象は<b>プロトコル</b>である。その抽象は<b>型付き有向非巡回グラフ（DAG）上の共有モジュールの合成</b>であり、各操作型に学習可能な予測成分 \(g_{\theta_j}\) を割り当てる。学習信号は<b>終端測定器ノードの出力</b>だけ — 中間トレースは学習にも評価にも使わない。<a class="xref" href="method.html">→ 手法の詳細</a></div>
+    <div class="frame" style="margin:0">実世界の対象は<b>プロトコル</b>である。その抽象は<b>型付き有向非巡回グラフ（DAG）上の共有モジュールの合成</b>であり、各操作型に学習可能な予測成分 \(g_{\theta_j}\) を割り当てる。学習信号は<b>終端観測器ノードの出力</b>だけ — 中間トレースは学習にも評価にも使わない。<a class="xref" href="method.html">→ 手法の詳細</a></div>
     <ul class="cando">
       <li><b>点クエリではなくプロトコル全体を扱う。</b> 実験設定 \(x\) と終端測定値 \(y\) を、1 つの構造化された応答として学習する。</li>
       <li><b>操作単位で知識を再利用する。</b> 同じ操作型が異なるプロトコル・位置・出現回数で現れても、同一の予測成分を共有する。</li>
       <li><b>未知プロトコルへゼロショット転移する。</b> 識別可能性が満たされれば、source の観測誤差が target の誤差を制御する（<a class="xref" href="theory.html#ass:transfer-diagnostics">知識転移上界</a>）。</li>
-      <li><b>能動学習で閉ループ補正する。</b> 予測不確実性から次の実験 \((p,x)\) を選び、終端観測を追加して残差を補正する。</li>
+      <li><b>能動学習で閉ループ補正する。</b> 予測不確実性から次の実験 \((p,x)\) を選び、終端の測定値を追加して残差を補正する。</li>
       <li><b>自律実験の代理モデル基盤。</b> 完全な機構モデルと単一ブラックボックスの中間に位置する構造化代理モデリング。</li>
     </ul>
   </div>
@@ -135,7 +135,7 @@
     <a class="claimcard" href="experiments.html#c1" style="--c:#0ea5a4"><span class="cn">1</span><div class="ct">転移（b=0）：条件が揃えば OFML は転移を助ける</div><p>プロトコルを共有操作モジュールの<b>合成</b>として扱い、再利用する操作の<b>識別可能性</b>とモデル特定が揃うとき、terminal-only でも未知 target へゼロショット転移する。破れれば失敗し、学習中の<b>中間観測</b>で条件を回復できる。</p><div class="figs">支える実験：図 3a · 図 3b（order）· 図 3c（count）· Φ/Ψ 監査 · 表 1 · 中間観測（図 6–9）</div><span class="go">主張を支える実験へ →</span></a>
     <a class="claimcard" href="experiments.html#c2" style="--c:#0f766e"><span class="cn">2</span><div class="ct">能動学習（b&gt;0）：転移が失敗しても構造の優位で誤差を早く下げる</div><p>\(b=0\) で識別が破れても、target 終端を能動観測すれば誤差は<b>記述子エイリアシング床</b>を割り、合成的 OFML は非構造ベースラインより速く適応する（<span class="m">s7</span>: ≈0.84→≈0.24）。情報獲得がランダムに勝つ。</p><div class="figs">支える実験：図 2（コスト指標曲線）· 表 2 · S4（全代理 AL）</div><span class="go">主張を支える実験へ →</span></a>
   </div>
-  <div class="resultbar" style="margin-top:20px">端末観測のみの OFML は、操作写像が終端観測から識別可能なときゼロショット転移し（主張 1）、識別が破れても target の能動学習が構造の優位を生かして誤差を早く下げる（主張 2）。</div>
+  <div class="resultbar" style="margin-top:20px">端末観測のみの OFML は、操作写像が終端の測定値から識別可能なときゼロショット転移し（主張 1）、識別が破れても target の能動学習が構造の優位を生かして誤差を早く下げる（主張 2）。</div>
 </div></section>
 
 <section><div class="wrap">

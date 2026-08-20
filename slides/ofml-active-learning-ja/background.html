@@ -20,7 +20,7 @@
 @media (prefers-reduced-motion:reduce){.spec .hl{animation:none}}
 .mark{font-weight:800}.mk-y{color:#16a34a}.mk-p{color:#d97706}.mk-n{color:#dc2626}
 </style></head><body>
-<nav class="sitenav"><div class="wrap"><a href="index.html">Overview</a><a class="on" href="background.html">Background</a><a href="problem.html">Problem setting</a><a href="method.html">Object-Flow Machine Learning</a><a href="theory.html">Theoretical statement and proofs</a><a href="experiments.html">Experiments</a><a href="references.html">References</a></div></nav>
+<nav class="sitenav"><div class="wrap"><a href="index.html">Overview</a><a class="on" href="background.html">Background</a><a href="problem.html">Problem setting</a><a href="method.html">Object-Flow Machine Learning</a><a href="theory.html">Theoretical statement and proofs</a><a href="experiments.html">Experiments</a><a href="hardware.html">Hardware integration</a><a href="references.html">References</a></div></nav>
 
 <div class="wrap page">
 <p class="kicker">Background — Introduction</p>
@@ -112,14 +112,14 @@
 <tr><td style="text-align:left">大規模言語モデル（LLM）</td><td class="mark mk-y">✓</td><td class="mark mk-p">△</td><td class="mark mk-p">△</td><td class="mark mk-n">✗</td><td class="mark mk-n">✗</td></tr>
 <tr><td style="text-align:left"><b>Object-Flow ML（本研究）</b></td><td class="mark mk-y">✓</td><td class="mark mk-y">✓</td><td class="mark mk-y">✓</td><td class="mark mk-y">✓</td><td class="mark mk-y">✓</td></tr>
 </tbody></table></div>
-<p class="annot">OFML は LLM による高水準計画と競合するものではなく、その下流で、構造化されたプロトコルと終端観測から不確実性付き代理モデルを学習する枠組みとして位置づけられる。</p>
+<p class="annot">OFML は LLM による高水準計画と競合するものではなく、その下流で、構造化されたプロトコルと終端の測定値から不確実性付き代理モデルを学習する枠組みとして位置づけられる。</p>
 </section>
 
 <!-- ===== 3. 観測構造のギャップ ===== -->
 <section style="padding:22px 0 0">
 <p class="kicker" style="margin-bottom:2px">③ 現実世界との観測構造のギャップ</p>
 <h3 class="sub" style="margin-top:2px">代理モデルが受け取るのは「終端出力」だけ — どの操作の誤差か分からない</h3>
-<p class="annot">下のトグルで「中間観測」を切り替えると、終端観測のみの制約が生む<b>誤差帰属のあいまいさ</b>と、各操作の直後に<b>観測器モジュール O_A・O_M</b>（並列・非破壊の側枝）を置いたときの解消を体感できる（これが後の主張 1（1-C 中間観測）の核心）。</p>
+<p class="annot">下のトグルで「中間観測」を切り替えると、終端の測定値のみの制約が生む<b>誤差帰属のあいまいさ</b>と、各操作の直後に<b>観測器モジュール O_A・O_M</b>（並列・非破壊の側枝）を置いたときの解消を体感できる（これが後の主張 1（1-C 中間観測）の核心）。</p>
 
 <div class="tobs" id="tobs">
   <div class="thead">
@@ -170,11 +170,11 @@
       <text x="470" y="228" class="tsub" fill="#5a6573">各 O_op は<tspan fill="#b45309" font-weight="800">並列・非破壊の側枝：下流操作には流れ込まない</tspan> ／ OFML 専用（黒箱は接頭辞スカラー読み出し）</text>
     </g>
   </svg>
-  <div class="cap" id="tobscap"><b>終端観測のみ</b>：A・M 直後の状態は記録されず、終端 <span class="pio" style="font-style:italic">y</span> の誤差をどの操作に帰属させるかが不定。<b>研究者は実際には途中経過を暗黙に把握している</b>が、それはデータとして残らず、代理モデルには渡らない。</div>
+  <div class="cap" id="tobscap"><b>終端の測定値のみ</b>：A・M 直後の状態は記録されず、終端 <span class="pio" style="font-style:italic">y</span> の誤差をどの操作に帰属させるかが不定。<b>研究者は実際には途中経過を暗黙に把握している</b>が、それはデータとして残らず、代理モデルには渡らない。</div>
 </div>
 
 <div class="callout" style="--ca:#f59e0b"><span class="lab">観測構造のギャップ（Introduction 第3段落）</span>
-<p>この間隙は、実験科学に特有の観測構造によってさらに明瞭になる。人間中心の実験では、実験者はプロトコルに明記されない手技、目視確認、環境調整、経験的判断を通じて、操作の途中経過を暗黙に管理している<a class="cite" data-cite="boiko2023coscientist">[tacit]</a>。しかし、閉ループ自律実験において代理モデルが受け取るデータは、多くの場合、<b>測定器を通じた終端出力に限られる</b>。中間状態が直接観測されない場合、各操作に対応する局所モデルを単独で教師あり学習することはできず、終端誤差をどの操作に帰属させるかも自明ではない<a class="cite" data-cite="damianou2013deepgp">[DeepGP]</a>。ロボット化によって実験操作の反復性が高まるほど、この<b>終端観測制約</b>は、操作単位の知識転移を支配する代理モデル設計上の中心問題として前景化する。</p></div>
+<p>この間隙は、実験科学に特有の観測構造によってさらに明瞭になる。人間中心の実験では、実験者はプロトコルに明記されない手技、目視確認、環境調整、経験的判断を通じて、操作の途中経過を暗黙に管理している<a class="cite" data-cite="boiko2023coscientist">[tacit]</a>。しかし、閉ループ自律実験において代理モデルが受け取るデータは、多くの場合、<b>測定器を通じた終端出力に限られる</b>。中間状態が直接観測されない場合、各操作に対応する局所モデルを単独で教師あり学習することはできず、終端誤差をどの操作に帰属させるかも自明ではない<a class="cite" data-cite="damianou2013deepgp">[DeepGP]</a>。ロボット化によって実験操作の反復性が高まるほど、この<b>終端の測定値のみという制約</b>は、操作単位の知識転移を支配する代理モデル設計上の中心問題として前景化する。</p></div>
 </section>
 
 <!-- ===== 4. 提案 ===== -->
@@ -183,14 +183,14 @@
 <h3 class="sub" style="margin-top:2px">プロトコルを「実験対象・操作列・測定器」の構造化入力として扱う</h3>
 
 <div class="callout" style="--ca:#0ea5a4"><span class="lab">提案（Introduction 第4段落）</span>
-<p>本研究では、この問題に対して <b>Object-Flow Machine Learning（OFML）</b>を提案する。OFML は、実験プロトコルを単一の識別子や平坦な特徴ベクトルとして扱うのではなく、<b>実験対象、操作列、測定器からなる構造化された入力</b>として扱う。具体的には、同じ種類の実験操作が異なるプロトコルに現れる場合に、その操作に対応する<b>予測写像のパラメータを共有</b>し、プロトコル全体の予測を終端観測に対して学習する。この設計により、OFML は、完全な物理・化学シミュレータほど詳細な機構知識を要求せず、単一のブラックボックス代理モデルよりもプロトコル内部の操作構造を保存する、<b>構造化代理モデリング</b>を実現する。</p></div>
+<p>本研究では、この問題に対して <b>Object-Flow Machine Learning（OFML）</b>を提案する。OFML は、実験プロトコルを単一の識別子や平坦な特徴ベクトルとして扱うのではなく、<b>実験対象、操作列、測定器からなる構造化された入力</b>として扱う。具体的には、同じ種類の実験操作が異なるプロトコルに現れる場合に、その操作に対応する<b>予測写像のパラメータを共有</b>し、プロトコル全体の予測を終端の測定値に対して学習する。この設計により、OFML は、完全な物理・化学シミュレータほど詳細な機構知識を要求せず、単一のブラックボックス代理モデルよりもプロトコル内部の操作構造を保存する、<b>構造化代理モデリング</b>を実現する。</p></div>
 <p class="annot">全体像（source で学習 → 未知プロトコルへ再結合 → target で能動補正）は <a class="xref" href="index.html">Overview</a> のアニメーション図を参照。</p>
 
 <p class="kicker" style="margin:22px 0 2px">本論文の貢献（3 点）</p>
 <div class="claimgrid">
-  <a class="claimcard" href="problem.html" style="--c:#0ea5a4"><span class="cn">1</span><div class="ct">問題の定式化</div><p>終端観測付きの複数実験プロトコル集合に対して、プロトコル構造化代理モデル学習問題を定式化する。</p><span class="go">Problem setting →</span></a>
+  <a class="claimcard" href="problem.html" style="--c:#0ea5a4"><span class="cn">1</span><div class="ct">問題の定式化</div><p>終端の測定値のみを用いる複数実験プロトコル集合に対して、プロトコル構造化代理モデル学習問題を定式化する。</p><span class="go">Problem setting →</span></a>
   <a class="claimcard" href="theory.html" style="--c:#6366f1"><span class="cn">2</span><div class="ct">知識転移の要件</div><p>プロトコル間の知識転移が成立するための要件を、共通操作語彙・操作的意味論・局所入力被覆・操作識別可能性・Lipschitz 安定性の観点から与える。</p><span class="go">Theoretical statement →</span></a>
-  <a class="claimcard" href="experiments.html" style="--c:#0f766e"><span class="cn">4</span><div class="ct">制御実験による検証</div><p>要件が成立/破れる場合を分けた制御実験で理論要件と転移性能の対応を検証し、要件が完全には満たされない設定で、終端観測に基づく能動学習が残差誤差をどれだけ補正できるかを評価する。</p><span class="go">Experiments →</span></a>
+  <a class="claimcard" href="experiments.html" style="--c:#0f766e"><span class="cn">4</span><div class="ct">制御実験による検証</div><p>要件が成立/破れる場合を分けた制御実験で理論要件と転移性能の対応を検証し、要件が完全には満たされない設定で、終端の測定値に基づく能動学習が残差誤差をどれだけ補正できるかを評価する。</p><span class="go">Experiments →</span></a>
 </div>
 </section>
 
@@ -199,7 +199,7 @@
 
 <script>
 (function(){var w=document.getElementById('tobs');if(!w)return;var b0=document.getElementById('tb0'),b1=document.getElementById('tb1'),cap=document.getElementById('tobscap');
- var C0='<b>終端観測のみ</b>：A・M 直後の状態は記録されず、終端 <span class="pio" style="font-style:italic">y</span> の誤差をどの操作に帰属させるかが不定。<b>研究者は実際には途中経過を暗黙に把握している</b>が、それはデータとして残らず、代理モデルには渡らない。';
+ var C0='<b>終端の測定値のみ</b>：A・M 直後の状態は記録されず、終端 <span class="pio" style="font-style:italic">y</span> の誤差をどの操作に帰属させるかが不定。<b>研究者は実際には途中経過を暗黙に把握している</b>が、それはデータとして残らず、代理モデルには渡らない。';
  var C1='<b>観測器モジュール O_A・O_M</b>（操作型ごとに別々の学習可能な読み出しヘッド <span class="m">O<sub>op</sub></span>: ℝᵈ→ℝ²、学習時のみ）を各操作の直後に置き、A / M 直後の真の 2 次元状態 sₐ*・sₘ* を観測する。O_op は<b>並列・非破壊の側枝</b>で下流操作には流れ込まず、潜在への<b>追加の勾配制約</b>としてのみ働く（試料を変えない非破壊測定の類似）。これで誤差の帰属が定まる。O_A..O_M は <b>OFML 専用</b>（ブラックボックスは同じ情報を接頭辞スカラー読み出しで受け取る）。→ <a class="xref" href="experiments.html#c1">主張 1 の 1-C</a>';
  function set(rev){w.classList.toggle('reveal',rev);b0.classList.toggle('on',!rev);b1.classList.toggle('on',rev);cap.innerHTML=rev?C1:C0;}
  b0.onclick=function(){set(false);};b1.onclick=function(){set(true);};

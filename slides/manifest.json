@@ -23,12 +23,11 @@
       "id": "ofml-active-learning",
       "title": "Object-Flow Machine Learning: Operation-Level Surrogate Modeling for Laboratory Workflows",
       "kind": "web",
-      "locked": true,
       "listed": true,
       "lang": "ja",
-      "file": "data/ofml-active-learning.enc",
+      "file": "data/ofml-active-learning.bundle",
       "date": "AAAI 2027",
-      "summary": "実験ワークフローの操作レベル代理モデリング：構造化されたプロトコルと終端観測から、ゼロショットのプロトコル間転移と閉ループ能動補正を学ぶ（AAAI 2027・日本語版）。"
+      "summary": "実験ワークフローの操作レベル代理モデリング：構造化されたプロトコルと終端の測定値のみから、ゼロショットのプロトコル間転移と閉ループ能動補正を学ぶ（AAAI 2027・日本語版）。"
     },
     {
       "id": "ofml-active-learning-en",
@@ -39,7 +38,7 @@
       "lang": "en",
       "file": "data/ofml-active-learning-en.enc",
       "date": "AAAI 2027",
-      "summary": "Operation-level surrogate modeling for laboratory workflows: zero-shot cross-protocol transfer and closed-loop active correction, learned from structured protocols and terminal observations (AAAI 2027)."
+      "summary": "Operation-level surrogate modeling for laboratory workflows: zero-shot cross-protocol transfer and closed-loop active correction, learned from structured protocols and terminal measurements only (AAAI 2027)."
     },
     {
       "id": "lip-ucb",

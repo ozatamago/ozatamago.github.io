@@ -1,0 +1,53 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>実機との接続 — OFML</title><link rel="stylesheet" href="style.css"/>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],macros:{Mcal:"\\mathcal{M}",Pcal:"\\mathcal{P}",Xcal:"\\mathcal{X}",E:"\\mathbb{E}",R:"\\mathbb{R}",Eval:"\\operatorname{Eval}",Obs:"\\operatorname{Obs}",norm:["\\left\\lVert #1\\right\\rVert",1]},packages:{'[+]':['ams']}},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script src="refs.js"></script><script src="protoviz.js"></script><script src="hovercard.js"></script><script src="obsviz.js"></script></head><body>
+<nav class="sitenav"><div class="wrap"><a href="index.html">Overview</a><a href="background.html">Background</a><a href="problem.html">Problem setting</a><a href="method.html">Object-Flow Machine Learning</a><a href="theory.html">Theoretical statement and proofs</a><a href="experiments.html">Experiments</a><a class="on" href="hardware.html">Hardware integration</a><a href="references.html">References</a></div></nav>
+
+<div class="wrap page">
+<p class="kicker">Hardware integration</p>
+<h2>実機との接続 — Tecan Fluent 自律実験系での能動学習</h2>
+<p class="lead">合成ベンチマークで検証した OFML の枠組みを、<b>実機の自律実験系</b>に接続した予備デモ。液体ハンドラ <b>Tecan Fluent</b>・サーモサイクラー <b>ODTC</b>・プレートリーダー <b>Magellan</b> を SiLA / 遠隔実行で駆動し、<b>色素混合（ColorMix）</b>タスクで「プロトコルを操作の合成として扱い、<b>終端の測定値のみ</b>から能動学習する」という論文の主張をそのまま実機で回した。プロトコル＝混合レシピ、操作＝分注・混合、終端の測定値＝吸光度である。</p>
+
+<figure class="figbox" style="max-width:760px;margin:16px auto">
+<div style="position:relative;width:100%;max-width:720px;margin:0 auto;aspect-ratio:16/9;background:#000;border-radius:8px;overflow:hidden">
+<iframe src="https://riken-share.box.com/embed/s/cgxlxmdcg7osaie9bkilcwdquyzhx7hg" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" allow="autoplay; fullscreen" allowfullscreen webkitallowfullscreen msallowfullscreen loading="lazy" title="Tecan Fluent ColorMix 実機デモ動画"></iframe>
+</div>
+<figcaption>実機デモ動画（Box 埋め込み）— Tecan Fluent が ColorMix の分注・混合・測定を自動実行する様子。再生できない場合は <a class="xref" href="https://riken-share.box.com/s/cgxlxmdcg7osaie9bkilcwdquyzhx7hg" target="_blank" rel="noopener">Box のリンク</a>を直接開く。</figcaption>
+</figure>
+
+<h3 class="sub">ColorMix タスク ＝ 実機版 OFML</h3>
+<div class="callout"><span class="lab">プロトコルを操作の合成として実機化</span>
+<p>ColorMix は、<b>水・Red・Yellow・Blue</b> の色素を各 well へ分注・混合し、生成した色（吸光度）を予測・最適化するタスクである。これは論文の抽象を実機へ写像したものだ：</p>
+<div class="protoset" data-kind="target" data-title="<b>ColorMix プロトコル例</b>（分注 → 混合 → 測定）" data-protocols="Red Yellow Blue Mix Read" data-cols="1"></div>
+<p class="annot">※ 操作型 <code>Red / Yellow / Blue</code>＝色素分注、<code>Mix</code>＝混合、<code>Read</code>＝終端の吸光度測定。同じ操作型（例：<code>Red</code> 分注）が異なるレシピで再利用される＝<b>重み共有による転移</b>の実機版。中間状態（混合途中の色）は観測せず、<b>終端の測定値のみ</b>を得る。</p></div>
+<div class="callout"><span class="lab">終端の測定値＝吸光度（3 波長）</span>
+<p>各 well の観測は Magellan による <b>430 / 520 / 630 nm</b> の吸光度（blank 補正済み）。中間の分注量や混合過程そのものは教師信号にせず、<b>最終ウェルの測定値のみ</b>から代理モデルを学習する（＝論文の terminal-only 設定）。</p></div>
+
+<h3 class="sub">ハードウェア構成と遠隔実行</h3>
+<div class="callout"><span class="lab">装置スタック</span>
+<p><b>Tecan Fluent</b>（8 チャネル LiHa 液体ハンドラ：色素・水の分注、tip 管理）＋ <b>ODTC</b>（Inheco サーモサイクラー：温調が必要な系）＋ <b>Magellan</b>（プレートリーダー：吸光度測定）。FluentControl の監査ログ（AuditTrail）と SiLA の進捗（<code>RunModeRunFinished / Progress 100</code>）で各 run の成否を機械可読に確認する。</p></div>
+<div class="callout"><span class="lab">安全側の乾式再設計</span>
+<p>8 チャネル同時 Aspirate が Active Stop になった知見から、source runner は <b>physical channel 1 のみ・1 回の色素 Aspirate を 140&nbsp;µL 以下に制限</b>する乾式（dry-run 検証付き）設計へ再構成。<code>validate_colormix_source_plan.py</code> が全プレートで PASS し、実機でも検証済み。実機コマンドを送る前に必ず計画検証を通す。</p></div>
+
+<h3 class="sub">source キャンペーンと能動学習</h3>
+<div class="qa">
+<div class="blk goal"><div class="h">取得済みデータ</div>
+<p><b>source campaign：</b>3 枚の source plate から合計 <b>264 件</b>の source observations を取得（各プレート 88 well、水 8 blank ＋ 3 色）。生 ASC は Windows/Mac 間で <b>SHA-256 一致</b>・shape <code>(3, 8, 12)</code>・全値 finite を確認。<br><b>能動学習：</b>凍結した pre-active baseline（264 source obs, 0 active）から開始し、<b>iterations 1–11</b> で A2–A12 の <b>wet observation 11 件</b>を実機取得した。</p></div>
+<div class="blk result"><div class="h">評価の分離（prequential）</div>
+<p>各 iteration で 3 種類を厳密に分けて報告する：<b>(1)</b> 新規 well の取得<i>前</i>予測 vs 実測＝<b>one-step prequential test</b>（唯一の unbiased test）、<b>(2)</b> 再学習後の同一 well 予測＝training-point assimilation 診断（test ではない）、<b>(3)</b> 既開封 16-well 固定パネルの取得前後差＝regression monitoring（unbiased test ではない）。取得前 baseline の Spearman ρ は 430/520/630 nm で <b>0.97 / 0.94 / 0.87</b>。</p></div>
+<div class="blk disc"><div class="h">論文の主張との対応</div>
+<p>この実機デモは論文の 3 点をそのまま体現する：<b>終端の測定値のみ</b>から学習（terminal-only）、同一操作型の<b>重み共有</b>による転移（<a class="xref" href="experiments.html#c1">主張 1</a>）、次の well を選んで<b>能動的に測定</b>し誤差を下げる閉ループ（<a class="xref" href="experiments.html#c2">主張 2</a>）。合成ベンチマーク（<a class="xref" href="experiments.html">Experiments</a>）で確立した挙動を、実試薬・実装置で確認する第一歩である。</p></div>
+</div>
+
+<div class="callout"><span class="lab">再現性・来歴</span>
+<p>すべての成果物に <b>SHA-256</b> を付し、pre-active baseline を <b>読み取り専用</b>（<code>-r--r--r--</code>）で dgx1 と Mac の両方に保存。36 ファイルの内部チェックが両環境で PASS。生 ASC → blank 補正 → CSV までを検証済みのパイプラインで再現でき、実機コマンドは監査ログと SiLA 進捗で照合する。実装の詳細は内部リポジトリ <code>tecan_fluent_demo</code>（Tecan Fluent 遠隔実行手順・ColorMix runner・Magellan 取り込み）に集約している。</p></div>
+
+<div class="callout" style="--ca:#f59e0b"><span class="lab">位置づけ（限界）</span>
+<p>本ページは<b>予備デモ</b>であり、論文の主結果ではない。色素混合は吸光度が加法的に近く識別しやすい良性タスクで、酵素反応など非線形・多段の系はこれから。実機の失敗モード（チャネル停止・tip 消費・温調待ち）は乾式検証と単一チャネル方式で回避しているが、スループットは限定的である。目的は「OFML の <b>terminal-only ＋ 能動学習</b>の枠組みが実機ループとして回ること」を示すことにある。</p></div>
+
+<p style="margin-top:24px"><a class="back" href="experiments.html">‹ Experiments へ戻る</a></p>
+</div>
+
+<script>
+(function(){var lb=document.createElement('div');lb.className='lightbox';lb.innerHTML='<div class="hint">クリック / Esc で閉じる</div><img alt=""/>';document.body.appendChild(lb);var im=lb.querySelector('img');document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.figbox img');if(t){im.src=t.currentSrc||t.src;lb.classList.add('open');document.body.style.overflow='hidden';return;}if(e.target.closest&&e.target.closest('.lightbox')){lb.classList.remove('open');document.body.style.overflow='';}});document.addEventListener('keydown',function(e){if(e.key==='Escape'){lb.classList.remove('open');document.body.style.overflow='';}});})();
+</script><script src="lib/tex-svg.js" id="MathJax-script" async></script></body></html>
