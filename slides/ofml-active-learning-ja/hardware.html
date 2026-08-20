@@ -1,4 +1,8 @@
 <!doctype html><html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>実機との接続 — OFML</title><link rel="stylesheet" href="style.css"/>
+<style>/* ColorMix dye-operation colors (page-local) */
+.protoset .op-R{--opb:#dc2626;--opf:#fee2e2}
+.protoset .op-Y{--opb:#d97706;--opf:#fef3c7}
+.protoset .op-B{--opb:#2563eb;--opf:#dbeafe}</style>
 <script>window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],macros:{Mcal:"\\mathcal{M}",Pcal:"\\mathcal{P}",Xcal:"\\mathcal{X}",E:"\\mathbb{E}",R:"\\mathbb{R}",Eval:"\\operatorname{Eval}",Obs:"\\operatorname{Obs}",norm:["\\left\\lVert #1\\right\\rVert",1]},packages:{'[+]':['ams']}},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
 <script src="refs.js"></script><script src="protoviz.js"></script><script src="hovercard.js"></script><script src="obsviz.js"></script></head><body>
 <nav class="sitenav"><div class="wrap"><a href="index.html">Overview</a><a href="background.html">Background</a><a href="problem.html">Problem setting</a><a href="method.html">Object-Flow Machine Learning</a><a href="theory.html">Theoretical statement and proofs</a><a href="experiments.html">Experiments</a><a class="on" href="hardware.html">Hardware integration</a><a href="references.html">References</a></div></nav>
@@ -17,9 +21,10 @@
 
 <h3 class="sub">ColorMix タスク ＝ 実機版 OFML</h3>
 <div class="callout"><span class="lab">プロトコルを操作の合成として実機化</span>
-<p>ColorMix は、<b>水・Red・Yellow・Blue</b> の色素を各 well へ分注・混合し、生成した色（吸光度）を予測・最適化するタスクである。これは論文の抽象を実機へ写像したものだ：</p>
-<div class="protoset" data-kind="target" data-title="<b>ColorMix プロトコル例</b>（分注 → 混合 → 測定）" data-protocols="Red Yellow Blue Mix Read" data-cols="1"></div>
-<p class="annot">※ 操作型 <code>Red / Yellow / Blue</code>＝色素分注、<code>Mix</code>＝混合、<code>Read</code>＝終端の吸光度測定。同じ操作型（例：<code>Red</code> 分注）が異なるレシピで再利用される＝<b>重み共有による転移</b>の実機版。中間状態（混合途中の色）は観測せず、<b>終端の測定値のみ</b>を得る。</p></div>
+<p>ColorMix は、各 well にまず水 150&nbsp;µL を張り、<b>Red・Yellow・Blue</b> の色水を分注（操作 <code>R</code>/<code>Y</code>/<code>B</code>：単色 5–40&nbsp;µL、二色・三色は 4 水準 5/15/25/35&nbsp;µL）、混合 <code>M</code> を経て、終端観測器 <code>O</code>（Magellan、430/520/630&nbsp;nm 吸光度）を読むタスクである。プロトコルは操作記号の合成として機械可読に定義されている（<code>experiment.yaml</code> の <code>steps</code>）：</p>
+<div class="protoset" data-kind="source" data-title="<b>source プロトコル（単色・二色）</b>— 共有モジュール R・Y・B・M をここで学習" data-protocols="R M O;Y M O;B M O;R Y M O;R B M O;Y B M O" data-labels="単色 Red;単色 Yellow;単色 Blue;二色 R+Y;二色 R+B;二色 Y+B" data-names="R:Red 分注 R;Y:Yellow 分注 Y;B:Blue 分注 B" data-cols="1"></div>
+<div class="protoset" data-kind="target" data-title="<b>target プロトコル（三色・未知）</b>— 能動学習はこの候補グリッド（5&nbsp;µL 刻み）から次の well を選ぶ" data-protocols="R Y B M O" data-labels="三色 R+Y+B" data-names="R:Red 分注 R;Y:Yellow 分注 Y;B:Blue 分注 B"></div>
+<p class="annot">※ 同じ操作型（例：<code>R</code> 分注）が単色・二色・三色のレシピ間で<b>同一の共有モジュール</b>として再利用される＝重み共有による転移の実機版。単色・二色（source）で学んだ <code>R</code>・<code>Y</code>・<code>B</code>・<code>M</code> を再結合して、未知の三色 <code>R Y B M O</code>（target）を予測する。中間状態（混合途中の色）は観測せず、<b>終端の測定値のみ</b>を得る。</p></div>
 <div class="callout"><span class="lab">終端の測定値＝吸光度（3 波長）</span>
 <p>各 well の観測は Magellan による <b>430 / 520 / 630 nm</b> の吸光度（blank 補正済み）。中間の分注量や混合過程そのものは教師信号にせず、<b>最終ウェルの測定値のみ</b>から代理モデルを学習する（＝論文の terminal-only 設定）。</p></div>
 
@@ -36,7 +41,7 @@
 <div class="blk result"><div class="h">評価の分離（prequential）</div>
 <p>各 iteration で 3 種類を厳密に分けて報告する：<b>(1)</b> 新規 well の取得<i>前</i>予測 vs 実測＝<b>one-step prequential test</b>（唯一の unbiased test）、<b>(2)</b> 再学習後の同一 well 予測＝training-point assimilation 診断（test ではない）、<b>(3)</b> 既開封 16-well 固定パネルの取得前後差＝regression monitoring（unbiased test ではない）。取得前 baseline の Spearman ρ は 430/520/630 nm で <b>0.97 / 0.94 / 0.87</b>。</p></div>
 <div class="blk disc"><div class="h">論文の主張との対応</div>
-<p>この実機デモは論文の 3 点をそのまま体現する：<b>終端の測定値のみ</b>から学習（terminal-only）、同一操作型の<b>重み共有</b>による転移（<a class="xref" href="experiments.html#c1">主張 1</a>）、次の well を選んで<b>能動的に測定</b>し誤差を下げる閉ループ（<a class="xref" href="experiments.html#c2">主張 2</a>）。合成ベンチマーク（<a class="xref" href="experiments.html">Experiments</a>）で確立した挙動を、実試薬・実装置で確認する第一歩である。</p></div>
+<p>この実機デモは論文の 3 点をそのまま体現する：<b>終端の測定値のみ</b>から学習（terminal-only）、単色・二色 source で学んだ共有モジュールを再結合して未知の三色 target <code>R Y B M O</code> を予測する<b>重み共有による転移</b>（<a class="xref" href="experiments.html#c1">主張 1</a>）、三色候補グリッドから次の well を選んで<b>能動的に測定</b>し誤差を下げる閉ループ（<a class="xref" href="experiments.html#c2">主張 2</a>）。合成ベンチマーク（<a class="xref" href="experiments.html">Experiments</a>）で確立した挙動を、実試薬・実装置で確認する第一歩である。</p></div>
 </div>
 
 <div class="callout"><span class="lab">再現性・来歴</span>

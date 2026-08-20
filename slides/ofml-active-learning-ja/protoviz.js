@@ -8,6 +8,9 @@
      data-labels    : optional ";"-separated per-chain labels (same length as protocols)
      data-cols      : "1" to lay chains out in a multi-column grid
      data-legend    : "0" to hide the legend
+     data-names     : optional ";"-separated "LETTER:label" overrides for chip titles and
+                      the legend (e.g. "R:Red dispense;Y:Yellow dispense"). Letters outside
+                      the default vocabulary are also shown in the legend (in first-use order).
 */
 (function () {
   var NAMES = { A: '操作 A', B: '操作 B', C: '操作 C', D: '操作 D', M: '共有ミキサ M', O: '端末観測器 O' };
@@ -26,7 +29,15 @@
     var showLegend = el.getAttribute('data-legend') !== '0';
     if (kind) el.classList.add('k-' + kind);
 
-    var used = {};
+    // per-element name overrides: data-names="R:Red dispense;Y:Yellow dispense"
+    var local = {};
+    (el.getAttribute('data-names') || '').split(';').forEach(function (pair) {
+      var i = pair.indexOf(':');
+      if (i > 0) local[pair.slice(0, i).trim().toUpperCase()] = pair.slice(i + 1).trim();
+    });
+    function nameOf(c) { return local[c] || NAMES[c] || c; }
+
+    var used = {}, order = [];
     var html = '';
     if (title) html += '<div class="ptitle">' + title + '</div>';
     html += '<div class="pgrid' + (cols ? ' cols' : '') + '">';
@@ -37,18 +48,20 @@
       if (lab) html += '<span class="plabel">' + esc(lab) + '</span>';
       html += '<span class="pio">x</span>';
       chips.forEach(function (c) {
-        used[c] = true;
+        if (!used[c]) { used[c] = true; order.push(c); }
         html += '<span class="parrow">&rsaquo;</span>';
-        html += '<span class="pchip op-' + c + '" data-op="' + c + '" title="' + (NAMES[c] || c) + '">' + c + '</span>';
+        html += '<span class="pchip op-' + c + '" data-op="' + c + '" title="' + esc(nameOf(c)) + '">' + c + '</span>';
       });
       html += '<span class="parrow">&rsaquo;</span><span class="pio">y</span>';
       html += '</div>';
     });
     html += '</div>';
     if (showLegend) {
+      var fixed = ['A', 'B', 'C', 'D', 'M', 'O'];
+      var extras = order.filter(function (c) { return fixed.indexOf(c) < 0; });
       html += '<div class="plegend">';
-      ['A', 'B', 'C', 'D', 'M', 'O'].forEach(function (c) {
-        if (used[c]) html += '<span data-op="' + c + '"><i class="sw op-' + c + '"></i>' + (NAMES[c] || c) + '</span>';
+      extras.concat(fixed).forEach(function (c) {
+        if (used[c]) html += '<span data-op="' + c + '"><i class="sw op-' + c + '"></i>' + esc(nameOf(c)) + '</span>';
       });
       html += '</div>';
     }
