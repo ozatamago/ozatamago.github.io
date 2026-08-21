@@ -78,6 +78,18 @@
   line-height: 1.85;
   text-align: justify;
 }
+.post img {
+  max-width: 100%;
+  height: auto;
+}
+.post pre {
+  overflow-x: auto;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fafafa;
+  line-height: 1.55;
+}
 .post ul {
   padding-left: 22px;
 }
