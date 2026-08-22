@@ -84,8 +84,12 @@ mjx-container svg{width:auto;height:auto;max-width:none}
 .lightbox img{max-width:none;background:#fff;border-radius:8px;box-shadow:0 20px 80px #000a}
 .lightbox .hint{position:fixed;top:14px;left:0;right:0;color:#cbd5e1;font-size:13px;font-weight:600;pointer-events:none}
 
-/* QA blocks on experiment pages */
-.qa{display:grid;gap:14px;margin-top:8px}.qa .blk{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+/* QA blocks on experiment pages.
+   NB `min-width:0` on the grid item is load-bearing: a grid item defaults to
+   min-width:auto, so a wide child (a nowrap data table, a full-width figure)
+   stretches the item past its track, overflows the page horizontally AND
+   disables the child .tblwrap's own overflow-x:auto. Needed at every width. */
+.qa{display:grid;gap:14px;margin-top:8px}.qa .blk{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-width:0}
 .qa .blk.goal{border-left:4px solid var(--indigo)}.qa .blk.setup{border-left:4px solid var(--teal)}
 .qa .blk.result{border-left:4px solid var(--good)}.qa .blk.disc{border-left:4px solid var(--amber)}
 .qa .blk .h{font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--teal-d);margin-bottom:5px}
@@ -226,3 +230,33 @@ footer{padding:34px 0 56px;color:var(--muted);font-size:13.5px;border-top:1px so
 .composer .obsrow button{font-weight:800;font-size:13px;border-radius:8px;padding:5px 10px;border:1.5px solid #0f766e;background:#fff;color:#0f766e;cursor:pointer}
 .composer .obsrow button.on{background:#0f766e;color:#fff}
 .composer .stage{display:block;text-align:center}
+
+/* ============================================================
+   Mobile layer (<=760px). Same HTML / same URL — only the
+   presentation adapts; nothing here applies on desktop.
+   ============================================================ */
+@media(max-width:760px){
+  /* Side padding only (longhand on purpose): `.page{padding:30px 0 64px}` would
+     otherwise be clobbered by a `padding` shorthand here, losing its vertical
+     rhythm. This also gives .wrap.page real side padding on mobile, which the
+     `.page` shorthand had zeroed out. */
+  .wrap{padding-left:14px;padding-right:14px}
+
+  /* site nav: one horizontally scrollable row with short labels
+     (270px / 6 wrapped rows -> ~59px / 1 row). Long labels stay in the
+     HTML for desktop and for anything reading the markup; the mobile
+     label comes from data-short. */
+  .sitenav .wrap{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:4px;scrollbar-width:none}
+  .sitenav .wrap::-webkit-scrollbar{display:none}
+  .sitenav a{font-size:13.5px;padding:9px 11px}
+  .sitenav a[data-short]{font-size:0}
+  .sitenav a[data-short]::after{content:attr(data-short);font-size:13.5px}
+
+  /* data tables: let text cells wrap. Numeric cells contain no spaces,
+     so they have no break opportunity and stay intact. */
+  table.data{font-size:12px}
+  table.data th,table.data td{white-space:normal}
+
+  /* touch targets */
+  .obwtog,.composer .ops button,.composer .obsrow button,.tobs .ttoggle button{min-height:44px}
+}
