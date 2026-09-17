@@ -1,0 +1,35 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>ProtocolUCB — 手法</title><link rel="stylesheet" href="style.css"/>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],macros:{Xcal:"\\mathcal{X}",Ycal:"\\mathcal{Y}",Acal:"\\mathcal{A}",Dcal:"\\mathcal{D}",Fcal:"\\mathcal{F}",Hcal:"\\mathcal{H}",Pcal:"\\mathcal{P}",Tcal:"\\mathcal{T}",E:"\\mathbb{E}",R:"\\mathbb{R}",N:"\\mathbb{N}",P:"\\mathbb{P}",Reg:"\\operatorname{Reg}",Var:"\\operatorname{Var}",argmax:"\\operatorname*{arg\\,max}",norm:["\\left\\lVert #1\\right\\rVert",1],abs:["\\left\\lvert #1\\right\\rvert",1]},packages:{'[+]':['ams']}},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script src="refs.js"></script><script src="protoviz.js"></script><script src="hovercard.js"></script></head><body>
+<nav class="sitenav"><div class="wrap"><a href="index.html">Overview</a><a href="background.html">Background</a><a href="problem.html" data-short="Problem">Problem setting</a><a class="on" href="method.html" data-short="Method">ProtocolUCB</a><a href="theory.html" data-short="Theory">Theoretical statement and proofs</a><a href="experiments.html">Experiments</a><a href="references.html" data-short="Refs">References</a></div></nav>
+
+<div class="wrap page">
+<p class="kicker">Method</p>
+<h2>ProtocolUCB — TODO 一行で述べる手法</h2>
+<p class="lead">TODO：アルゴリズムの狙いを 2–4 文で。</p>
+
+<h3>1. TODO — 推定量</h3>
+<p class="prose">TODO：各ラウンドで何を推定するか。</p>
+
+<h3>2. TODO — 信頼上界の構成</h3>
+<p class="prose">TODO：構造を使った信頼幅の構成。</p>
+
+<h3>3. アルゴリズム</h3>
+<div class="frame">
+<p><b>ProtocolUCB</b>（TODO：擬似コード）</p>
+<ol class="prose">
+<li>入力：TODO</li>
+<li>for \(t = 1, \dots, T\)：
+  <ul>
+    <li>TODO：信頼上界 \(\mathrm{UCB}_t(a)\) を計算する</li>
+    <li>\(a_t \in \argmax_{a \in \Acal} \mathrm{UCB}_t(a)\) を選ぶ</li>
+    <li>TODO：観測 \(y_t\) を得て推定量を更新する</li>
+  </ul></li>
+</ol>
+</div>
+
+<h3>4. TODO — 計算量と実装上の注意</h3>
+<p class="prose">TODO。</p>
+
+<div class="callout"><span class="lab">理論との対応</span><p>TODO：どの設計が <a class="xref" href="theory.html#thm:placeholder">主定理</a> のどの項に対応するか。</p></div>
+<p style="margin-top:28px"><a class="back" href="index.html">‹ Overview へ戻る</a></p></div><script src="lib/tex-svg.js" id="MathJax-script" async></script></body></html>

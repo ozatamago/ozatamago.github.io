@@ -1,0 +1,76 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>ProtocolUCB: TODO — Subtitle</title><link rel="stylesheet" href="style.css"/>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],macros:{Xcal:"\\mathcal{X}",Ycal:"\\mathcal{Y}",Acal:"\\mathcal{A}",Dcal:"\\mathcal{D}",Fcal:"\\mathcal{F}",Hcal:"\\mathcal{H}",Pcal:"\\mathcal{P}",Tcal:"\\mathcal{T}",E:"\\mathbb{E}",R:"\\mathbb{R}",N:"\\mathbb{N}",P:"\\mathbb{P}",Reg:"\\operatorname{Reg}",Var:"\\operatorname{Var}",argmax:"\\operatorname*{arg\\,max}",norm:["\\left\\lVert #1\\right\\rVert",1],abs:["\\left\\lvert #1\\right\\rvert",1]},packages:{'[+]':['ams']}},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script src="refs.js"></script><script src="protoviz.js"></script><script src="hovercard.js"></script></head><body>
+<nav class="sitenav"><div class="wrap"><a class="on" href="index.html">Overview</a><a href="background.html">Background</a><a href="problem.html" data-short="Problem">Problem setting</a><a href="method.html" data-short="Method">ProtocolUCB</a><a href="theory.html" data-short="Theory">Theoretical statement and proofs</a><a href="experiments.html">Experiments</a><a href="references.html" data-short="Refs">References</a></div></nav>
+
+<header class="hero"><div class="wrap">
+  <span class="eyebrow">TODO 会議・年 · 論文オーバービュー · インタラクティブ</span>
+  <h1>ProtocolUCB:<br/>TODO — サブタイトル</h1>
+  <p class="tag">TODO：1 段落で「何を入力として、何を仮定し、何を達成するか」を書く。OFML 版と同じく、太字で鍵となる語（<b>プロトコル</b>・<b>信頼上界</b>・<b>リグレット</b>など）を強調し、最後に「任意の相互参照はホバーでプレビュー、クリックで該当箇所へ。」と添える。</p>
+  <div class="badges"><span class="badge">TODO バッジ 1</span><span class="badge">TODO バッジ 2</span><span class="badge">TODO バッジ 3</span><span class="badge">TODO バッジ 4</span></div>
+</div></header>
+
+<section><div class="wrap">
+  <p class="kicker">全体像</p>
+  <h2>TODO — 手法を 3 段階で述べる見出し</h2>
+  <p class="lead">TODO：全体像の図が示すことを 2–4 文で。</p>
+  <figure class="fw" style="margin:22px 0 0">
+    <svg viewBox="0 0 1000 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ProtocolUCB の全体像（プレースホルダ）">
+      <style>
+        .pt{font-family:inherit;font-weight:800;font-size:13px;fill:#10151c}
+        .ps{font-family:inherit;font-size:10.5px;fill:#5a6573}
+        .nl{font-family:inherit;font-weight:800;font-size:15px;fill:#10151c;text-anchor:middle}
+        .panel{fill:#fcfdfe;stroke:#cbd5e1;stroke-width:1.4;stroke-dasharray:4 4}
+      </style>
+      <rect class="panel" x="6" y="16" width="310" height="268" rx="12"/>
+      <rect class="panel" x="345" y="16" width="310" height="268" rx="12"/>
+      <rect class="panel" x="684" y="16" width="310" height="268" rx="12"/>
+      <circle cx="26" cy="40" r="11" fill="#0f766e"/><text x="26" y="44.5" class="nl" fill="#fff" font-size="12">1</text>
+      <text x="44" y="44" class="pt">TODO ステップ 1</text>
+      <text x="16" y="64" class="ps">TODO — 一行の説明</text>
+      <circle cx="365" cy="40" r="11" fill="#0f766e"/><text x="365" y="44.5" class="nl" fill="#fff" font-size="12">2</text>
+      <text x="383" y="44" class="pt">TODO ステップ 2</text>
+      <text x="355" y="64" class="ps">TODO — 一行の説明</text>
+      <circle cx="704" cy="40" r="11" fill="#0f766e"/><text x="704" y="44.5" class="nl" fill="#fff" font-size="12">3</text>
+      <text x="722" y="44" class="pt">TODO ステップ 3</text>
+      <text x="694" y="64" class="ps">TODO — 一行の説明</text>
+      <text x="500" y="170" class="nl" fill="#94a3b8">図はここに描く（インタラクティブ SVG）</text>
+    </svg>
+  </figure>
+  <div class="protorow" style="margin-top:26px">
+    <div class="frame" style="margin:0">TODO：手法の一文定義（対象 → 抽象 → 学習信号）。<a class="xref" href="method.html">→ 手法の詳細</a></div>
+    <ul class="cando">
+      <li><b>TODO 能力 1。</b> 説明。</li>
+      <li><b>TODO 能力 2。</b> 説明。</li>
+      <li><b>TODO 能力 3。</b> 説明。</li>
+      <li><b>TODO 能力 4。</b> 説明（理論への参照 <a class="xref" href="theory.html#thm:placeholder">主定理</a>）。</li>
+    </ul>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <p class="kicker">実験の主張</p>
+  <h2>実験は N つの主張に分解される</h2>
+  <p class="lead">TODO：評価指標（リグレット曲線など）と、各主張カードの読み方を説明する。</p>
+  <div class="claimgrid">
+    <a class="claimcard" href="experiments.html#c1" style="--c:#0ea5a4"><span class="cn">1</span><div class="ct">TODO 主張 1 のタイトル</div><p>TODO：主張の本文。</p><div class="figs">支える実験：TODO</div><span class="go">主張を支える実験へ →</span></a>
+    <a class="claimcard" href="experiments.html#c2" style="--c:#0f766e"><span class="cn">2</span><div class="ct">TODO 主張 2 のタイトル</div><p>TODO：主張の本文。</p><div class="figs">支える実験：TODO</div><span class="go">主張を支える実験へ →</span></a>
+  </div>
+  <div class="resultbar" style="margin-top:20px">TODO：実験全体の結論を 1 文で。</div>
+</div></section>
+
+<section><div class="wrap">
+  <p class="kicker">理論の骨子</p>
+  <h2>TODO — 主定理までの道筋</h2>
+  <p class="lead">TODO：各ステップをクリックすると <a class="xref" href="theory.html">Theoretical statement and proofs</a> の該当箇所へ移動する、と説明する。</p>
+  <div class="steps">
+    <a class="stepcard" href="theory.html#ass:placeholder"><b>① TODO — 仮定</b><p>TODO：一段落。</p><span class="go">該当する結果と証明へ →</span></a>
+    <div class="downarrow">↓</div>
+    <a class="stepcard" href="theory.html#lem:placeholder"><b>② TODO — 補題</b><p>TODO：一段落。</p><span class="go">該当する結果と証明へ →</span></a>
+    <div class="downarrow">↓</div>
+    <a class="stepcard star" href="theory.html#thm:placeholder"><b>③ TODO — 主定理</b><p>TODO：一段落。</p><span class="go">該当する結果と証明へ →</span></a>
+  </div>
+</div></section>
+
+<footer><div class="wrap">Yusuke Ozaki. <i>ProtocolUCB: TODO — 正式タイトル.</i> TODO 投稿先・年。· 図は原稿から抽出。統計値・表・主張は <a href="experiments.html">Experiments</a>、定理と証明は <a href="theory.html">Theory</a> を参照。</div></footer>
+<script src="lib/tex-svg.js" id="MathJax-script" async></script></body></html>
