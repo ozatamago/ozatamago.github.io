@@ -52,12 +52,12 @@
     },
     {
       "id": "protocol-ucb",
-      "title": "ProtocolUCB: TODO — Subtitle",
+      "title": "Object-Flow Machine Learning: Operation-Level Surrogate Modeling for Laboratory Workflows",
       "kind": "web",
       "file": "data/protocol-ucb.bundle",
       "mime": "text/html",
-      "date": "TODO",
-      "summary": "ProtocolUCB の論文オーバービュー（骨組み・執筆中）。Background / Problem setting / Method / Theory / Experiments / References の構成。"
+      "date": "AAAI 2027",
+      "summary": "実験ワークフローの操作レベル代理モデリング：構造化されたプロトコルと終端の測定値のみから、ゼロショットのプロトコル間転移と閉ループ能動補正を学ぶ（AAAI 2027・日本語版）。"
     }
   ]
 }
