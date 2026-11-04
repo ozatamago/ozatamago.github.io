@@ -396,8 +396,7 @@ PUBS = {
         ]),
         ("Under review", "R", [
             ("ofml", OFML_TITLE, KAIZU_TAKAHASHI, "Under review.",
-             '<a href="/slides/viewer.html?id=ofml-active-learning-en">Slides</a> · '
-             '<a href="/slides/viewer.html?id=ofml-active-learning">Japanese version</a>'),
+             '<a href="/slides/viewer.html?id=ofml-active-learning-en">Slides</a>'),
             ("lipschitz", LIPSCHITZ_TITLE, "{me} and Chong Liu",
              "Under review.", ""),
             ("spin", SPIN_TITLE, "{me} and Dhaval Patel",
@@ -425,8 +424,7 @@ PUBS = {
         ]),
         ("査読中", "R", [
             ("ofml", OFML_TITLE, KAIZU_TAKAHASHI, "査読中。",
-             '<a href="/slides/viewer.html?id=ofml-active-learning">解説スライド</a> · '
-             '<a href="/slides/viewer.html?id=ofml-active-learning-en">英語版</a>'),
+             '<a href="/slides/viewer.html?id=ofml-active-learning">解説スライド</a>'),
             ("lipschitz", LIPSCHITZ_TITLE, "{me} and Chong Liu",
              "査読中。", ""),
             ("spin", SPIN_TITLE, "{me} and Dhaval Patel",
