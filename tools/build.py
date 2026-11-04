@@ -20,7 +20,7 @@ import subprocess
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE = "https://ozatamago.github.io"
-ASSET_VER = "20"  # bump when assets/styles.css changes (cache-busting)
+ASSET_VER = "21"  # bump when assets/styles.css changes (cache-busting)
 KATEX_VER = "0.16.11"  # KaTeX version vendored in assets/katex/ (tools/package.json)
 CV_PDF = "/assets/cv.pdf?v=20261104b"  # bump the date when assets/cv.pdf is replaced
 
@@ -61,24 +61,28 @@ ABOUT = {
     "en": {
         "bio": [
             'I am an undergraduate student in Computer Science at Kwansei Gakuin University '
-            'and a Research Part-timer II in the Laboratory for Biologically Inspired Computing (PI: Koichi Takahashi) at the '
+            'and a Research Part-timer II in the Laboratory for Biologically Inspired Computing (PI: <a href="https://www.bdr.riken.jp/en/research/labs/takahashi-k/index.html">Koichi Takahashi</a>) at the '
             'RIKEN Center for Biosystems Dynamics Research (BDR), also affiliated with the RIKEN AGIS program. '
             'From August 2025 to May 2026, I was an exchange student in the Department of Computer Science at the University at Albany, SUNY, '
-            'where I continue to work with Chong Liu.',
+            'where I continue to work with <a href="https://chong-l.github.io/">Chong Liu</a>.',
             'My long-term goal is to create living organisms with arbitrary, desired functions. To pursue this vision, I am interested in '
             'laboratory automation, including automated experiment execution and automated experimental design/planning.',
             'Outside research, I practice Brazilian Jiu-Jitsu (blue belt) and enjoy reading and running.',
         ],
         "interests_h": "Research interests",
-        "interests_lead": "My research is on Bayesian optimization, bandits, and active learning for self-driving laboratories. Recently I have been working on:",
+        "interests_lead": "My research is on Bayesian optimization, bandits, and active learning for self-driving laboratories, "
+                          "and on the infrastructure that lets AI agents operate laboratory instruments. Recently I have been working on:",
+        # (topic, anchor of its Research Experience entry, publication refs)
         "interests": [
-            ('Operation-level surrogate models for experimental protocols', "/publications/#ofml"),
-            ('Bayesian optimization of protocols', "/publications/#protocolucb"),
-            ('Lipschitz bandits', "/publications/#lipschitz"),
-            ('Structured planning for LLM agents', "/publications/#spin"),
+            ('Prediction, active learning, and Bayesian optimization from experimental protocols', "protocols",
+             "{ref:ofml} {ref:protocolucb}"),
+            ('Cumulative regret analysis of Lipschitz bandits', "lipschitz", "{ref:lipschitz}"),
+            ('Structured planning for LLM agents', "spin", "{ref:spin}"),
+            ('Laboratory automation and experiment infrastructure', "lab-automation", ""),
+            ('Quantum algorithms for Gaussian-process Bayesian optimization', "quantum", ""),
         ],
-        "interests_more": 'A complete list of papers and talks is on the <a href="/publications/">Publications</a> page; '
-                          'see <a href="/research/">Research Experience</a> for the projects behind them.',
+        "interests_more": 'Details of each project are on the <a href="/research/">Research Experience</a> page; '
+                          'papers and talks are listed on <a href="/publications/">Publications</a>.',
         "news_h": "News",
         "news": [
             ("2026", 'Workshop paper <em>Bayesian Optimization of Protocols</em> accepted at the NeurIPS 2026 Workshop on AI for Drug Discovery (AI4DD).'),
@@ -112,20 +116,22 @@ ABOUT = {
     "ja": {
         "bio": [
             '関西学院大学 工学部 情報工学課程の学部生です。理化学研究所 生命機能科学研究センター（BDR）バイオコンピューティング研究チーム'
-            '（チームディレクター：高橋 恒一）の研究パートタイマーIIとして研究に取り組んでおり、理研 TRIP事業本部 科学研究基盤モデル開発プログラム（AGIS）にも所属しています。'
-            '2025年8月から2026年5月まで University at Albany, SUNY のコンピュータサイエンス学科に交換留学し、現在も Chong Liu 先生と研究を続けています。',
+            '（チームディレクター：<a href="https://www.bdr.riken.jp/jp/research/labs/takahashi-k/index.html">高橋 恒一</a>）の研究パートタイマーIIとして研究に取り組んでおり、理研 TRIP事業本部 科学研究基盤モデル開発プログラム（AGIS）にも所属しています。'
+            '2025年8月から2026年5月まで University at Albany, SUNY のコンピュータサイエンス学科に交換留学し、現在も <a href="https://chong-l.github.io/">Chong Liu</a> 先生と研究を続けています。',
             '長期的には、任意の望ましい機能を持つ生物を設計・創出できる技術に関心があります。そのために、実験の自動実行や実験計画の自動化を含むラボオートメーションを研究しています。',
             '研究以外では、ブラジリアン柔術（青帯）に取り組み、読書とランニングを楽しんでいます。',
         ],
         "interests_h": "研究関心",
-        "interests_lead": "自律実験（self-driving laboratory）のためのベイズ最適化、バンディット、能動学習を研究しています。最近のテーマ：",
+        "interests_lead": "自律実験（self-driving laboratory）のためのベイズ最適化、バンディット、能動学習と、"
+                          "AI エージェントが実験装置を操作するための基盤を研究しています。最近のテーマ：",
         "interests": [
-            ('実験プロトコルの操作レベル代理モデル', "/ja/publications/#ofml"),
-            ('実験プロトコルのベイズ最適化', "/ja/publications/#protocolucb"),
-            ('リプシッツ・バンディット', "/ja/publications/#lipschitz"),
-            ('LLMエージェントの構造的プランニング', "/ja/publications/#spin"),
+            ('実験プロトコルに基づく予測・能動学習・ベイズ最適化', "protocols", "{ref:ofml} {ref:protocolucb}"),
+            ('リプシッツ・バンディットの累積リグレット解析', "lipschitz", "{ref:lipschitz}"),
+            ('LLM エージェントの構造的プランニング', "spin", "{ref:spin}"),
+            ('実験自動化と実験基盤の開発', "lab-automation", ""),
+            ('量子計算によるガウス過程ベイズ最適化', "quantum", ""),
         ],
-        "interests_more": '論文と発表の一覧は<a href="/ja/publications/">論文</a>、その背景にある研究は<a href="/ja/research/">研究経歴</a>にまとめています。',
+        "interests_more": '各研究の詳細は<a href="/ja/research/">研究経歴</a>に、論文と発表の一覧は<a href="/ja/publications/">論文</a>にまとめています。',
         "news_h": "News",
         "news": [
             ("2026年", 'ワークショップ論文 <em>Bayesian Optimization of Protocols</em> が NeurIPS 2026 Workshop on AI for Drug Discovery（AI4DD）に採択。'),
@@ -165,6 +171,8 @@ BDR_LAB = {"en": "RIKEN BDR, Laboratory for Biologically Inspired Computing (PI:
            "ja": "理化学研究所 生命機能科学研究センター（BDR）バイオコンピューティング研究チーム（チームディレクター：高橋 恒一）"}
 ALBANY_LIU = {"en": "University at Albany, SUNY, Department of Computer Science (Advisor: Chong Liu)",
               "ja": "University at Albany, SUNY コンピュータサイエンス学科（指導教員：Chong Liu）"}
+# Anchor id of each Research Experience entry, in the order of RESEARCH (the same in both languages).
+RESEARCH_IDS = ["protocols", "lipschitz", "spin", "lab-automation", "quantum", "preference-bo", "gnn", "grn"]
 RESEARCH = {
     "en": [
         ("Prediction, Active Learning, and Bayesian Optimization from Experimental Protocols: OFML / ProtocolBO and ProtocolUCB",
@@ -584,7 +592,10 @@ def title_block(lang, key):
 def home_page(lang):
     a = ABOUT[lang]
     bio = "\n".join('      <p{}>{}</p>'.format(' class="lead"' if i == 0 else "", p) for i, p in enumerate(a["bio"]))
-    interests = "\n".join('          <li><a href="{}">{}</a></li>'.format(href, label) for (label, href) in a["interests"])
+    research = "/research/" if lang == "en" else "/ja/research/"
+    interests = "\n".join('          <li><a href="{}#{}">{}</a>{}</li>'.format(research, anchor, label,
+                                                                          " " + cite_pubs(lang, refs) if refs else "")
+                          for (label, anchor, refs) in a["interests"])
     news = "\n".join('          <li><span class="when">{}</span>{}</li>'.format(w, b) for (w, b) in a["news"])
     links = "\n".join('        <li><a href="{}">{}</a></li>'.format(href, label) for (label, href) in a["links"])
     return (
@@ -634,13 +645,14 @@ def cite_pubs(lang, text):
 
 def research_page(lang):
     out = []
-    for (org, when, role, where, note, bullets) in RESEARCH[lang]:
+    assert len(RESEARCH_IDS) == len(RESEARCH[lang])
+    for ident, (org, when, role, where, note, bullets) in zip(RESEARCH_IDS, RESEARCH[lang]):
         bullets = [cite_pubs(lang, b) for b in bullets]
         block = (
-            '    <section class="entry">\n'
+            '    <section class="entry" id="{ident}">\n'
             '      <div class="entry-head"><h2>{org}</h2><span class="entry-when">{when}</span></div>\n'
             '      <div class="entry-sub"><em>{role}</em><span>{where}</span></div>\n'
-        ).format(org=org, when=when, role=role, where=where)
+        ).format(ident=ident, org=org, when=when, role=role, where=where)
         if note:
             block += '      <p class="entry-note">{}</p>\n'.format(note)
         block += list_block(bullets) + '\n    </section>'
