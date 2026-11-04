@@ -1,0 +1,135 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>order identification (non-commutativity) and forward transfer (Fig. 3b) — OFML Experiments</title><link rel="stylesheet" href="../style.css"/>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],macros:{Mcal:"\\mathcal{M}",Pcal:"\\mathcal{P}",Xcal:"\\mathcal{X}",Zcal:"\\mathcal{Z}",Scal:"\\mathcal{S}",Obs:"\\operatorname{Obs}",E:"\\mathbb{E}",RMSE:"\\operatorname{RMSE}",NRMSE:"\\operatorname{NRMSE}",IVR:"\\mathrm{IVR}",SUR:"\\mathrm{SUR}",eps:"\\varepsilon",norm:["\\left\\lVert #1\\right\\rVert",1]},packages:{'[+]':['ams']}},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script src="../refs.js"></script><script src="../protoviz.js"></script><script src="../hovercard.js"></script><script src="../obsviz.js"></script></head><body>
+<nav class="sitenav"><div class="wrap"><a href="../index.html">Overview</a><a href="../background.html">Background</a><a href="../problem.html" data-short="Problem">Problem setting</a><a href="../method.html" data-short="OFML">Object-Flow Machine Learning</a><a href="../theory.html" data-short="Theory">Theoretical statement and proofs</a><a href="../experiments.html">Experiments</a><a href="../hardware.html" data-short="Hardware">Hardware integration</a><a href="../references.html" data-short="Refs">References</a></div></nav>
+<div class="topbar"><div class="wrap"><a class="back" href="../experiments.html">‹ Experiments</a><span class="crumb">Claim 1 › Fig. 3b (order forward transfer)</span></div></div>
+
+<div class="wrap page">
+<p class="kicker"><span class="pill" style="--c:#0ea5a4">Claim 1 · composition aids transfer (order identification)</span></p>
+<h2>Fig. 3b — forward transfer via order identification (non-commutativity)</h2>
+<p class="lead">The core of Claim 1. We measure whether a <b>non-commutative operation sequence (order)</b> can be forward-transferred from the source to a <b>held-out order</b>, using <b>macro NRMSE</b> on the held-out order. The linear composition <code>OFML-linear</code> identifies each operation's matrix from the source and exactly reconstructs the held-out order as an <b>ordering of matrix products</b> (macro NRMSE ≈0.017). The composition net <code>OFML-Ens</code>, which explicitly sees the training order, is small on the training reference but collapses on held-out orders, and <code>Shared-Ens</code>, which sees only the operation count, cannot distinguish same-count / different-order and fails on every order. This is a direct verification of the main theorem's <b>rank condition \(\ker\Phi\subseteq\ker\Psi\)</b> (<a class="xref" href="../theory.html#prop:ofml-linear" data-ref="prop:ofml-linear">Proposition 4</a>(i)) itself.</p>
+
+<figure class="figbox"><svg id="c1ord-svg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" style="max-width:700px;width:100%;font-family:inherit" role="img" aria-label="grouped bar chart comparing forward-transfer NRMSE across 3 models for each held-out order">
+<style>
+.ax{stroke:#94a3b8;stroke-width:1}
+.gl{stroke:#e2e8f0;stroke-width:1}
+.tt{font-size:12.5px;font-weight:800;fill:#10151c;text-anchor:middle}
+.lg{font-size:10.5px;fill:#5a6573}
+.axn{font-size:10px;fill:#5a6573;text-anchor:end}
+.ord{font-size:10px;font-weight:700;fill:#10151c;text-anchor:middle;letter-spacing:.5px}
+.tag{font-size:8.5px;fill:#5a6573;text-anchor:middle}
+.vl{font-size:8.5px;font-weight:700;fill:#10151c;text-anchor:middle}
+.ro{font-size:10px;fill:#5a6573;text-anchor:middle}
+.bar{cursor:pointer;transition:opacity .12s}
+.bar:hover{opacity:.8;stroke:#10151c;stroke-width:1.2}
+.b-lin{fill:#0ea5a4}.b-ens{fill:#6366f1}.b-sh{fill:#94a3b8}
+.sw-lin{fill:#0ea5a4}.sw-ens{fill:#6366f1}.sw-sh{fill:#94a3b8}
+</style>
+<text x="350" y="15" class="tt">held-out order forward-transfer NRMSE — only linear composition identifies the order</text>
+<rect class="sw-lin" x="150" y="24" width="12" height="11" rx="2"/><text x="166" y="33" class="lg">OFML-linear</text>
+<rect class="sw-ens" x="290" y="24" width="12" height="11" rx="2"/><text x="306" y="33" class="lg">OFML-Ens</text>
+<rect class="sw-sh" x="410" y="24" width="12" height="11" rx="2"/><text x="426" y="33" class="lg">Shared-Ens</text>
+<line class="gl" x1="64" y1="174.67" x2="560" y2="174.67"/>
+<line class="gl" x1="64" y1="111.33" x2="560" y2="111.33"/>
+<line class="gl" x1="64" y1="48" x2="560" y2="48"/>
+<line class="ax" x1="64" y1="48" x2="64" y2="238"/>
+<line class="ax" x1="64" y1="238" x2="560" y2="238"/>
+<text x="58" y="241" class="axn">0</text><text x="58" y="178" class="axn">1.0</text><text x="58" y="115" class="axn">2.0</text><text x="58" y="51" class="axn">3.0</text>
+<text x="20" y="143" transform="rotate(-90 20 143)" class="lg" text-anchor="middle">NRMSE</text>
+<!-- group 1: A B C M O (training reference) -->
+<rect class="bar b-lin" x="82" y="235" width="24" height="3" data-order="A B C M O" data-model="OFML-linear" data-val="0.011"/>
+<rect class="bar b-ens" x="114" y="233" width="24" height="5" data-order="A B C M O" data-model="OFML-Ens" data-val="0.076"/>
+<rect class="bar b-sh" x="146" y="148" width="24" height="90" data-order="A B C M O" data-model="Shared-Ens" data-val="1.417"/>
+<text x="94" y="231" class="vl">0.011</text><text x="126" y="229" class="vl">0.076</text><text x="158" y="144" class="vl">1.417</text>
+<text x="126" y="252" class="ord">A B C M O</text><text x="126" y="263" class="tag">training reference</text>
+<!-- group 2: A C B M O (held-out) -->
+<rect class="bar b-lin" x="206" y="235" width="24" height="3" data-order="A C B M O" data-model="OFML-linear" data-val="0.026"/>
+<rect class="bar b-ens" x="238" y="68" width="24" height="170" data-order="A C B M O" data-model="OFML-Ens" data-val="2.691"/>
+<rect class="bar b-sh" x="270" y="67" width="24" height="171" data-order="A C B M O" data-model="Shared-Ens" data-val="2.700"/>
+<text x="218" y="231" class="vl">0.026</text><text x="250" y="64" class="vl">2.691</text><text x="282" y="63" class="vl">2.700</text>
+<text x="250" y="252" class="ord">A C B M O</text><text x="250" y="263" class="tag">held-out</text>
+<!-- group 3: B A C M O (held-out) -->
+<rect class="bar b-lin" x="330" y="235" width="24" height="3" data-order="B A C M O" data-model="OFML-linear" data-val="0.022"/>
+<rect class="bar b-ens" x="362" y="198" width="24" height="40" data-order="B A C M O" data-model="OFML-Ens" data-val="0.635"/>
+<rect class="bar b-sh" x="394" y="134" width="24" height="104" data-order="B A C M O" data-model="Shared-Ens" data-val="1.637"/>
+<text x="342" y="231" class="vl">0.022</text><text x="374" y="194" class="vl">0.635</text><text x="406" y="130" class="vl">1.637</text>
+<text x="374" y="252" class="ord">B A C M O</text><text x="374" y="263" class="tag">held-out</text>
+<!-- group 4: C B A M O (held-out) -->
+<rect class="bar b-lin" x="454" y="235" width="24" height="3" data-order="C B A M O" data-model="OFML-linear" data-val="0.009"/>
+<rect class="bar b-ens" x="486" y="135" width="24" height="103" data-order="C B A M O" data-model="OFML-Ens" data-val="1.621"/>
+<rect class="bar b-sh" x="518" y="53" width="24" height="185" data-order="C B A M O" data-model="Shared-Ens" data-val="2.921"/>
+<text x="466" y="231" class="vl">0.009</text><text x="498" y="131" class="vl">1.621</text><text x="530" y="49" class="vl">2.921</text>
+<text x="498" y="252" class="ord">C B A M O</text><text x="498" y="263" class="tag">held-out</text>
+<text id="c1ord-ro" x="350" y="285" class="ro">Hover over a bar to display the order × model NRMSE</text>
+</svg><figcaption>Fig. 3b: forward-transfer macro NRMSE for 4 held-out orders (all with identical count, differing only in order) × 3 models (averaged over 12 bench seeds). The teal <code>OFML-linear</code> stays near the floor for every order (≤0.026) = it <b>identifies the order</b>. <code>OFML-Ens</code> collapses on every held-out order except the training reference <code>A B C M O</code> (0.076), and the order-blind <code>Shared-Ens</code> is high on every order. Hover over a bar to read its value. Click to enlarge.</figcaption></figure>
+
+<div class="qa">
+<div class="blk goal"><div class="h">Goal (summary of the claim)</div>
+<p>For non-commutative operation composition, we directly test Claim 1 — "<b>if the source spans the order directions (i.e., if it is identifiable), forward transfer to a held-out order is possible</b>" — via <b>macro NRMSE</b> on the held-out order. The linear composition <code>OFML-linear</code> identifies each operation's \(2\times2\) matrix from the source and exactly reconstructs a held-out order as an <b>ordering of matrix products</b> (NRMSE ≤0.026 for all 4 orders, macro 0.017). The composition net <code>OFML-Ens</code>, which explicitly sees the training order, is small on the training reference <code>A B C M O</code> (0.076) but collapses on held-out orders (macro 1.256), and the order-blind <code>Shared-Ens</code>, which sees only the operation count, cannot distinguish same-count / different-order and fails on every order (macro 2.169). We isolate that the key to transfer is not "composition per se" but "<b>composition with identifiability</b>".</p></div>
+
+<div class="blk setup"><div class="h">Setup</div>
+<p>A composed affine-linear family (non-commutative operations \(\{A,B,C\}\) + terminal \(M\) · linear readout \(O\)). <b>The source is 12 protocols that span the order</b>: 3 single-operation protocols (<code>A M O</code>, <code>B M O</code>, <code>C M O</code>), 6 two-operation pairs in both orders (<code>A B M O</code>/<code>B A M O</code>, <code>A C M O</code>/<code>C A M O</code>, <code>B C M O</code>/<code>C B M O</code>), and 3 full permutations that are not held out (<code>A B C M O</code>, <code>B C A M O</code>, <code>C A B M O</code>). These excite each operation matrix and the principal non-commutative directions, and satisfy \(\ker\Phi\subseteq\ker\Psi\) at the true \(\theta\). <b>The target is 1 training reference</b> <code>A B C M O</code> and <b>3 held-out protocols</b> <code>A C B M O</code>·<code>B A C M O</code>·<code>C B A M O</code> (the remaining 3 permutations that never appear in the source; their count is identical to the training reference and only the order differs). Each protocol is learned with <b>per_proto=40 points</b> and evaluated on <b>n_test=120 points</b> (noise-free · ground truth). All 3 models see the <b>same source/target evidence</b> (a pure structural comparison). With the <b>12 bench seeds</b> as the primary statistical unit, all metrics are <b>macro NRMSE</b>. Observation noise \(\sigma=0.02\).</p>
+<p class="annot">※ The 3 held-out orders have a <b>count that is exactly identical</b> to the training reference and differ only in order (a design that exposes order-blind aliasing). <code>OFML-linear</code> is deterministic linear identification + composition, so seed variation is only at the level of numerical / observation noise, whereas <code>OFML-Ens</code> / <code>Shared-Ens</code> are seed-only 5-member deep ensembles (capacity-matched hidden_dim=32). We do not use raw RMSE; everything is unified as NRMSE normalized by each target's own scale.</p></div>
+
+<div class="blk setup"><div class="h">Model configurations and metric definitions</div>
+<div class="tblwrap"><table class="data"><caption>3 surrogate models (<code>OFML-Ens</code> / <code>Shared-Ens</code> are seed-only 5-member deep ensembles · capacity-matched hidden_dim=32)</caption>
+<thead><tr><th style="text-align:left">Model</th><th style="text-align:left">Structure</th><th style="text-align:left">Key settings</th><th style="text-align:left">Handling of order (non-commutativity)</th></tr></thead>
+<tbody>
+<tr><td style="text-align:left"><code>OFML-linear</code></td><td style="text-align:left">A linear readout that <b>composes, in order,</b> a \(2\times2\) matrix per operation type. Each matrix is identified by least squares from the source rows</td><td style="text-align:left">closed-form identification (linear algebra), y standardization, no randomized training</td><td style="text-align:left">Exactly reconstructs the held-out order via the <b>ordering of matrix products</b> (preserves non-commutativity)</td></tr>
+<tr><td style="text-align:left"><code>OFML-Ens</code></td><td style="text-align:left">Composition net <code>TerminalOnlyOFML</code> (composes a latent module per operation type), 5 members</td><td style="text-align:left">latent_dim=10, hidden=32, 400 epochs, y standardization</td><td style="text-align:left">Reproduces orders seen in training but cannot extrapolate to unobserved orders and collapses</td></tr>
+<tr><td style="text-align:left"><code>Shared-Ens</code></td><td style="text-align:left">A 5-member MLP based on the operation-count descriptor (<b>order-blind</b>)</td><td style="text-align:left">hidden=32, 300 epochs, y standardization</td><td style="text-align:left">No order information (byte-for-byte identical predictions for same-count / different-order)</td></tr>
+</tbody></table></div>
+<p>All metrics are <b>macro NRMSE</b>. Normalizing by each target's pooled scale \(s_\star\) and averaging over the target set: \[ \eps_\pi=\sqrt{\mathrm{mean}_x\,(\mu_\pi-f_\pi)^2\,/\,s_\star^2},\qquad \NRMSE_{\mathrm{macro}}=\frac{1}{|\Pcal_{\mathrm{tgt}}|}\sum_{\pi\in\Pcal_{\mathrm{tgt}}}\eps_\pi,\qquad s_\star=\sqrt{\tfrac{1}{|\Pcal_{\mathrm{tgt}}|}\textstyle\sum_\pi \mathrm{mean}_x\big((f_\pi-\bar f)^2\big)}. \] Here \(\mu_\pi\) is the prediction for order \(\pi\), \(f_\pi\) is the ground truth, and \(\bar f\) is the mean over all targets. \(\eps_\pi\) is the NRMSE of each order (each cell of the figure/table), and its target average is the macro NRMSE. \(s_\star\) is computed on a common 48×48 dense grid.</p></div>
+
+<div class="blk setup"><div class="h">Protocols used (Appendix A)</div>
+<div class="protoset" data-kind="source" data-title="<b>order source (12 protocols: single operations · both-order pairs · non-held-out full permutations)</b>" data-protocols="A M O;B M O;C M O;A B M O;B A M O;A C M O;C A M O;B C M O;C B M O;A B C M O;B C A M O;C A B M O" data-cols="2"></div>
+<div class="protoset" data-kind="target" data-title="<b>order target (1 training reference + 3 held-out = same count · different order)</b>" data-protocols="A B C M O;A C B M O;B A C M O;C B A M O" data-cols="2"></div>
+<div class="tblwrap"><table class="data" style="min-width:520px"><caption>Data generation for the order run</caption>
+<thead><tr><th style="text-align:left">Element</th><th style="text-align:left">Value</th><th style="text-align:left">Property</th></tr></thead>
+<tbody>
+<tr><td style="text-align:left">source learning</td><td style="text-align:left">40 points/protocol × 12 = 480 points</td><td style="text-align:left">with noise \(\sigma=0.02\)</td></tr>
+<tr><td style="text-align:left">target evidence (training reference)</td><td style="text-align:left">40 points (<code>A B C M O</code> only)</td><td style="text-align:left">used for learning by <code>OFML-Ens</code> / <code>Shared-Ens</code></td></tr>
+<tr><td style="text-align:left">test</td><td style="text-align:left">120 points/target (Sobol scramble A)</td><td style="text-align:left">noise-free (ground truth)</td></tr>
+<tr><td style="text-align:left">dense grid</td><td style="text-align:left">48×48/target</td><td style="text-align:left">for pooled-scale · NRMSE normalization</td></tr>
+</tbody></table></div>
+<p class="phint">Hovering over a module type highlights the shared identical operation across all protocols (= weight sharing). The 3 held-out protocols have a count exactly identical to <code>A B C M O</code> and differ only in order, visualizing that "you cannot distinguish them without looking at the order".</p>
+<details class="proof" style="margin-top:10px"><summary>Detailed setup (seed taxonomy · procedure · QC)</summary><div class="pf">
+<b>Seed taxonomy.</b> The <code>bench_seed</code> (12 of them) is the <b>primary statistical unit</b> and redraws the true affine-linear family itself (the operation matrices + readout). Derived streams are separated: task=bench_seed, pool=bench_seed×7+1, noise=bench_seed×7+2, model=bench_seed (pairing across models by task = paired comparison). Sobol uses sob=bench_seed×100003 + fixed offset (test +11 / grid +301). Because <code>OFML-linear</code> uses closed-form identification, its seed dependence is only via observation noise.<br><br>
+<b>Procedure.</b> All models see the same 12 source rows and the same target evidence (40 points of the training reference <code>A B C M O</code>). <code>OFML-linear</code> identifies each operation matrix from the source by least squares and evaluates by composing the target order as a matrix product (held-out orders are <b>zero-shot</b>: no target evidence required). <code>OFML-Ens</code> / <code>Shared-Ens</code> learn from source + training reference and predict held-out orders.<br><br>
+<b>QC / leakage control.</b> The test is noise-free (no train-on-test), and the 3 held-out orders appear in neither the source nor the training reference (no order leakage). The count is fixed identical across the 4 orders, eliminating confounds <b>other than</b> order (operation set · depth). All records have status=ok.<br><br>
+<b>How to read it.</b> Only the NRMSE difference on held-out orders measures "whether the order (non-commutativity) could be identified". By the design of identical count · differing only in order, the failure of <code>Shared-Ens</code> gives the fundamental lower bound (the order-blind floor).
+</div></details></div>
+
+<div class="blk result"><div class="h">Result</div>
+<p><b><code>OFML-linear</code> is best on all 4 orders (the minimum for each order).</b> Even on the 3 held-out orders it stays at NRMSE ≤0.026, <b>reconstructing as a matrix product</b> an order it has never seen in training = it identifies the order (non-commutativity). <code>OFML-Ens</code> is small on the training reference <code>A B C M O</code> (0.076) but collapses to 0.635–2.691 on held-out orders (macro 1.256) = it cannot extrapolate the order. <code>Shared-Ens</code> cannot distinguish the 4 orders with identical count and is high even on the training reference (1.417), with macro 2.169 (the order-blind floor).</p>
+<div class="tblwrap"><table class="data"><caption>Table 4 — held-out order forward-transfer NRMSE (averaged over 12 bench seeds, per_proto=40, n_test=120). The minimum for each order (= <code>OFML-linear</code>) is highlighted. All are NRMSE normalized by the pooled scale of the macro target set.</caption>
+<thead><tr><th style="text-align:left">Order (identical count)</th><th>Type</th><th>OFML-linear</th><th>OFML-Ens</th><th>Shared-Ens</th></tr></thead>
+<tbody>
+<tr><td style="text-align:left"><code>A B C M O</code></td><td>training reference</td><td class="best">0.011</td><td>0.076</td><td>1.417</td></tr>
+<tr><td style="text-align:left"><code>A C B M O</code></td><td>held-out</td><td class="best">0.026</td><td>2.691</td><td>2.700</td></tr>
+<tr><td style="text-align:left"><code>B A C M O</code></td><td>held-out</td><td class="best">0.022</td><td>0.635</td><td>1.637</td></tr>
+<tr><td style="text-align:left"><code>C B A M O</code></td><td>held-out</td><td class="best">0.009</td><td>1.621</td><td>2.921</td></tr>
+<tr><td style="text-align:left"><b>macro NRMSE</b></td><td>all 4 orders</td><td class="best">0.017</td><td>1.256</td><td>2.169</td></tr>
+</tbody></table></div>
+<p>The gap is dramatic (on the held-out macro, <code>OFML-linear</code> is about 1/74 of <code>OFML-Ens</code> and about 1/128 of <code>Shared-Ens</code>). The held-out collapse of <code>OFML-Ens</code> depends strongly on the order (worst 2.691 for <code>A C B M O</code>, smallest 0.635 for <code>B A C M O</code>): the larger the "order distance" from the training reference, the larger the error.</p></div>
+
+<div class="blk disc"><div class="h">Discussion — how it supports the claim</div>
+<p>Success or failure on held-out orders demarcates the core of Claim 1. <b><code>OFML-linear</code></b> <b>transfers non-commutative composition zero-shot</b> when the source spans the order directions (\(\ker\Phi\subseteq\ker\Psi\)) = <a class="xref" href="../experiments.html#c1">Claim 1</a>. <b>The collapse of <code>OFML-Ens</code></b> shows that, even with the same composition structure, a fit that does not guarantee identifiability does not extrapolate to unobserved orders (composition is <b>not a sufficient condition</b> for transfer; identifiability is the key). <b><code>Shared-Ens</code></b> erases the order in principle because it uses a count descriptor, so it cannot distinguish same-count / different-order = the identification limit of terminal-only / order-blind = <a class="xref" href="../experiments.html#c1">Claim 1</a>. By the design of identical count · differing only in order, this gap purely measures only "whether the order (non-commutativity) could be identified".</p>
+<p>For a direct audit of identifiability (the \(\Phi/\Psi\) ranks of the true \(\theta\)), see the <a class="xref" href="c2-tradeoff.html">Φ/Ψ audit</a>; for the linear s0 parity, see <a class="xref" href="c1-fig1.html">Fig. 3a</a>; for count aliasing, see <a class="xref" href="c1-count.html">Fig. 3c</a>; and for the positioning under the cost-indexed view, see <a class="xref" href="cost-indexed.html">Fig. 2</a>.</p>
+<p class="annot">※ Limitations: the near-zero error of <code>OFML-linear</code> is a result on a composed family where linear identification is exactly effective, and the residual is due to numerical / observation noise \(\sigma=0.02\). The held-out orders are restricted to matching count · differing only in order (confounds other than order are eliminated). The collapse values of <code>OFML-Ens</code> have large seed variance (especially <code>A C B M O</code>), and the point estimates are 12-seed averages. The figure's vertical axis is clipped to 0–3 (the <code>OFML-linear</code> bars are drawn with a minimum height of 3px for visibility; the labels and table are authoritative for the true values).</p></div>
+</div>
+
+<div class="callout"><span class="lab">Correspondence with theory</span>
+<p>This experiment verifies the main theorem's rank condition directly. When the source spans the order directions and <b>\(\ker\Phi\subseteq\ker\Psi\)</b> holds, the linear composition transfers exactly to a held-out order (the rank condition itself of <a class="xref" href="../theory.html#prop:ofml-linear" data-ref="prop:ofml-linear">Proposition 4</a>(i); equivalently \(\mathrm{row}(\Psi)\subseteq\mathrm{row}(\Phi)\), with the condition number \(K=\sigma_{\max}(\Psi)/\sigma_{\min}^{+}(\Phi)\) governing error amplification). The held-out collapse of <code>OFML-Ens</code> is empirical evidence that a composition fit that does not impose identifiability lies outside the guarantee region of Proposition 4. Even for an order where identification breaks (a permutation the source does not span), terminal-response consistency can be recovered by directly <b>actively observing</b> the target terminal (<a class="xref" href="../theory.html#thm:ofml-active" data-ref="thm:ofml-active">Theorem 3</a> · <a class="xref" href="../theory.html#prop:ofml-rescue" data-ref="prop:ofml-rescue">Proposition 5</a>).</p></div>
+
+<div class="qa" style="margin-top:16px"><div class="blk"><div class="h">The claim this experiment supports</div><div><a class="claimcard" href="../experiments.html#c1" style="--c:#0ea5a4;display:block;border-top-width:4px"><span class="cn">1</span><div class="ct" style="margin-top:8px">When the right conditions (identifiability) hold, OFML aids forward transfer</div><p>When, in addition to the composed representation, the identifiability of the reused operations and model specification are in place, even terminal-only transfers zero-shot to an unknown target.</p></a></div></div></div>
+
+<p style="margin-top:22px"><a class="back" href="../experiments.html">‹ Back to Experiments</a></p>
+</div>
+
+<script>
+(function(){var ro=document.getElementById('c1ord-ro');if(!ro)return;var def=ro.textContent;var bars=document.querySelectorAll('#c1ord-svg .bar');for(var i=0;i<bars.length;i++){(function(b){b.addEventListener('mouseenter',function(){ro.textContent='order '+b.getAttribute('data-order')+' · '+b.getAttribute('data-model')+' — NRMSE '+b.getAttribute('data-val');});b.addEventListener('mouseleave',function(){ro.textContent=def;});})(bars[i]);}})();
+</script>
+<script>
+(function(){var lb=document.createElement('div');lb.className='lightbox';lb.innerHTML='<div class="hint">Click / Esc to close</div><img alt=""/>';document.body.appendChild(lb);var im=lb.querySelector('img');document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.figbox img');if(t){im.src=t.currentSrc||t.src;lb.classList.add('open');document.body.style.overflow='hidden';return;}if(e.target.closest&&e.target.closest('.lightbox')){lb.classList.remove('open');document.body.style.overflow='';}});document.addEventListener('keydown',function(e){if(e.key==='Escape'){lb.classList.remove('open');document.body.style.overflow='';}});})();
+</script><script src="../lib/tex-svg.js" id="MathJax-script" async></script></body></html>

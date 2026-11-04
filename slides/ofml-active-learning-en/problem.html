@@ -1,0 +1,80 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Problem setting — OFML</title><link rel="stylesheet" href="style.css"/>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],macros:{Mcal:"\\mathcal{M}",Pcal:"\\mathcal{P}",Xcal:"\\mathcal{X}",Ycal:"\\mathcal{Y}",Zcal:"\\mathcal{Z}",Scal:"\\mathcal{S}",Qcal:"\\mathcal{Q}",Ccal:"\\mathcal{C}",Ucal:"\\mathcal{U}",Acal:"\\mathcal{A}",Dcal:"\\mathcal{D}",Hcal:"\\mathcal{H}",Gcal:"\\mathcal{G}",Tcal:"\\mathcal{T}",Rcal:"\\mathcal{R}",E:"\\mathbb{E}",R:"\\mathbb{R}",N:"\\mathbb{N}",Eval:"\\operatorname{Eval}",Pa:"\\operatorname{Pa}",Anc:"\\operatorname{Anc}",Obs:"\\operatorname{Obs}",Var:"\\operatorname{Var}",Cov:"\\operatorname{Cov}",Law:"\\operatorname{Law}",supp:"\\operatorname{supp}",mean:"\\operatorname{mean}",RMSE:"\\operatorname{RMSE}",NRMSE:"\\operatorname{NRMSE}",IVR:"\\mathrm{IVR}",SUR:"\\mathrm{SUR}",AUC:"\\operatorname{AUC}",argmax:"\\operatorname*{arg\\,max}",norm:["\\left\\lVert #1\\right\\rVert",1],abs:["\\left\\lvert #1\\right\\rvert",1]},packages:{'[+]':['ams']}},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script src="refs.js"></script><script src="protoviz.js"></script><script src="hovercard.js"></script><script src="obsviz.js"></script></head><body>
+<nav class="sitenav"><div class="wrap"><a href="index.html">Overview</a><a href="background.html">Background</a><a class="on" href="problem.html" data-short="Problem">Problem setting</a><a href="method.html" data-short="OFML">Object-Flow Machine Learning</a><a href="theory.html" data-short="Theory">Theoretical statement and proofs</a><a href="experiments.html">Experiments</a><a href="hardware.html" data-short="Hardware">Hardware integration</a><a href="references.html" data-short="Refs">References</a></div></nav>
+
+<div class="wrap page">
+<p class="kicker">Problem setting</p>
+<h2>Protocol-Structured Surrogate Modeling Problem with Terminal Measurement</h2>
+<p class="lead">We define the target that OFML solves. We present, point by point in boxes, the protocol structure, the true latent execution, the observation model, the <b>OFML hypothesis class</b>, source→target learning, and the <b>sequential action and cost-indexed objective</b> (the running text is supplementary only). The details of the weight-sharing architecture of the composition are treated in <a class="xref" href="method.html">Object-Flow Machine Learning</a>, and the consistency of the terminal-function posterior in <a class="xref" href="theory.html">Theoretical statement and proofs</a>. The notation is kept consistent with the <a class="xref" href="experiments/cost-indexed.html">cost-indexed evaluation</a> of the experiments and with the theory.</p>
+
+<!-- ==================== 3.1 ==================== -->
+<h3 class="sub">3.1 Protocol vocabulary and typed execution graph</h3>
+<div class="callout"><span class="lab">Operation vocabulary and protocol set</span>
+<p>Let the shared operation vocabulary be \(\Mcal=\{M_1,\ldots,M_m\}\). Each \(M_j\) is an operation type reused across protocols, such as dispensing, mixing, heating, incubation, reaction, or readout preparation. Let the protocol set be \(\Pcal\) and the observed source be \(\Pcal_{\mathrm{src}}\subseteq\Pcal\) (the finite target set to which transfer is directed is defined in 3.4).</p></div>
+<div class="callout"><span class="lab">Typed directed acyclic graph (DAG) and local input-assembly map</span>
+<p>Each protocol \(p\in\Pcal\) is a typed DAG \(p=(V_p,E_p,\tau_p,\iota_p)\). Here \(V_p\) is the node set, \(E_p\) the dependencies, and \(\tau_p:V_p\to\{1,\ldots,m\}\) assigns an operation type to each node. Let the parent set of node \(v\) be \(\Pa_p(v)\) and the external design variable be \(x\in\Xcal_p\). Let the local input space of operation type \(M_j\) be \(\Zcal_j\) and the post-operation latent-state space be \(\Scal_j\); we define once the <b>input-assembly map</b> that assembles the local input of each node as follows:</p>
+\[ \iota_{p,v}:\left(\prod_{u\in\Pa_p(v)}\Scal_{\tau_p(u)}\right)\times \Xcal_p \to \Zcal_{\tau_p(v)}. \]</div>
+<div class="callout"><span class="lab">True latent execution (protocol-dependent true map)</span>
+<p>We write the true map of each operation type \(M_j\), depending on the protocol in question, as \(F_{j,p}^\dagger:\Zcal_j\to\Scal_j\). Following the topological order of the DAG, the true state is determined from the design variable \(x\) as follows:</p>
+\[ z_v^\dagger(x) = \iota_{p,v}\!\left((s_u^\dagger(x))_{u\in\Pa_p(v)},\, x\right),\qquad s_v^\dagger(x) = F_{\tau_p(v),\,p}^\dagger\!\left(z_v^\dagger(x)\right). \]
+<p class="annot">Note: making the true map <b>protocol-dependent \(F_{j,p}^\dagger\)</b> is intentional. The OFML <b>model</b> shares a single module \(g_{\theta_j}\) across the same operation type (3.3), but <b>whether the truth agrees with that sharing</b> is a <b>condition</b> for transfer to hold, not a premise (C2 in 3.4, <a class="xref" href="theory.html#ass:transfer-diagnostics" data-ref="ass:transfer-diagnostics">Assumption 8</a>). The semantic shift s2 is a failure mode that deliberately breaks this condition.</p></div>
+
+<!-- ==================== 3.2 ==================== -->
+<h3 class="sub">3.2 Observation model</h3>
+<div class="callout"><span class="lab">Observer vocabulary and observable nodes</span>
+<p>We separate the measurement devices as an <b>observer vocabulary</b> \(\Qcal=\{Q_1,\ldots,Q_r\}\) distinct from the operation vocabulary. Each observer \(Q_q\) has a true readout map \(h_q^\dagger:\Scal_{j}\to\Ycal_q\) that reads out the latent state of the node at which it is placed. Let the observable-node set of protocol \(p\) be \(\Obs(p)\subseteq V_p\) (the nodes at which observers are placed). We do not assume that arbitrary intermediate node outputs are directly observable; only the outputs of explicitly placed observers can be observed.</p>
+<p class="annot">Note: separating observers from the operation vocabulary makes future extensions natural—multiple observers, per-observer costs, intermediate measurements, and non-destructive/destructive measurements. In the main setting of this paper, \(\Qcal=\{q_{\mathrm{term}}\}\), \(\Ycal_{q_{\mathrm{term}}}=\R\) (a single terminal scalar observer).</p></div>
+<div class="callout"><span class="lab">Observation space and noisy observation</span>
+<p>Let the observation space be \(\Ycal_p^{\mathrm{obs}}=\prod_{q\in\Obs(p)}\Ycal_q\) and the true observation output be \(\Eval^\dagger(p;x)=\left(h_q^\dagger(s_{v(q)}^\dagger(x))\right)_{q\in\Obs(p)}\) (\(v(q)\) is the node at which observer \(q\) is placed). The observation data is</p>
+\[ y_i = \Eval^\dagger(p_i;x_i)+\xi_i,\qquad \E[\xi_i\mid \cdot]=0, \]
+<p>where \(\xi_i\) is conditionally unbiased, finite-variance noise on the observation space \(\Ycal_{p_i}^{\mathrm{obs}}\) (<a class="xref" href="theory.html#ass:finite-variance" data-ref="ass:finite-variance">Assumption 4</a> in the theory).</p></div>
+<div class="callout" style="--ca:#f59e0b"><span class="lab">Main setting: terminal-only measurement</span>
+<p>In the main setting of this work, each protocol has \(\Obs(p)=\{q_p^{\mathrm{term}}\}\), and the observation data contains <b>only the output of the terminal measurement-device node (a single scalar \(y\))</b>. Even when intermediate stages are observed during learning, they are represented not as the intermediate state itself but as the output of an observer module placed at that position. In this respect, OFML differs from function-network-type Bayesian optimization<a class="cite" data-cite="astudillo2021bofn">[bofn]</a>, which directly uses intermediate node outputs, and from pKGFN<a class="cite" data-cite="buathong2024pkgfn">[pKGFN]</a>, which presupposes per-node partial evaluation.</p></div>
+
+<!-- ==================== 3.3 ==================== -->
+<h3 class="sub">3.3 OFML hypothesis class</h3>
+<div class="callout"><span class="lab">Shared operation modules and composed predictor</span>
+<p>We assign to each operation type \(M_j\) a <b>shared module</b> \(g_{\theta_j}:\Zcal_j\to\Scal_j\) that is learned. The <b>readout head</b> \(h_q\) of observer \(Q_q\) is also a learning target, and we bundle all learnable components (operation modules + observer heads) as \(\theta\in\Theta\) (the terminal readout in the main setting is a fixed scalar measurement, while the intermediate observer head of 1-C is learnable). Composing in the same topological order as the true execution, we define the predictor as</p>
+\[ \Eval(p;\theta;x)=\bigl(h_q(s_{v(q)}^{\theta}(x))\bigr)_{q\in\Obs(p)},\quad s_v^{\theta}(x)=g_{\tau_p(v)}\!\bigl(\iota_{p,v}((s_u^{\theta}(x))_{u\in\Pa_p(v)},x);\theta\bigr) \]
+<p>Sharing <b>a single parameter \(\theta_j\) across the same operation type</b> is the inductive bias of OFML, and this is what distinguishes it from the unstructured baselines (Shared-Ens / Independent-Ens) that ignore order and count. The details of the composition architecture are in <a class="xref" href="method.html">Object-Flow Machine Learning</a>.</p></div>
+<div class="callout"><span class="lab">Parameter uncertainty and pushforward to the terminal function</span>
+<p>Let the uncertainty distribution of the module parameters be \(\Pi_n^\theta\). This does not identify exact posterior, SMC, and deep ensemble with one another; rather, it serves to define the "<b>terminal-function sample</b>" interface that all of them commonly provide. For each target \(p\), via the pushforward \(T_p(\theta)(x)=\Eval(p;\theta;x)\), we obtain the distribution of the terminal function</p>
+\[ \Pi_n^{G}=(T_p)_{\#}\,\Pi_n^\theta,\qquad \widehat f_{n,p}(x)=\mu_{n,p}(x)=\E_{\theta\sim\Pi_n^\theta}\!\left[\Eval(p;\theta;x)\right] \]
+<p>The prediction is based on this <b>posterior mean \(\mu_{n,p}\)</b>, and the active-learning acquisition on the variance of this distribution. \(\Pi_n^{G}\) corresponds to the \(C(\Xcal)\)-valued posterior \(\Law(G\mid\Hcal_n)\) (<a class="xref" href="theory.html#lem:ofml-pushforward" data-ref="lem:ofml-pushforward">Lemma 5</a>) whose consistency the theory discusses.</p></div>
+
+<!-- ==================== 3.4 ==================== -->
+<h3 class="sub">3.4 Source-to-target learning</h3>
+<div class="callout"><span class="lab">Separation of source / target data</span>
+<p>We split the data into source and target:</p>
+\[ \Dcal_n=\Dcal_{\mathrm{src}}\cup\Dcal_{\mathrm{tar},n},\qquad \Dcal_{\mathrm{tar},0}=\emptyset. \]
+<p>\(\Dcal_{\mathrm{src}}\) is the source observations fixed before any target cost is counted, and \(\Dcal_{\mathrm{tar},n}\) is the target observations added sequentially. \(n=0\) corresponds to after source pretraining with no target observations (zero-shot transfer), and \(n\ge1\) to target adaptation. The source acquisition cost is treated as a <b>sunk cost</b> common to all models and is not included on the cost axis.</p></div>
+<div class="callout"><span class="lab">Finite target set and transfer objective</span>
+<p>Let the objects of transfer and evaluation be a <b>finite target protocol set</b> \(\Pcal_\star=\{p_1,\ldots,p_K\}\subseteq\Pcal\) (typically \(\Pcal_\star\cap\Pcal_{\mathrm{src}}=\emptyset\)). The true target function of each \(p\in\Pcal_\star\) is \(f_p^\dagger(x)=\Eval^\dagger(p;x)\). The objective is to predict \(\{f_p^\dagger:p\in\Pcal_\star\}\) from the source and (as needed) a small number of target observations.</p>
+<p class="annot">Note: a single target is the special case \(K=1\). Figure 2 of this paper simultaneously evaluates the two targets \(\Pcal_\star=\{\mathrm{ABO},\mathrm{BAO}\}\) (or \(\{\mathrm{ABCMO},\mathrm{CBAMO}\}\)). Using two targets makes it possible to define the <b>descriptor aliasing floor</b> \(F_{\mathrm{alias}}\) of the order-ignoring Shared-Ens (<a class="xref" href="experiments/cost-indexed.html">cost-indexed</a>).</p></div>
+<div class="callout"><span class="lab">Transfer condition C2 (semantic sharing)</span>
+<p>The OFML model always shares \(g_{\theta_j}\), but transfer holds <b>only when the truth agrees with that sharing</b>. We express the shared-semantics condition as</p>
+\[ F_{j,p}^\dagger=F_j^\dagger\quad\text{(for relevant }p\text{)} \]
+<p>as condition C2. When this breaks (semantic shift s2), zero-shot transfer can fail. For the complete transferability diagnostics C1–C5 see <a class="xref" href="theory.html#ass:transfer-diagnostics" data-ref="ass:transfer-diagnostics">Assumption 8</a>, and for the linear rank condition see <a class="xref" href="theory.html#prop:ofml-linear" data-ref="prop:ofml-linear">Proposition 4</a>.</p></div>
+
+<!-- ==================== 3.5 ==================== -->
+<h3 class="sub">3.5 Sequential action and cost-indexed objective</h3>
+<div class="callout"><span class="lab">History, action, policy</span>
+<p>Let the observation history be \(\Hcal_n=\sigma(\Dcal_{\mathrm{src}},\Dcal_{\mathrm{tar},n})\) and the action be \(a_n=(p_n,x_n,q_n)\) (target protocol, design point, observer); the next action is chosen based on the history: \(a_{n+1}=\pi_n(\Hcal_n)\). The candidate set is</p>
+\[ \Acal_n\subseteq\bigsqcup_{p\in\Pcal_\star}\{p\}\times\Xcal_p \]
+<p>(a finite pool in the experiments, a compact continuous domain in the theory). In the main setting of this paper, \(p_n\in\Pcal_\star\), \(q_n=q_{\mathrm{term}}\), and unit cost \(c(a_n)=1\). This connects to the theory's \(\Pi_n=\Law(G\mid\Hcal_n)\) (<a class="xref" href="theory.html#thm:ofml-active" data-ref="thm:ofml-active">Theorem 3</a>).</p></div>
+<div class="callout"><span class="lab">Cumulative target cost and budget</span>
+<p>We write the cumulative target acquisition cost as</p>
+\[ B_n=\sum_{i=1}^{n}c(a_i),\qquad \text{under unit cost } B_n=n,\quad B_0=0. \]
+<p>\(B_0=0\) is a <b>conditional target cost</b> that does not include the source pretraining cost (the source is a sunk cost common to all models).</p></div>
+<div class="callout"><span class="lab">Cost-indexed learning objective (unified)</span>
+<p>The macro target error at cumulative cost \(b\), normalized by the pooled scale \(s_\star=\sqrt{\sum_{p\in\Pcal_\star} w_p\,\mean((f_p^\dagger-\bar f)^2)}\) (equal weights \(w_p=1/K\)), is defined as</p>
+\[ \varepsilon_m(b)=\left(\sum_{p\in\Pcal_\star} w_p\;\E_{x\sim\nu_p}\!\left[\tfrac{\norm{\mu_{n,p}(x)-f_p^\dagger(x)}^2}{s_\star^2}\right]\right)^{1/2},\qquad \bar J(B)=\frac1B\int_0^B\varepsilon_m(b)\,db \]
+<p>(\(\nu_p\) = the evaluation distribution over target \(p\), approximated by a finite test set in the experiments; \(\bar J\) uses the trapezoidal rule). The objective of OFML is <b>unified</b> into making \(\varepsilon_m(b)\) small over the entire budget \([0,B]\): \(\varepsilon_m(0)\) measures <a class="xref" href="experiments.html#c1">forward transfer</a> (\(b=0\)), \(\varepsilon_m(b),\,b>0\) measures <a class="xref" href="experiments.html#c2">target adaptation</a>, and we report \(\bar J(B)\) together with the endpoints \(\varepsilon_m(0)/\varepsilon_m(B)\).</p></div>
+
+<p style="margin-top:24px"><a class="back" href="method.html">On to Object-Flow Machine Learning →</a></p>
+</div>
+
+<script>
+
+</script><script src="lib/tex-svg.js" id="MathJax-script" async></script></body></html>

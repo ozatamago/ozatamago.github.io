@@ -1,0 +1,58 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Hardware integration — OFML</title><link rel="stylesheet" href="style.css"/>
+<style>/* ColorMix dye-operation colors (page-local) */
+.protoset .op-R{--opb:#dc2626;--opf:#fee2e2}
+.protoset .op-Y{--opb:#d97706;--opf:#fef3c7}
+.protoset .op-B{--opb:#2563eb;--opf:#dbeafe}</style>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],macros:{Mcal:"\\mathcal{M}",Pcal:"\\mathcal{P}",Xcal:"\\mathcal{X}",E:"\\mathbb{E}",R:"\\mathbb{R}",Eval:"\\operatorname{Eval}",Obs:"\\operatorname{Obs}",norm:["\\left\\lVert #1\\right\\rVert",1]},packages:{'[+]':['ams']}},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script src="refs.js"></script><script src="protoviz.js"></script><script src="hovercard.js"></script><script src="obsviz.js"></script></head><body>
+<nav class="sitenav"><div class="wrap"><a href="index.html">Overview</a><a href="background.html">Background</a><a href="problem.html" data-short="Problem">Problem setting</a><a href="method.html" data-short="OFML">Object-Flow Machine Learning</a><a href="theory.html" data-short="Theory">Theoretical statement and proofs</a><a href="experiments.html">Experiments</a><a class="on" href="hardware.html" data-short="Hardware">Hardware integration</a><a href="references.html" data-short="Refs">References</a></div></nav>
+
+<div class="wrap page">
+<p class="kicker">Hardware integration</p>
+<h2>Hardware integration — active learning on a Tecan Fluent autonomous lab</h2>
+<p class="lead">A preliminary demo connecting the OFML framework — validated on synthetic benchmarks — to a real autonomous laboratory. Driving the <b>Tecan Fluent</b> liquid handler, <b>ODTC</b> thermocycler, and <b>Magellan</b> plate reader via SiLA / remote execution, we ran the paper's central claim directly on hardware with a <b>dye-mixing (ColorMix)</b> task: treat a protocol as a composition of operations and actively learn from the <b>terminal measurement only</b>. Protocol = mixing recipe, operation = dispense / mix, terminal measurement = absorbance.</p>
+
+<figure class="figbox" style="max-width:760px;margin:16px auto">
+<div style="position:relative;width:100%;max-width:720px;margin:0 auto;aspect-ratio:16/9;background:#000;border-radius:8px;overflow:hidden">
+<iframe src="https://riken-share.box.com/embed/s/cgxlxmdcg7osaie9bkilcwdquyzhx7hg" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" allow="autoplay; fullscreen" allowfullscreen webkitallowfullscreen msallowfullscreen loading="lazy" title="Tecan Fluent ColorMix hardware demo video"></iframe>
+</div>
+<figcaption>Hardware demo video (Box embed) — the Tecan Fluent automatically running the ColorMix dispense / mix / measure loop. If it does not play, open the <a class="xref" href="https://riken-share.box.com/s/cgxlxmdcg7osaie9bkilcwdquyzhx7hg" target="_blank" rel="noopener">Box link</a> directly.</figcaption>
+</figure>
+
+<h3 class="sub">The ColorMix task = OFML on hardware</h3>
+<div class="callout"><span class="lab">A protocol as a composition of operations, on hardware</span>
+<p>ColorMix first fills each well with 150&nbsp;µL of water, dispenses <b>Red, Yellow, and Blue</b> dye solutions (operations <code>R</code>/<code>Y</code>/<code>B</code>: 5–40&nbsp;µL single-color, 4 levels 5/15/25/35&nbsp;µL for two-/three-color), mixes (<code>M</code>), and reads the terminal observer <code>O</code> (Magellan absorbance at 430/520/630&nbsp;nm). Protocols are machine-readably defined as compositions of operation symbols (the <code>steps</code> field of <code>experiment.yaml</code>):</p>
+<div class="protoset" data-kind="source" data-title="<b>Source protocols (single- and two-color)</b> — the shared modules R, Y, B, M are learned here" data-protocols="R M O;Y M O;B M O;R Y M O;R B M O;Y B M O" data-labels="single Red;single Yellow;single Blue;two-color R+Y;two-color R+B;two-color Y+B" data-names="R:Red dispense R;Y:Yellow dispense Y;B:Blue dispense B" data-cols="1"></div>
+<div class="protoset" data-kind="target" data-title="<b>Target protocol (three-color, unseen)</b> — active learning picks the next well from this candidate grid (5&nbsp;µL steps)" data-protocols="R Y B M O" data-labels="three-color R+Y+B" data-names="R:Red dispense R;Y:Yellow dispense Y;B:Blue dispense B"></div>
+<p class="annot">The same operation type (e.g. an <code>R</code> dispense) is reused as <b>one shared module</b> across single-, two-, and three-color recipes = the hardware version of transfer by weight sharing. The modules <code>R</code>, <code>Y</code>, <code>B</code>, <code>M</code> learned on single- and two-color sources recombine to predict the unseen three-color target <code>R Y B M O</code>. Intermediate state (the color mid-mixing) is not observed; only the <b>terminal measurement</b> is obtained.</p></div>
+<div class="callout"><span class="lab">Terminal measurement = absorbance (3 wavelengths)</span>
+<p>Each well's observation is the Magellan absorbance at <b>430 / 520 / 630 nm</b> (blank-corrected). The intermediate dispense volumes and the mixing process itself are not used as supervision; the surrogate learns from the <b>final well's measurement only</b> (= the paper's terminal-only setting).</p></div>
+
+<h3 class="sub">Hardware stack and remote execution</h3>
+<div class="callout"><span class="lab">Instrument stack</span>
+<p><b>Tecan Fluent</b> (8-channel LiHa liquid handler: dye / water dispensing and tip management) + <b>ODTC</b> (Inheco thermocycler: for temperature-controlled systems) + <b>Magellan</b> (plate reader: absorbance measurement). Each run's success is confirmed machine-readably from the FluentControl AuditTrail and the SiLA progress (<code>RunModeRunFinished / Progress 100</code>).</p></div>
+<div class="callout"><span class="lab">Safety-first dry-run redesign</span>
+<p>After 8-channel simultaneous aspirates triggered an Active Stop, the source runner was rebuilt to a dry-run-validated design that uses <b>physical channel 1 only and caps a single dye aspirate at 140&nbsp;µL</b>. <code>validate_colormix_source_plan.py</code> passes on all plates and was verified on hardware; every plan is validated before any command is sent to the instrument.</p></div>
+
+<h3 class="sub">Source campaign and active learning</h3>
+<div class="qa">
+<div class="blk goal"><div class="h">Data collected</div>
+<p><b>Source campaign:</b> <b>264 source observations</b> collected across 3 source plates (88 wells each: 8 water blanks + 3 colors). Raw ASC files match by <b>SHA-256</b> across Windows/Mac, with shape <code>(3, 8, 12)</code> and all values finite. <br><b>Active learning:</b> starting from a frozen pre-active baseline (264 source obs, 0 active), <b>iterations 1–11</b> acquired <b>11 wet observations</b> (A2–A12) on the instrument.</p></div>
+<div class="blk result"><div class="h">Separated evaluation (prequential)</div>
+<p>At each iteration three things are reported and kept strictly separate: <b>(1)</b> pre-acquisition prediction vs measurement of a new well = a <b>one-step prequential test</b> (the only unbiased test); <b>(2)</b> the same-well prediction after retraining = a training-point-assimilation diagnostic (not a test); <b>(3)</b> the before/after difference on a previously-opened 16-well fixed panel = regression monitoring (not an unbiased test). The pre-acquisition baseline Spearman ρ is <b>0.97 / 0.94 / 0.87</b> at 430/520/630 nm.</p></div>
+<div class="blk disc"><div class="h">Correspondence with the paper's claims</div>
+<p>This hardware demo instantiates the paper's three points directly: learning from the <b>terminal measurement only</b> (terminal-only), <b>transfer by weight sharing</b> — recombining the shared modules learned on single- and two-color sources to predict the unseen three-color target <code>R Y B M O</code> (<a class="xref" href="experiments.html#c1">Claim 1</a>), and a closed loop that <b>actively picks the next well to measure</b> from the three-color candidate grid to drive down error (<a class="xref" href="experiments.html#c2">Claim 2</a>). It is a first step toward confirming, with real reagents and instruments, the behavior established on synthetic benchmarks (<a class="xref" href="experiments.html">Experiments</a>).</p></div>
+</div>
+
+<div class="callout"><span class="lab">Reproducibility &amp; provenance</span>
+<p>Every artifact carries a <b>SHA-256</b>, and the pre-active baseline is stored <b>read-only</b> (<code>-r--r--r--</code>) on both the dgx1 and the Mac; internal checks over 36 files pass on both. The pipeline from raw ASC → blank correction → CSV is reproducible under verification, and instrument commands are cross-checked against the audit log and SiLA progress. Implementation details are consolidated in the internal repository <code>tecan_fluent_demo</code> (Tecan Fluent remote-execution guide, ColorMix runner, Magellan ingest).</p></div>
+
+<div class="callout" style="--ca:#f59e0b"><span class="lab">Positioning (limitations)</span>
+<p>This page is a <b>preliminary demo</b>, not a main result of the paper. Dye mixing is a benign task whose absorbance is nearly additive and easy to identify; nonlinear, multi-step systems such as enzyme reactions are future work. Hardware failure modes (channel stops, tip consumption, temperature-control waits) are avoided by dry-run validation and the single-channel scheme, but throughput is limited. The goal is to show that OFML's <b>terminal-only + active-learning</b> framework closes the loop on real hardware.</p></div>
+
+<p style="margin-top:24px"><a class="back" href="experiments.html">‹ Back to Experiments</a></p>
+</div>
+
+<script>
+(function(){var lb=document.createElement('div');lb.className='lightbox';lb.innerHTML='<div class="hint">Click / Esc to close</div><img alt=""/>';document.body.appendChild(lb);var im=lb.querySelector('img');document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.figbox img');if(t){im.src=t.currentSrc||t.src;lb.classList.add('open');document.body.style.overflow='hidden';return;}if(e.target.closest&&e.target.closest('.lightbox')){lb.classList.remove('open');document.body.style.overflow='';}});document.addEventListener('keydown',function(e){if(e.key==='Escape'){lb.classList.remove('open');document.body.style.overflow='';}});})();
+</script><script src="lib/tex-svg.js" id="MathJax-script" async></script></body></html>

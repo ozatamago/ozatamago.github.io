@@ -33,12 +33,12 @@
       "id": "ofml-active-learning-en",
       "title": "Object-Flow Machine Learning: Operation-Level Surrogate Modeling for Laboratory Workflows",
       "kind": "web",
-      "locked": true,
       "listed": true,
       "lang": "en",
-      "file": "data/ofml-active-learning-en.enc",
+      "file": "data/ofml-active-learning-en.bundle",
       "date": "2026",
-      "summary": "Operation-level surrogate modeling for laboratory workflows: zero-shot cross-protocol transfer and closed-loop active correction, learned from structured protocols and terminal measurements only."
+      "summary": "Operation-level surrogate modeling for laboratory workflows: zero-shot cross-protocol transfer and closed-loop active correction, learned from structured protocols and terminal measurements only.",
+      "mime": "text/html"
     },
     {
       "id": "lip-ucb",

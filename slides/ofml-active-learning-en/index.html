@@ -1,0 +1,160 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Object-Flow Machine Learning: Operation-Level Surrogate Modeling for Laboratory Workflows</title><link rel="stylesheet" href="style.css"/>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],macros:{Mcal:"\\mathcal{M}",Pcal:"\\mathcal{P}",Xcal:"\\mathcal{X}",Ycal:"\\mathcal{Y}",Zcal:"\\mathcal{Z}",Scal:"\\mathcal{S}",Qcal:"\\mathcal{Q}",Ccal:"\\mathcal{C}",Ucal:"\\mathcal{U}",Acal:"\\mathcal{A}",Dcal:"\\mathcal{D}",Hcal:"\\mathcal{H}",Gcal:"\\mathcal{G}",Tcal:"\\mathcal{T}",Rcal:"\\mathcal{R}",E:"\\mathbb{E}",R:"\\mathbb{R}",N:"\\mathbb{N}",Eval:"\\operatorname{Eval}",Pa:"\\operatorname{Pa}",Anc:"\\operatorname{Anc}",Obs:"\\operatorname{Obs}",Var:"\\operatorname{Var}",Cov:"\\operatorname{Cov}",RMSE:"\\operatorname{RMSE}",AUC:"\\operatorname{AUC}",argmax:"\\operatorname*{arg\\,max}",norm:["\\left\\lVert #1\\right\\rVert",1],abs:["\\left\\lvert #1\\right\\rvert",1]},packages:{'[+]':['ams']}},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script src="refs.js"></script><script src="protoviz.js"></script><script src="hovercard.js"></script><script src="obsviz.js"></script></head><body>
+<nav class="sitenav"><div class="wrap"><a class="on" href="index.html">Overview</a><a href="background.html">Background</a><a href="problem.html" data-short="Problem">Problem setting</a><a href="method.html" data-short="OFML">Object-Flow Machine Learning</a><a href="theory.html" data-short="Theory">Theoretical statement and proofs</a><a href="experiments.html">Experiments</a><a href="hardware.html" data-short="Hardware">Hardware integration</a><a href="references.html" data-short="Refs">References</a></div></nav>
+
+<header class="hero"><div class="wrap">
+  <span class="eyebrow">Paper overview · Interactive</span>
+  <h1>Object-Flow Machine Learning:<br/>Operation-Level Surrogate Modeling for Laboratory Workflows</h1>
+  <p class="tag">We treat an experimental protocol not as a single identifier or a flat feature vector, but as a structured input consisting of <b>experimental objects, operation sequences, and measurement instruments</b>. By <b>sharing</b> across protocols the predictive components corresponding to the same operation type, we transfer zero-shot to unseen protocols from a few <b>terminal measurements</b> and correct in closed loop via <b>active learning</b>. This is <b>protocol-structure-preserving surrogate modeling</b>, positioned between a full mechanistic simulator and a single black-box surrogate model. Any cross-reference previews on hover and jumps to its target on click.</p>
+  <div class="badges"><span class="badge">Structured surrogate model</span><span class="badge">Cross-protocol knowledge transfer</span><span class="badge">Terminal measurements only</span><span class="badge">Active learning (MaxVar / IVR)</span><span class="badge">GP · Deep ensemble · BNN</span></div>
+</div></header>
+
+<section><div class="wrap">
+  <p class="kicker">Big picture</p>
+  <h2>Three stages: learn on source, recompose into an unseen protocol, and correct on target</h2>
+  <p class="lead">The predictive components of the same operation type (same color) are shared across multiple protocols. This is the sole mechanism of cross-protocol knowledge transfer. We learn shared modules on the source protocols (①), recompose them into an unseen target protocol for zero-shot prediction (②), and perform closed-loop correction via active learning while adding terminal measurements on the target (③).</p>
+  <figure class="fw" style="margin:22px 0 0">
+  <svg viewBox="0 0 1000 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The three stages of OFML: pretraining on source protocols, zero-shot cross-protocol prediction, and active learning on the target">
+    <defs>
+      <marker id="ah" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#0f766e"/></marker>
+      <marker id="ahb" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#0f766e"/></marker>
+      <marker id="aho" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#e07a3c"/></marker>
+    </defs>
+    <style>
+      .pt{font-family:inherit;font-weight:800;font-size:13px;fill:#10151c}
+      .ps{font-family:inherit;font-size:10.5px;fill:#5a6573}
+      .nl{font-family:inherit;font-weight:800;font-size:15px;fill:#10151c;text-anchor:middle}
+      .io{font-family:inherit;font-style:italic;font-weight:700;font-size:13px;fill:#5a6573}
+      .cap{font-family:inherit;font-size:10.5px;fill:#5a6573;text-anchor:middle}
+      .capb{font-family:inherit;font-weight:800;font-size:11px;fill:#10151c;text-anchor:middle}
+      .gl{font-family:inherit;font-weight:800;font-size:10px;fill:#0f766e;text-anchor:middle}
+      .gs{font-family:inherit;font-size:9px;fill:#5a6573;text-anchor:middle}
+      .bt{font-family:inherit;font-weight:700;font-size:9.5px;fill:#10151c;text-anchor:middle}
+      .panel{fill:#fcfdfe;stroke:#cbd5e1;stroke-width:1.4;stroke-dasharray:4 4}
+      .conn{stroke:#0f766e;stroke-width:1.8;fill:none}
+    </style>
+    <rect class="panel" x="6" y="16" width="292" height="308" rx="12"/>
+    <rect class="panel" x="360" y="16" width="296" height="308" rx="12"/>
+    <rect class="panel" x="712" y="16" width="282" height="308" rx="12"/>
+    <circle cx="26" cy="40" r="11" fill="#0f766e"/><text x="26" y="44.5" class="nl" fill="#fff" font-size="12">1</text>
+    <text x="44" y="44" class="pt">Pretraining: source protocols</text>
+    <text x="16" y="64" class="ps">Learn shared modules from simple protocols</text>
+    <text x="18" y="171" class="io">x</text>
+    <line class="conn flow" x1="30" y1="166" x2="41" y2="166" marker-end="url(#ah)"/>
+    <rect x="42" y="148" width="40" height="34" rx="9" fill="#dbeafe" stroke="#2563eb" stroke-width="1.8" class="pulseA"/><text x="62" y="170" class="nl">A</text>
+    <line class="conn flow" x1="82" y1="166" x2="117" y2="166" marker-end="url(#ah)"/>
+    <rect x="118" y="148" width="40" height="34" rx="9" fill="#eef1f4" stroke="#64748b" stroke-width="1.8" class="pulseM"/><text x="138" y="170" class="nl">M</text>
+    <line class="conn flow" x1="158" y1="166" x2="193" y2="166" marker-end="url(#ah)"/>
+    <rect x="194" y="148" width="40" height="34" rx="9" fill="#e5e7eb" stroke="#475569" stroke-width="1.8" class="pulseO"/><text x="214" y="170" class="nl">O</text>
+    <line class="conn flow" x1="234" y1="166" x2="247" y2="166" marker-end="url(#ah)"/>
+    <text x="250" y="171" class="io">y₁</text>
+    <circle r="4" cy="166" cx="45" fill="#0ea5a4" class="t1"/>
+    <text x="18" y="261" class="io">x</text>
+    <line class="conn flow" x1="30" y1="256" x2="41" y2="256" marker-end="url(#ah)"/>
+    <rect x="42" y="238" width="40" height="34" rx="9" fill="#dcfce7" stroke="#16a34a" stroke-width="1.8"/><text x="62" y="260" class="nl">B</text>
+    <line class="conn flow" x1="82" y1="256" x2="117" y2="256" marker-end="url(#ah)"/>
+    <rect x="118" y="238" width="40" height="34" rx="9" fill="#eef1f4" stroke="#64748b" stroke-width="1.8" class="pulseM"/><text x="138" y="260" class="nl">M</text>
+    <line class="conn flow" x1="158" y1="256" x2="193" y2="256" marker-end="url(#ah)"/>
+    <rect x="194" y="238" width="40" height="34" rx="9" fill="#e5e7eb" stroke="#475569" stroke-width="1.8" class="pulseO"/><text x="214" y="260" class="nl">O</text>
+    <line class="conn flow" x1="234" y1="256" x2="247" y2="256" marker-end="url(#ah)"/>
+    <text x="250" y="261" class="io">y₂</text>
+    <circle r="4" cy="256" cx="45" fill="#0ea5a4" class="t2"/>
+    <line x1="138" y1="182" x2="138" y2="238" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="2 3"/>
+    <line x1="214" y1="182" x2="214" y2="238" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="2 3"/>
+    <text x="176" y="214" class="gs">Weight sharing</text>
+    <text x="16" y="300" class="ps">Same color = the same shared module type</text>
+    <text x="329" y="150" class="gl">Reuse</text>
+    <line class="conn" x1="303" y1="166" x2="355" y2="166" stroke-width="3" marker-end="url(#ahb)"/>
+    <text x="329" y="184" class="gs">modules</text>
+    <circle cx="380" cy="40" r="11" fill="#0f766e"/><text x="380" y="44.5" class="nl" fill="#fff" font-size="12">2</text>
+    <text x="398" y="44" class="pt">Cross-protocol prediction (zero-shot)</text>
+    <text x="368" y="64" class="ps">Recompose learned modules into an unseen protocol</text>
+    <text x="372" y="181" class="io">x</text>
+    <line class="conn flow" x1="384" y1="176" x2="393" y2="176" marker-end="url(#ah)"/>
+    <rect x="394" y="158" width="38" height="34" rx="9" fill="#dbeafe" stroke="#2563eb" stroke-width="1.8" class="pulseA"/><text x="413" y="180" class="nl">A</text>
+    <line class="conn flow" x1="432" y1="176" x2="455" y2="176" marker-end="url(#ah)"/>
+    <rect x="456" y="158" width="38" height="34" rx="9" fill="#dcfce7" stroke="#16a34a" stroke-width="1.8" class="pulseB"/><text x="475" y="180" class="nl">B</text>
+    <line class="conn flow" x1="494" y1="176" x2="517" y2="176" marker-end="url(#ah)"/>
+    <rect x="518" y="158" width="38" height="34" rx="9" fill="#eef1f4" stroke="#64748b" stroke-width="1.8" class="pulseM"/><text x="537" y="180" class="nl">M</text>
+    <line class="conn flow" x1="556" y1="176" x2="579" y2="176" marker-end="url(#ah)"/>
+    <rect x="580" y="158" width="38" height="34" rx="9" fill="#e5e7eb" stroke="#475569" stroke-width="1.8" class="pulseO"/><text x="599" y="180" class="nl">O</text>
+    <line class="conn flow" x1="618" y1="176" x2="629" y2="176" marker-end="url(#ah)"/>
+    <text x="632" y="181" class="io">ŷ</text>
+    <circle r="4" cy="176" cx="397" fill="#0ea5a4" class="t3"/>
+    <text x="508" y="240" class="capb">target protocol: A → B → M → O</text>
+    <text x="508" y="262" class="cap">0 target labels — modules already identified</text>
+    <text x="684" y="150" class="gl">hard</text>
+    <line class="conn" x1="660" y1="166" x2="708" y2="166" stroke-width="3" marker-end="url(#ahb)"/>
+    <text x="684" y="184" class="gs">protocol</text>
+    <circle cx="732" cy="40" r="11" fill="#0f766e"/><text x="732" y="44.5" class="nl" fill="#fff" font-size="12">3</text>
+    <text x="750" y="44" class="pt">Active learning on the target</text>
+    <text x="720" y="64" class="ps">Query the most informative point and correct</text>
+    <rect x="722" y="104" width="120" height="46" rx="10" fill="#fff" stroke="#e07a3c" stroke-width="1.8"/>
+    <text x="782" y="122" class="bt">Surrogate model</text><text x="782" y="136" class="bt">(mean + uncertainty)</text>
+    <rect x="866" y="104" width="120" height="46" rx="10" fill="#fff" stroke="#e07a3c" stroke-width="1.8"/>
+    <text x="926" y="122" class="bt">Select next x*</text><text x="926" y="136" class="bt">(max predictive variance)</text>
+    <rect x="866" y="212" width="120" height="46" rx="10" fill="#fff" stroke="#e07a3c" stroke-width="1.8"/>
+    <text x="926" y="230" class="bt">Run the target</text><text x="926" y="244" class="bt">Observe terminal y</text>
+    <rect x="722" y="212" width="120" height="46" rx="10" fill="#fff" stroke="#e07a3c" stroke-width="1.8"/>
+    <text x="782" y="230" class="bt">Update the shared</text><text x="782" y="244" class="bt">modules</text>
+    <g class="conn" stroke="#e07a3c">
+      <line x1="844" y1="127" x2="862" y2="127" marker-end="url(#aho)"/>
+      <line x1="926" y1="152" x2="926" y2="209" marker-end="url(#aho)"/>
+      <line x1="864" y1="235" x2="846" y2="235" marker-end="url(#aho)"/>
+      <line x1="782" y1="209" x2="782" y2="152" marker-end="url(#aho)"/>
+    </g>
+    <circle cx="854" cy="181" r="16" fill="none" stroke="#0ea5a4" stroke-width="2" class="ring"/>
+    <text x="854" y="185" class="gl" font-size="9">iterate</text>
+    <text x="853" y="292" class="cap">Zero-shot error → shrinks with each query</text>
+  </svg>
+  </figure>
+  <div class="fwlegend">
+    <span><i style="background:#dbeafe;border-color:#2563eb"></i>Operation A</span>
+    <span><i style="background:#dcfce7;border-color:#16a34a"></i>Operation B</span>
+    <span><i style="background:#eef1f4;border-color:#64748b"></i>Shared mixer M</span>
+    <span><i style="background:#e5e7eb;border-color:#475569"></i>Terminal observer O</span>
+  </div>
+  <div class="protorow" style="margin-top:26px">
+    <div class="frame" style="margin:0">The real-world object of interest is a <b>protocol</b>. Its abstraction is a <b>composition of shared modules over a typed directed acyclic graph (DAG)</b>, assigning to each operation type a learnable predictive component \(g_{\theta_j}\). The only learning signal is the <b>output of the terminal measurement-instrument node</b> — intermediate traces are used neither for training nor for evaluation. <a class="xref" href="method.html">→ Method details</a></div>
+    <ul class="cando">
+      <li><b>Handle the whole protocol, not point queries.</b> We learn the experimental configuration \(x\) and the terminal measurement \(y\) as a single structured response.</li>
+      <li><b>Reuse knowledge at the operation level.</b> Even when the same operation type appears in different protocols, positions, or numbers of occurrences, it shares an identical predictive component.</li>
+      <li><b>Transfer zero-shot to unseen protocols.</b> When identifiability holds, the source observation error controls the target error (<a class="xref" href="theory.html#ass:transfer-diagnostics">knowledge-transfer upper bound</a>).</li>
+      <li><b>Correct in closed loop via active learning.</b> We select the next experiment \((p,x)\) from the predictive uncertainty, add terminal measurements, and correct the residual.</li>
+      <li><b>A surrogate-model foundation for autonomous experimentation.</b> Structured surrogate modeling positioned between a full mechanistic model and a single black box.</li>
+    </ul>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <p class="kicker">Experimental claims</p>
+  <h2>The experiments decompose into two claims</h2>
+  <p class="lead">We measure ongoing surrogate performance with the <b>macro NRMSE</b> curve against the cumulative acquisition cost \(b\) of target labels. \(b=0\) is <b>forward transfer</b>; \(b>0\) is <b>active adaptation</b>. Clicking each card navigates to the experiment page supporting that claim (Goal, Setup, Result, Discussion). All experiments are <b>terminal-only</b> (observing only a single terminal scalar \(y\) per protocol execution), and only the intermediate-observation ablation (1-C of Claim 1) introduces observers in stages during training.</p>
+  <div class="claimgrid">
+    <a class="claimcard" href="experiments.html#c1" style="--c:#0ea5a4"><span class="cn">1</span><div class="ct">Transfer (b=0): when the conditions hold, OFML aids transfer</div><p>Treating a protocol as a <b>composition</b> of shared operation modules, when the <b>identifiability</b> of the reused operations and correct model specification both hold, it transfers zero-shot to an unseen target even under terminal-only. When they break, it fails, and the condition can be recovered with <b>intermediate observations</b> during training.</p><div class="figs">Supporting experiments: Fig. 3a · Fig. 3b (order) · Fig. 3c (count) · Φ/Ψ audit · Table 1 · intermediate observations (Figs. 6–9)</div><span class="go">To the experiments supporting this claim →</span></a>
+    <a class="claimcard" href="experiments.html#c2" style="--c:#0f766e"><span class="cn">2</span><div class="ct">Active learning (b&gt;0): even when transfer fails, structural advantage drives the error down faster</div><p>Even when identifiability breaks at \(b=0\), actively observing the target terminal drops the error below the <b>descriptor aliasing floor</b>, and compositional OFML adapts faster than the unstructured baseline (<span class="m">s7</span>: ≈0.84→≈0.24). Information acquisition beats random.</p><div class="figs">Supporting experiments: Fig. 2 (cost-indexed curves) · Table 2 · S4 (active learning for all surrogates)</div><span class="go">To the experiments supporting this claim →</span></a>
+  </div>
+  <div class="resultbar" style="margin-top:20px">Terminal-measurement-only OFML transfers zero-shot when the operation maps are identifiable from terminal measurements (Claim 1), and even when identifiability breaks, active learning on the target exploits the structural advantage to drive the error down faster (Claim 2).</div>
+</div></section>
+
+<section><div class="wrap">
+  <p class="kicker">Theory outline</p>
+  <h2>Consistency of \(C(\mathcal{X})\)-valued Bayesian active learning — four steps</h2>
+  <p class="lead">We remove the old OFML transfer upper bound from the main theorem and set <b>active-learning consistency</b> for the correct \(C(\mathcal{X})\)-valued posterior as the primary contribution. Clicking each step navigates to the relevant part of <a class="xref" href="theory.html">Theoretical statement and proofs</a>. Cross-references preview on hover.</p>
+  <div class="steps">
+    <a class="stepcard" href="theory.html#prop:common-moment-convergence"><b>① Common posterior-moment convergence (Proposition)</b><p>By Banach-valued Lévy upward convergence, the posterior mean and second moment converge uniformly, \(\mu_n\to\mu_\infty\), \(v_n\to v_\infty\) (in \(C(\mathcal{X})\)). It does not rely on Gaussian-process updates.</p><span class="go">To the corresponding result and proof →</span></a>
+    <div class="downarrow">↓</div>
+    <a class="stepcard" href="theory.html#lem:supermartingale"><b>② Supermartingale of the residual uncertainty (Lemma)</b><p>\(H_n=\int v_n\,d\lambda\) is a nonnegative supermartingale, and the one-step expected reduction at the selected point coincides with the acquisition function, \(D_n=\Delta^{\mathrm{IVR}}_n(X_{n+1})\), hence \(\sup_x\Delta^{\mathrm{IVR}}_n(x)\to0\).</p><span class="go">To the corresponding result and proof →</span></a>
+    <div class="downarrow">↓</div>
+    <a class="stepcard star" href="theory.html#thm:cx-main"><b>③ Noisy IVR/SUR consistency (main theorem)</b><p>With the linear-predictor lower bound plus the small-ball mass of a full-support measure, \(\left\lVert v_n\right\rVert_\infty\to0\), hence \(G=\mu_\infty\) and \(\left\lVert\mu_n-G\right\rVert_\infty\to0\) (even under fixed noise, the latent-function variance vanishes everywhere).</p><span class="go">To the corresponding result and proof →</span></a>
+    <div class="downarrow">↓</div>
+    <a class="stepcard" href="theory.html#thm:ofml-active"><b>④ OFML target active correction (Theorem)</b><p>The fixed target protocol is made \(C(\mathbb{X})\)-valued via pushforward, and the assumptions are discharged with a Lipschitz bridge. Even when transfer identification breaks, direct active observation of the target terminal recovers terminal-response consistency.</p><span class="go">To the corresponding result and proof →</span></a>
+  </div>
+</div></section>
+
+<footer><div class="wrap">Yusuke Ozaki. <i>Object-Flow Machine Learning: Active Learning Framework Utilizing Protocols Information.</i> Manuscript. · Figures extracted from the manuscript. The big-picture figure is recreated as an interactive version. For statistics, tables, and claims see <a href="experiments.html">Experiments</a>; for theorems and proofs see <a href="theory.html">Theory</a>.</div></footer>
+
+<script>
+
+</script><script src="lib/tex-svg.js" id="MathJax-script" async></script></body></html>
