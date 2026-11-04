@@ -67,7 +67,7 @@ ABOUT = {
             'where I continue to work with Chong Liu.',
             'My long-term goal is to create living organisms with arbitrary, desired functions. To pursue this vision, I am interested in '
             'laboratory automation, including automated experiment execution and automated experimental design/planning.',
-            'Outside research, I practice Brazilian Jiu-Jitsu and enjoy reading.',
+            'Outside research, I practice Brazilian Jiu-Jitsu (blue belt) and enjoy reading and running.',
         ],
         "interests_h": "Research interests",
         "interests_lead": "My research is on Bayesian optimization, bandits, and active learning for self-driving laboratories. Recently I have been working on:",
@@ -115,7 +115,7 @@ ABOUT = {
             '（チームディレクター：高橋 恒一）の研究パートタイマーIIとして研究に取り組んでおり、理研 TRIP事業本部 科学研究基盤モデル開発プログラム（AGIS）にも所属しています。'
             '2025年8月から2026年5月まで University at Albany, SUNY のコンピュータサイエンス学科に交換留学し、現在も Chong Liu 先生と研究を続けています。',
             '長期的には、任意の望ましい機能を持つ生物を設計・創出できる技術に関心があります。そのために、実験の自動実行や実験計画の自動化を含むラボオートメーションを研究しています。',
-            '研究以外では、ブラジリアン柔術と読書が趣味です。',
+            '研究以外では、ブラジリアン柔術（青帯）に取り組み、読書とランニングを楽しんでいます。',
         ],
         "interests_h": "研究関心",
         "interests_lead": "自律実験（self-driving laboratory）のためのベイズ最適化、バンディット、能動学習を研究しています。最近のテーマ：",
