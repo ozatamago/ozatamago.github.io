@@ -22,7 +22,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE = "https://ozatamago.github.io"
 ASSET_VER = "21"  # bump when assets/styles.css changes (cache-busting)
 KATEX_VER = "0.16.11"  # KaTeX version vendored in assets/katex/ (tools/package.json)
-CV_PDF = "/assets/cv.pdf?v=20261104b"  # bump the date when assets/cv.pdf is replaced
+CV_PDF = "/assets/cv.pdf?v=20261104c"  # bump the date when assets/cv.pdf is replaced
 
 NAME = {"en": "Yusuke Ozaki", "ja": "尾崎 勇介"}
 NAV_LABEL = {"en": "Main navigation", "ja": "メインナビゲーション"}
@@ -376,6 +376,7 @@ SOFTWARE = {
 # (heading, label prefix, [(anchor id, title, authors, status / venue, links html or "")]);
 # a newline in the status starts a new line (e.g. review status, then the preprint).
 # Shown as: title, then authors, then status, then links.
+# Papers under review: don't name the venue (double-blind review; title + authors + venue together de-anonymize).
 OFML_TITLE = "Object-Flow Machine Learning: Operation-Level Surrogate Modeling for Self-Driving Laboratories"
 LIPSCHITZ_TITLE = "Cumulative Regret Analysis of the Piyavskii–Shubert Algorithm in Lipschitz Bandits"
 SPIN_TITLE = "SPIN: Structural LLM Planning via Iterative Navigation for Industrial Tasks"
@@ -394,12 +395,12 @@ PUBS = {
              "<em>NeurIPS 2026 Workshop on AI for Drug Discovery (AI4DD)</em>, 2026.", ""),
         ]),
         ("Under review", "R", [
-            ("ofml", OFML_TITLE, KAIZU_TAKAHASHI, "Under review at <em>AAAI 2027</em>.",
+            ("ofml", OFML_TITLE, KAIZU_TAKAHASHI, "Under review.",
              '<a href="/slides/viewer.html?id=ofml-active-learning">Slides (Japanese)</a>'),
             ("lipschitz", LIPSCHITZ_TITLE, "{me} and Chong Liu",
-             "Under review at <em>Transactions on Machine Learning Research (TMLR)</em>.", ""),
+             "Under review.", ""),
             ("spin", SPIN_TITLE, "{me} and Dhaval Patel",
-             "Under review at the <em>Annual Meeting of the Association for Computational Linguistics (ACL)</em>.\n"
+             "Under review.\n"
              "Preprint: arXiv:2605.14051, 2026.", SPIN_LINKS.format("Visual summary")),
         ]),
         ("Presentations", "", [
@@ -422,12 +423,12 @@ PUBS = {
              "<em>NeurIPS 2026 Workshop on AI for Drug Discovery（AI4DD）</em>採択、2026年。", ""),
         ]),
         ("査読中", "R", [
-            ("ofml", OFML_TITLE, KAIZU_TAKAHASHI, "<em>AAAI 2027</em> に投稿・査読中。",
+            ("ofml", OFML_TITLE, KAIZU_TAKAHASHI, "査読中。",
              '<a href="/slides/viewer.html?id=ofml-active-learning">解説スライド（日本語）</a>'),
             ("lipschitz", LIPSCHITZ_TITLE, "{me} and Chong Liu",
-             "<em>Transactions on Machine Learning Research（TMLR）</em>に投稿・査読中。", ""),
+             "査読中。", ""),
             ("spin", SPIN_TITLE, "{me} and Dhaval Patel",
-             "<em>Annual Meeting of the Association for Computational Linguistics（ACL）</em>に投稿・査読中。\n"
+             "査読中。\n"
              "プレプリント：arXiv:2605.14051（2026年）。", SPIN_LINKS.format("ビジュアル要約")),
         ]),
         ("学会発表", "", [

@@ -5,7 +5,7 @@ __pycache__/
 # Local source material for the OFML slides artifact (raw figures / markdown /
 # scripts). NOT deployed — the published artifact is the encrypted bundle
 # slides/data/ofml-active-learning.enc, which contains its own figure copies.
-slides/data/OFML_AAAI'27_FIGURES/
+slides/data/OFML_*_FIGURES/
 
 # Uncropped source of assets/headshot.jpg (includes a bystander); keep local only.
 assets/profile-trex-original.jpg

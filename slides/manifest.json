@@ -26,8 +26,8 @@
       "listed": true,
       "lang": "ja",
       "file": "data/ofml-active-learning.bundle",
-      "date": "AAAI 2027",
-      "summary": "実験ワークフローの操作レベル代理モデリング：構造化されたプロトコルと終端の測定値のみから、ゼロショットのプロトコル間転移と閉ループ能動補正を学ぶ（AAAI 2027・日本語版）。"
+      "date": "2026",
+      "summary": "実験ワークフローの操作レベル代理モデリング：構造化されたプロトコルと終端の測定値のみから、ゼロショットのプロトコル間転移と閉ループ能動補正を学ぶ（日本語版）。"
     },
     {
       "id": "ofml-active-learning-en",
@@ -37,8 +37,8 @@
       "listed": true,
       "lang": "en",
       "file": "data/ofml-active-learning-en.enc",
-      "date": "AAAI 2027",
-      "summary": "Operation-level surrogate modeling for laboratory workflows: zero-shot cross-protocol transfer and closed-loop active correction, learned from structured protocols and terminal measurements only (AAAI 2027)."
+      "date": "2026",
+      "summary": "Operation-level surrogate modeling for laboratory workflows: zero-shot cross-protocol transfer and closed-loop active correction, learned from structured protocols and terminal measurements only."
     },
     {
       "id": "lip-ucb",
@@ -47,7 +47,7 @@
       "locked": true,
       "listed": true,
       "file": "data/lipucb-lipschitz-bandits.enc",
-      "date": "TMLR (under review)",
+      "date": "2026",
       "summary": "Interactive companion to the LiP-UCB paper — Piyavskii–Shubert upper envelopes, Lipschitz-propagated confidence intervals, animated 1D & 2D demos, regret experiments, and the theory achieving the minimax cumulative-regret rate for noisy Lipschitz bandits."
     },
     {
@@ -56,8 +56,8 @@
       "kind": "web",
       "file": "data/protocol-ucb.bundle",
       "mime": "text/html",
-      "date": "AAAI 2027 (under review)",
-      "summary": "実験ワークフローの操作レベル代理モデリング：構造化されたプロトコルと終端の測定値のみから、ゼロショットのプロトコル間転移と閉ループ能動補正を学ぶ（AAAI 2027 投稿中・日本語版）。"
+      "date": "2026",
+      "summary": "実験ワークフローの操作レベル代理モデリング：構造化されたプロトコルと終端の測定値のみから、ゼロショットのプロトコル間転移と閉ループ能動補正を学ぶ（日本語版）。"
     }
   ]
 }
