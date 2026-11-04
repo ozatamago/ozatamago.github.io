@@ -74,7 +74,7 @@ ABOUT = {
                           "and on the infrastructure that lets AI agents operate laboratory instruments. Recently I have been working on:",
         # (topic, anchor of its Research Experience entry, publication refs)
         "interests": [
-            ('Prediction, active learning, and Bayesian optimization from experimental protocols', "protocols",
+            ('Machine learning on experimental protocols: OFML and ProtocolUCB', "protocols",
              "{ref:ofml} {ref:protocolucb}"),
             ('Cumulative regret analysis of Lipschitz bandits', "lipschitz", "{ref:lipschitz}"),
             ('Structured planning for LLM agents', "spin", "{ref:spin}"),
@@ -125,7 +125,7 @@ ABOUT = {
         "interests_lead": "自律実験（self-driving laboratory）のためのベイズ最適化、バンディット、能動学習と、"
                           "AI エージェントが実験装置を操作するための基盤を研究しています。最近のテーマ：",
         "interests": [
-            ('実験プロトコルに基づく予測・能動学習・ベイズ最適化', "protocols", "{ref:ofml} {ref:protocolucb}"),
+            ('実験プロトコルを扱う機械学習：OFML と ProtocolUCB', "protocols", "{ref:ofml} {ref:protocolucb}"),
             ('リプシッツ・バンディットの累積リグレット解析', "lipschitz", "{ref:lipschitz}"),
             ('LLM エージェントの構造的プランニング', "spin", "{ref:spin}"),
             ('実験自動化と実験基盤の開発', "lab-automation", ""),
@@ -175,7 +175,7 @@ ALBANY_LIU = {"en": "University at Albany, SUNY, Department of Computer Science 
 RESEARCH_IDS = ["protocols", "lipschitz", "spin", "lab-automation", "quantum", "preference-bo", "gnn", "grn"]
 RESEARCH = {
     "en": [
-        ("Prediction, Active Learning, and Bayesian Optimization from Experimental Protocols: OFML / ProtocolBO and ProtocolUCB",
+        ("Machine Learning on Experimental Protocols: OFML and ProtocolUCB",
          "Jun. 2024 – Aug. 2025, Jun. 2026 – Present",
          BDR_LAB["en"] + "; with Kazunari Kaizu", "Kobe, Japan",
          "Developed a machine-learning system that predicts experimental outcomes from experimental protocols, written in the "
@@ -276,7 +276,7 @@ RESEARCH = {
           'measurements together can predict expression.']),
     ],
     "ja": [
-        ("実験プロトコルに基づく予測・能動学習・ベイズ最適化：OFML／ProtocolBO・ProtocolUCB",
+        ("実験プロトコルを扱う機械学習：OFML と ProtocolUCB",
          "2024年6月 – 2025年8月、2026年6月 – 現在",
          BDR_LAB["ja"] + "、共同研究者：海津 一成", "兵庫県神戸市",
          "研究室で開発された Object-Flow Programming Language で記述された実験プロトコルと実験条件から、実験結果を予測する機械学習システムの"
