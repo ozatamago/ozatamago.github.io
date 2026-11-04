@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Research — Yusuke Ozaki</title>
-  <meta name="description" content="Research by Yusuke Ozaki: Bayesian optimization, Lipschitz bandits, structured LLM planning, laboratory automation, and single-cell omics." />
+  <title>Research Experience — Yusuke Ozaki</title>
+  <meta name="description" content="Research experience of Yusuke Ozaki at RIKEN BDR, the University at Albany, SUNY, Kwansei Gakuin University, IBM, and the University of Osaka." />
   <meta name="author" content="Yusuke Ozaki" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://ozatamago.github.io/research/" />
@@ -13,29 +13,23 @@
   <link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/research/" />
   <link rel="icon" href="/assets/headshot.jpg" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Research — Yusuke Ozaki" />
-  <meta property="og:description" content="Research by Yusuke Ozaki: Bayesian optimization, Lipschitz bandits, structured LLM planning, laboratory automation, and single-cell omics." />
+  <meta property="og:title" content="Research Experience — Yusuke Ozaki" />
+  <meta property="og:description" content="Research experience of Yusuke Ozaki at RIKEN BDR, the University at Albany, SUNY, Kwansei Gakuin University, IBM, and the University of Osaka." />
   <meta property="og:url" content="https://ozatamago.github.io/research/" />
   <meta property="og:image" content="https://ozatamago.github.io/assets/headshot.jpg" />
   <meta property="og:locale" content="en_US" />
   <meta property="og:locale:alternate" content="ja_JP" />
   <meta name="twitter:card" content="summary" />
-  <link rel="stylesheet" href="/assets/styles.css?v=11" />
+  <link rel="stylesheet" href="/assets/styles.css?v=20" />
+  <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.11" />
 </head>
-<body data-interaction="reaction-diffusion">
+<body>
   <header class="site-header">
-    <a class="brand" href="/">Yusuke Ozaki</a>
     <nav class="nav" aria-label="Main navigation">
-      <a href="/">Home</a>
-      <a href="/experience/">Work Experience</a>
-      <a href="/education/">Education</a>
-      <a class="active" href="/research/">Research</a>
+      <a href="/">About</a>
+      <a class="active" href="/research/">Research Experience</a>
       <a href="/publications/">Publications</a>
-      <a href="/projects/">Projects</a>
-      <a href="/awards/">Awards</a>
-      <a href="/slides/">Slides</a>
       <a href="/cv/">CV</a>
-      <a href="/blog/">Blog</a>
       <span class="lang-switch" role="group" aria-label="Language / 言語">
         <a class="active" aria-current="page" href="/research/">EN</a>
         <a href="/ja/research/">日本語</a>
@@ -44,17 +38,105 @@
   </header>
 
   <main class="content">
-    <h1 class="page-title">Research</h1>
+    <h1 class="page-title">Research Experience</h1>
     <div class="page-line"></div>
+    <section class="entry">
+      <div class="entry-head"><h2>Prediction, Active Learning, and Bayesian Optimization from Experimental Protocols: OFML / ProtocolBO and ProtocolUCB</h2><span class="entry-when">Jun. 2024 – Aug. 2025, Jun. 2026 – Present</span></div>
+      <div class="entry-sub"><em>RIKEN BDR, Laboratory for Biologically Inspired Computing (PI: Koichi Takahashi); with Kazunari Kaizu</em><span>Kobe, Japan</span></div>
+      <p class="entry-note">Developed a machine-learning system that predicts experimental outcomes from experimental protocols, written in the lab's Object-Flow Programming Language, and their conditions. Responsible for the whole project, from conceiving and designing the method through theory, implementation, numerical and physical experiments, and paper writing. Research Part-timer II; also affiliated with the RIKEN AGIS program (since Jun. 2026).</p>
       <ul class="item-list">
-        <li><strong>Lipschitz bandits:</strong> Analyzing bandit problems using Lipschitz continuity under the supervision of Chong Liu.</li>
-        <li><strong>Structured LLM planning:</strong> Researching SPIN, a structured planning method for industrial tasks, in collaboration with Dhaval Patel at IBM.</li>
-        <li><strong>AI for bioengineering and biology:</strong> Graph neural networks for molecular and cellular systems, gene regulatory network inference, and single-cell omics analysis.</li>
-        <li><strong>Protocol-aware active learning:</strong> Bayesian optimization frameworks that autonomously drive scientific experiments and support data-efficient exploration of experimental conditions.</li>
-        <li><strong>Presentations:</strong> Poster at AutoML 2025 on Object-Flow Machine Learning; oral presentation at the RIKEN BDR Student Symposium 2025; poster at the Spring School for Theoretical Biology 2025.</li>
+        <li><strong>Operation-level surrogate model.</strong> Proposed OFML, which represents an experimental protocol as a typed directed acyclic graph and composes surrogate models shared by operation type <a class="pub-ref" href="/publications/#ofml">[R1]</a>. Implemented it with neural networks and, by learning from final measurements without labels for intermediate states, developed a way to predict the outcomes of unobserved protocols that recombine operations.</li>
+        <li><strong>Theory and numerical experiments.</strong> Under stated assumptions, proved uniform convergence of the posterior mean under active learning by integrated variance reduction <a class="pub-ref" href="/publications/#ofml">[R1]</a>, and convergence of the ProtocolUCB recommendation to the set of global maximizers <a class="pub-ref" href="/publications/#protocolucb">[W1]</a>. Also analyzed conditions for prediction on unobserved protocols, and in numerical experiments on synthetic protocols compared prediction error and mean protocol-wise simple regret across model-sharing and experiment-selection choices.</li>
+        <li><strong>Closed loop on a physical instrument.</strong> Mapped OFML's operation-level surrogates to the operation modules of a Tecan Fluent and connected them to colored-water experiments. Ran a loop that repeats execution, measurement, and model updates, demonstrating that operation-level modeling, matched to the instrument's modules, links experiments and learning <a class="pub-ref" href="/publications/#ofml">[R1]</a>.</li>
       </ul>
-  </main>
+    </section>
 
-  <script src="/assets/interactions.js?v=11" defer></script>
+    <section class="entry">
+      <div class="entry-head"><h2>Lipschitz Bandits: Cumulative Regret Analysis</h2><span class="entry-when">Feb. 2026 – Present</span></div>
+      <div class="entry-sub"><em>University at Albany, SUNY, Department of Computer Science (Advisor: Chong Liu)</em><span>Albany, NY, USA</span></div>
+      <ul class="item-list">
+        <li><strong>Motivation and method.</strong> Examined the classical Piyavskii–Shubert algorithm from the viewpoint of cumulative regret, focusing on the problem that observation noise breaks its guaranteed upper bounds on function values. Proposed LiP-UCB, which handles noise through a statistical correction that propagates confidence intervals, estimated from nearby observations, to the whole domain via Lipschitz continuity <a class="pub-ref" href="/publications/#lipschitz">[R2]</a>.</li>
+        <li><strong>Cumulative regret analysis and lower bounds revisited.</strong> In the noiseless setting, proved a bound of <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>L</mi></mrow><annotation encoding="application/x-tex">2L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">2</span><span class="mord mathnormal">L</span></span></span></span>, independent of the horizon <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi></mrow><annotation encoding="application/x-tex">T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span></span></span></span>, in one dimension and a bound of <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><msqrt><mi>d</mi></msqrt><mtext> </mtext><mi>L</mi><mtext> </mtext><msup><mi>T</mi><mrow><mn>1</mn><mo>−</mo><mn>1</mn><mi mathvariant="normal">/</mi><mi>d</mi></mrow></msup></mrow><annotation encoding="application/x-tex">3\sqrt{d}\,L\,T^{1-1/d}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.1078em;"></span><span class="mord">3</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9322em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal">d</span></span></span><span style="top:-2.8922em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1078em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">L</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.888em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span><span class="mbin mtight">−</span><span class="mord mtight">1/</span><span class="mord mathnormal mtight">d</span></span></span></span></span></span></span></span></span></span></span></span> for <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mo>≥</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">d\ge2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8304em;vertical-align:-0.136em;"></span><span class="mord mathnormal">d</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span>. In the noisy setting, showed that the expected cumulative regret matches the lower bound up to logarithmic factors. Also identified a problem in an existing lower-bound proof and re-derived the lower bound under Gaussian noise <a class="pub-ref" href="/publications/#lipschitz">[R2]</a>.</li>
+        <li><strong>Numerical experiments.</strong> In the one-dimensional noiseless setting, tracked cumulative regret against the number of observations and confirmed that the Piyavskii–Shubert algorithm stays within the theoretical bound <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>L</mi></mrow><annotation encoding="application/x-tex">2L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">2</span><span class="mord mathnormal">L</span></span></span></span>. In the noisy setting, compared LiP-UCB with existing minimax-optimal methods and showed comparable performance in the settings tested <a class="pub-ref" href="/publications/#lipschitz">[R2]</a>.</li>
+      </ul>
+    </section>
+
+    <section class="entry">
+      <div class="entry-head"><h2>SPIN: Planning with Large Language Models</h2><span class="entry-when">Aug. 2025 – May 2026</span></div>
+      <div class="entry-sub"><em>University at Albany, SUNY, with IBM (Collaborator: Dhaval Patel, IBM)</em><span>Albany, NY, USA</span></div>
+      <ul class="item-list">
+        <li><strong>Team leadership and collaboration.</strong> Led a student development team in an IBM-partnered capstone project and grew it into a research collaboration. Over about a year, researched and developed LLM agents for industrial asset operations together with their execution and evaluation infrastructure, building a system that covers prompt design, execution-trace logging, and structural validation and automatic evaluation of plans.</li>
+        <li><strong>Motivation and method.</strong> Noting that external tool calls can dominate operating cost in industrial use, developed SPIN, which suppresses redundant execution and structural defects in plans. It validates and repairs a plan as a directed acyclic graph, evaluates the predicted outcome of a partial plan, and stops execution once it judges the result sufficient to answer <a class="pub-ref" href="/publications/#spin">[R3]</a>.</li>
+        <li><strong>Numerical experiments.</strong> On 261 AssetOpsBench scenarios, reduced the average number of tool calls per run from 11.81 to 6.82 (about 42%) compared with an existing configuration. Also evaluated on 18 MCP-Bench tasks with two language models, confirming improvements in metrics for plan validity, tool selection, and dependency awareness <a class="pub-ref" href="/publications/#spin">[R3]</a>.</li>
+      </ul>
+    </section>
+
+    <section class="entry">
+      <div class="entry-head"><h2>Laboratory Automation and Experiment Infrastructure</h2><span class="entry-when">Jun. 2026 – Present</span></div>
+      <div class="entry-sub"><em>RIKEN BDR, Laboratory for Biologically Inspired Computing (PI: Koichi Takahashi)</em><span>Kobe, Japan</span></div>
+      <ul class="item-list">
+        <li><strong>Problem setting and system design.</strong> Identified as the problem that each instrument requires familiarity with its own GUI operations and procedure settings, and aimed to reduce the operating burden and setup errors for both experimental and computational researchers. Conceived a system in which an agent turns the goals and conditions of an experiment, given in chat, into a procedure the instrument can execute, and set the development plan.</li>
+        <li><strong>Analysis of control software and the execution environment.</strong> Directed the agent to the parts to read and the points to check in the FluentControl device definitions and operation scripts and in the Maholo control software, and advanced the analysis while matching it against the physical layout and labware. Organized the operation specifications, communication protocols, and execution conditions, and led the development of SiLA 2 connectors (<a href="https://github.com/ozatamago/tecan-fluent">tecan-fluent</a>, <a href="https://github.com/ozatamago/inheco-odtc">inheco-odtc</a>) and execution scripts, building an environment in which the agent, with human approval, creates and runs procedures and checks instrument state without per-experiment procedure authoring in the GUI. On the Fluent, the connectors cover the pipetting arm, gripper, deck cameras and deck state, an Inheco ODTC thermal cycler, an Infinite 200 PRO plate reader, and a BioShake shaker.</li>
+        <li><strong>Design and execution of physical tests, and procedure improvement.</strong> Defined the goals, experimental conditions, and the division of roles between people and the agent for the demos, and led supervised tests on the instruments: water dispensing, plate transport, and 30 thermal cycles on the Fluent, and nine steps including dispensing, sealing, mixing, and seal peeling in four protocols on the Maholo. When the agent failed, investigated the cause from instrument state and run logs and revised the procedure; for a plate left in the ODTC after a stop command failed following PCR, had the agent write a recovery procedure and retrieve the plate.</li>
+        <li><strong>Control of related instruments and extension to lab automation.</strong> Developed a SiLA 2 connector for a Franka Research 3 arm that reads robot state, operates it through Desk, and captures camera images. Now working on automating <em>E. coli</em> transformation on the Fluent with the instrument-control infrastructure built here.</li>
+      </ul>
+    </section>
+
+    <section class="entry">
+      <div class="entry-head"><h2>Quantum Algorithms for Gaussian-Process Bayesian Optimization</h2><span class="entry-when">Jun. 2026 – Present</span></div>
+      <div class="entry-sub"><em>University at Albany, SUNY, Department of Computer Science (Advisor: Chong Liu); Collaborator: Chaowen Guan, University of Cincinnati</em><span>Albany, NY, USA</span></div>
+      <ul class="item-list">
+        <li>Studying whether the quantum singular value transformation (QSVT) and quantum linear system (QLS) solvers can approximately maximize the GP-UCB acquisition function at lower cost than classical linear algebra.</li>
+      </ul>
+    </section>
+
+    <section class="entry">
+      <div class="entry-head"><h2>Preference-Based Bayesian Optimization</h2><span class="entry-when">May 2025 – Jan. 2026</span></div>
+      <div class="entry-sub"><em>University at Albany, SUNY, Department of Computer Science (Advisor: Chong Liu)</em><span>Albany, NY, USA</span></div>
+      <ul class="item-list">
+        <li>Study Bayesian optimization with a Generalized Preference Model, analyzing regret bounds and identifiability when learned embeddings are combined with Gaussian-process models.</li>
+      </ul>
+    </section>
+
+    <section class="entry">
+      <div class="entry-head"><h2>Graph Neural Networks That Learn Sparse Structure</h2><span class="entry-when">May 2024 – Apr. 2025</span></div>
+      <div class="entry-sub"><em>Kwansei Gakuin University, Inokuchi Lab (Advisor: Akihiro Inokuchi)</em><span>Sanda, Hyogo, Japan</span></div>
+      <ul class="item-list">
+        <li>Designed a graph neural network that learns task-specific sparse adjacency layer by layer, with an actor–critic edge-selection module trained by policy gradient, to reduce the edges used in convolution (<a href="https://github.com/ozatamago/MEG">MEG</a>).</li>
+      </ul>
+    </section>
+
+    <section class="entry">
+      <div class="entry-head"><h2>Gene Regulatory Network Inference from Single-Cell Omics</h2><span class="entry-when">Feb. 2025 – Aug. 2025</span></div>
+      <div class="entry-sub"><em>The University of Osaka, PRIMe, Yachie Lab (PI: Nozomu Yachie)</em><span>Osaka, Japan</span></div>
+      <p class="entry-note">Research Assistant.</p>
+      <ul class="item-list">
+        <li><strong>Data analysis toward gene regulatory network inference.</strong> Surveyed existing methods, aiming at gene regulatory network inference that integrates RNA expression and chromatin accessibility. Preprocessed a 10x Genomics Multiome dataset of embryonic day 18 (E18) mouse brain and, using both measurements paired in the same nuclei, prepared data for testing hypotheses about regulatory relationships and for training and evaluating expression-prediction models.</li>
+        <li><strong>Modeling grounded in prior findings.</strong> Reviewed the literature on the relationship between chromatin accessibility and gene expression, and organized the finding that similar accessibility can accompany both rising and falling expression. Building on prior work, examined the assumptions and limits of explaining expression state or the direction of its change from accessibility alone.</li>
+        <li><strong>Implementation and exploratory evaluation of expression-prediction models.</strong> Worked on predicting the per-cell expression of a single gene from genome-wide chromatin accessibility and gene expression. Implemented neural-network and Transformer models and, through training and prediction experiments, explored how far the two measurements together can predict expression.</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>Software</h2>
+      <ul class="item-list">
+        <li><a href="https://github.com/ozatamago/tecan-fluent"><strong>tecan-fluent</strong></a>: SiLA 2 connector for a Tecan Fluent 780 (arm, gripper, deck cameras, thermal cycler, plate reader, shaker), built with the UniteLabs CDK.</li>
+        <li><a href="https://github.com/ozatamago/inheco-odtc"><strong>inheco-odtc</strong></a>: SiLA 2 connector for an Inheco ODTC 96 thermal cycler integrated in the Fluent.</li>
+        <li><a href="https://github.com/ozatamago/cx_bayes_al"><strong>cx_bayes_al</strong></a>: Lean 4 formalization and experiments for global consistency of cost-aware Bayesian active learning.</li>
+        <li><a href="https://github.com/ozatamago/MEG"><strong>MEG</strong></a>: Minimal Edges Generator, a sparse-adjacency graph neural network.</li>
+      </ul>
+    </section>
+  </main>
 </body>
 </html>

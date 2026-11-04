@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Publications — Yusuke Ozaki</title>
-  <meta name="description" content="Publications by Yusuke Ozaki, including SPIN: Structural LLM Planning via Iterative Navigation for Industrial Tasks (arXiv:2605.14051)." />
+  <meta name="description" content="Publications and presentations by Yusuke Ozaki: Bayesian optimization of protocols, Object-Flow Machine Learning, Lipschitz bandits, and SPIN." />
   <meta name="author" content="Yusuke Ozaki" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://ozatamago.github.io/publications/" />
@@ -14,28 +14,21 @@
   <link rel="icon" href="/assets/headshot.jpg" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Publications — Yusuke Ozaki" />
-  <meta property="og:description" content="Publications by Yusuke Ozaki, including SPIN: Structural LLM Planning via Iterative Navigation for Industrial Tasks (arXiv:2605.14051)." />
+  <meta property="og:description" content="Publications and presentations by Yusuke Ozaki: Bayesian optimization of protocols, Object-Flow Machine Learning, Lipschitz bandits, and SPIN." />
   <meta property="og:url" content="https://ozatamago.github.io/publications/" />
   <meta property="og:image" content="https://ozatamago.github.io/assets/headshot.jpg" />
   <meta property="og:locale" content="en_US" />
   <meta property="og:locale:alternate" content="ja_JP" />
   <meta name="twitter:card" content="summary" />
-  <link rel="stylesheet" href="/assets/styles.css?v=11" />
+  <link rel="stylesheet" href="/assets/styles.css?v=20" />
 </head>
-<body data-interaction="voronoi">
+<body>
   <header class="site-header">
-    <a class="brand" href="/">Yusuke Ozaki</a>
     <nav class="nav" aria-label="Main navigation">
-      <a href="/">Home</a>
-      <a href="/experience/">Work Experience</a>
-      <a href="/education/">Education</a>
-      <a href="/research/">Research</a>
+      <a href="/">About</a>
+      <a href="/research/">Research Experience</a>
       <a class="active" href="/publications/">Publications</a>
-      <a href="/projects/">Projects</a>
-      <a href="/awards/">Awards</a>
-      <a href="/slides/">Slides</a>
       <a href="/cv/">CV</a>
-      <a href="/blog/">Blog</a>
       <span class="lang-switch" role="group" aria-label="Language / 言語">
         <a class="active" aria-current="page" href="/publications/">EN</a>
         <a href="/ja/publications/">日本語</a>
@@ -46,11 +39,31 @@
   <main class="content">
     <h1 class="page-title">Publications</h1>
     <div class="page-line"></div>
-      <ul class="item-list">
-        <li><strong>SPIN: Structural LLM Planning via Iterative Navigation for Industrial Tasks.</strong> <span class="meta"><strong>Yusuke Ozaki</strong>, Dhaval Patel. arXiv preprint arXiv:2605.14051 [cs.AI], 2026.</span> <span class="meta"><a href="https://arxiv.org/abs/2605.14051">arXiv</a> &middot; <a href="https://arxiv.org/pdf/2605.14051">PDF</a> &middot; <a href="/slides/viewer.html?id=spin-showcase">Visual summary</a></span></li>
+    <section class="section">
+      <h2>Workshop papers</h2>
+      <ul class="pub-list">
+        <li id="protocolucb"><span class="pub-label">[W1]</span><div class="pub-body"><span class="pub-title">Bayesian Optimization of Protocols</span><span class="pub-authors"><strong>Yusuke Ozaki</strong>, Kazunari Kaizu, and Koichi Takahashi</span><span class="pub-venue"><em>NeurIPS 2026 Workshop on AI for Drug Discovery (AI4DD)</em>, 2026.</span></div></li>
       </ul>
-  </main>
+    </section>
 
-  <script src="/assets/interactions.js?v=11" defer></script>
+    <section class="section">
+      <h2>Under review</h2>
+      <ul class="pub-list">
+        <li id="ofml"><span class="pub-label">[R1]</span><div class="pub-body"><span class="pub-title">Object-Flow Machine Learning: Operation-Level Surrogate Modeling for Self-Driving Laboratories</span><span class="pub-authors"><strong>Yusuke Ozaki</strong>, Kazunari Kaizu, and Koichi Takahashi</span><span class="pub-venue">Under review at <em>AAAI 2027</em>.</span><span class="pub-links"><a href="/slides/viewer.html?id=ofml-active-learning">Slides (Japanese)</a></span></div></li>
+        <li id="lipschitz"><span class="pub-label">[R2]</span><div class="pub-body"><span class="pub-title">Cumulative Regret Analysis of the Piyavskii–Shubert Algorithm in Lipschitz Bandits</span><span class="pub-authors"><strong>Yusuke Ozaki</strong> and Chong Liu</span><span class="pub-venue">Under review at <em>Transactions on Machine Learning Research (TMLR)</em>.</span></div></li>
+        <li id="spin"><span class="pub-label">[R3]</span><div class="pub-body"><span class="pub-title">SPIN: Structural LLM Planning via Iterative Navigation for Industrial Tasks</span><span class="pub-authors"><strong>Yusuke Ozaki</strong> and Dhaval Patel</span><span class="pub-venue">Under review at the <em>Annual Meeting of the Association for Computational Linguistics (ACL)</em>.</span><span class="pub-venue">Preprint: arXiv:2605.14051, 2026.</span><span class="pub-links"><a href="https://arxiv.org/abs/2605.14051">arXiv</a> · <a href="https://arxiv.org/pdf/2605.14051">PDF</a> · <a href="/slides/viewer.html?id=spin-showcase">Visual summary</a></span></div></li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>Presentations</h2>
+      <ul class="pub-list">
+        <li><div class="pub-body"><span class="pub-title">Object-Flow Machine Learning: Knowledge Transfer and Active Learning across Experimental Protocols with Operation-Level Surrogate Models</span><span class="pub-authors"><strong>Yusuke Ozaki</strong>, Kazunari Kaizu, and Koichi Takahashi</span><span class="pub-venue">Poster, <em>66th Summer School of the Biophysical Society of Japan Young Researchers (SPIRAL)</em>, Nagano, Japan, Aug. 2026. (In Japanese.)</span></div></li>
+        <li><div class="pub-body"><span class="pub-title">Object-Flow Machine Learning: Active learning framework utilizing protocols information</span><span class="pub-authors"><strong>Yusuke Ozaki</strong>, Kazunari Kaizu, and Koichi Takahashi</span><span class="pub-venue">Poster, <em>AutoML Conference 2025, Non-Archival Content Track</em>, New York City, USA, Sep. 2025.</span><span class="pub-links"><a href="https://openreview.net/forum?id=7k2vOhYPnd">OpenReview</a> · <a href="https://doi.org/10.5281/zenodo.16741262">Zenodo</a> · <a href="https://github.com/kaizu/ofplang/tree/ofml">Code</a></span></div></li>
+        <li><div class="pub-body"><span class="pub-title">Development of a Machine Learning Method Utilizing Experimental Protocols to Predict Outcomes and an Active Learning Framework Employing the Method</span><span class="pub-authors"><strong>Yusuke Ozaki</strong></span><span class="pub-venue">Oral, <em>RIKEN BDR Student Symposium 2025</em>, Kobe, Japan, May 2025.</span></div></li>
+        <li><div class="pub-body"><span class="pub-title">Development of a Machine Learning Method Utilizing Protocols to Predict Experimental Outcomes</span><span class="pub-authors"><strong>Yusuke Ozaki</strong></span><span class="pub-venue">Oral, <em>Spring School for Theoretical Biology 2025</em>, Hiroshima University, Japan, Feb. 2025.</span></div></li>
+      </ul>
+    </section>
+  </main>
 </body>
 </html>

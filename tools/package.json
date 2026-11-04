@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "description": "Build-time dependencies for tools/build.py (TeX pre-rendering).",
+  "dependencies": {
+    "katex": "0.16.11"
+  }
+}

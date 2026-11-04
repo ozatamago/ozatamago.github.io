@@ -6,3 +6,9 @@ __pycache__/
 # scripts). NOT deployed — the published artifact is the encrypted bundle
 # slides/data/ofml-active-learning.enc, which contains its own figure copies.
 slides/data/OFML_AAAI'27_FIGURES/
+
+# Uncropped source of assets/headshot.jpg (includes a bystander); keep local only.
+assets/profile-trex-original.jpg
+
+# Build-time dependencies of tools/build.py (npm install in tools/)
+tools/node_modules/

@@ -18,10 +18,8 @@
 
 .page-head h1 {
   margin: 0;
-  font-family: Impact, "Arial Narrow", Arial, sans-serif;
   font-size: 40px;
-  letter-spacing: 0.01em;
-  text-transform: uppercase;
+  font-weight: 300;
 }
 
 .page-head .sub {

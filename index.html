@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="google-site-verification" content="Sbo6Nd1grieFwSqdgQMoZZsaIiLJxnaERxbTDKaRBXU" />
-  <title>Yusuke Ozaki — Personal Website | Computer Science Researcher</title>
-  <meta name="description" content="Yusuke Ozaki, an undergraduate at Kwansei Gakuin University and Research Part-timer II at RIKEN BDR. Bayesian optimization, Lipschitz bandits, structured LLM planning, and AI for science." />
+  <title>Yusuke Ozaki</title>
+  <meta name="description" content="Yusuke Ozaki, an undergraduate at Kwansei Gakuin University and Research Part-timer II at RIKEN BDR. Bayesian optimization, bandits, and active learning for self-driving laboratories." />
   <meta name="author" content="Yusuke Ozaki" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://ozatamago.github.io/" />
@@ -14,14 +14,14 @@
   <link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/" />
   <link rel="icon" href="/assets/headshot.jpg" />
   <meta property="og:type" content="profile" />
-  <meta property="og:title" content="Yusuke Ozaki — Personal Website | Computer Science Researcher" />
-  <meta property="og:description" content="Yusuke Ozaki, an undergraduate at Kwansei Gakuin University and Research Part-timer II at RIKEN BDR. Bayesian optimization, Lipschitz bandits, structured LLM planning, and AI for science." />
+  <meta property="og:title" content="Yusuke Ozaki" />
+  <meta property="og:description" content="Yusuke Ozaki, an undergraduate at Kwansei Gakuin University and Research Part-timer II at RIKEN BDR. Bayesian optimization, bandits, and active learning for self-driving laboratories." />
   <meta property="og:url" content="https://ozatamago.github.io/" />
   <meta property="og:image" content="https://ozatamago.github.io/assets/headshot.jpg" />
   <meta property="og:locale" content="en_US" />
   <meta property="og:locale:alternate" content="ja_JP" />
   <meta name="twitter:card" content="summary" />
-  <link rel="stylesheet" href="/assets/styles.css?v=11" />
+  <link rel="stylesheet" href="/assets/styles.css?v=20" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -33,12 +33,11 @@
     "jobTitle": "Undergraduate Student and Research Part-timer II",
     "knowsAbout": [
       "Bayesian Optimization",
+      "Bandits",
       "Active Learning",
-      "Graph Neural Networks",
-      "AI for Science",
+      "Self-Driving Laboratories",
       "Laboratory Automation",
-      "Single-cell omics",
-      "Lipschitz Bandits",
+      "Graph Neural Networks",
       "Structured LLM Planning"
     ],
     "alumniOf": [
@@ -64,20 +63,13 @@
   }
   </script>
 </head>
-<body data-interaction="boids">
+<body>
   <header class="site-header">
-    <a class="brand" href="/">Yusuke Ozaki</a>
     <nav class="nav" aria-label="Main navigation">
-      <a class="active" href="/">Home</a>
-      <a href="/experience/">Work Experience</a>
-      <a href="/education/">Education</a>
-      <a href="/research/">Research</a>
+      <a class="active" href="/">About</a>
+      <a href="/research/">Research Experience</a>
       <a href="/publications/">Publications</a>
-      <a href="/projects/">Projects</a>
-      <a href="/awards/">Awards</a>
-      <a href="/slides/">Slides</a>
       <a href="/cv/">CV</a>
-      <a href="/blog/">Blog</a>
       <span class="lang-switch" role="group" aria-label="Language / 言語">
         <a class="active" aria-current="page" href="/">EN</a>
         <a href="/ja/">日本語</a>
@@ -85,50 +77,66 @@
     </nav>
   </header>
 
-  <section class="hero">
-    <div>
-      <h1>Yusuke Ozaki</h1>
-      <div class="hero-line"></div>
+  <main class="content about">
+    <div class="about-main">
+      <p class="lead">I am an undergraduate student in Computer Science at Kwansei Gakuin University and a Research Part-timer II in the Laboratory for Biologically Inspired Computing (PI: Koichi Takahashi) at the RIKEN Center for Biosystems Dynamics Research (BDR), also affiliated with the RIKEN AGIS program. From August 2025 to May 2026, I was an exchange student in the Department of Computer Science at the University at Albany, SUNY, where I continue to work with Chong Liu.</p>
+      <p>My long-term goal is to create living organisms with arbitrary, desired functions. To pursue this vision, I am interested in laboratory automation, including automated experiment execution and automated experimental design/planning.</p>
+      <p>Outside research, I practice Brazilian Jiu-Jitsu and enjoy reading.</p>
+
+      <section class="section" id="interests">
+        <h2>Research interests</h2>
+        <p>My research is on Bayesian optimization, bandits, and active learning for self-driving laboratories. Recently I have been working on:</p>
+        <ol class="topic-list">
+          <li><a href="/publications/#ofml">Operation-level surrogate models for experimental protocols</a></li>
+          <li><a href="/publications/#protocolucb">Bayesian optimization of protocols</a></li>
+          <li><a href="/publications/#lipschitz">Lipschitz bandits</a></li>
+          <li><a href="/publications/#spin">Structured planning for LLM agents</a></li>
+        </ol>
+        <p>A complete list of papers and talks is on the <a href="/publications/">Publications</a> page; see <a href="/research/">Research Experience</a> for the projects behind them.</p>
+      </section>
+
+      <section class="section" id="news">
+        <h2>News</h2>
+        <ul class="news-list">
+          <li><span class="when">2026</span>Workshop paper <em>Bayesian Optimization of Protocols</em> accepted at the NeurIPS 2026 Workshop on AI for Drug Discovery (AI4DD).</li>
+          <li><span class="when">Aug. 2026</span>Poster on Object-Flow Machine Learning at the 66th Summer School of the Biophysical Society of Japan Young Researchers (SPIRAL).</li>
+          <li><span class="when">Jun. 16, 2026</span>Started a Research Part-timer II appointment at the RIKEN Center for Biosystems Dynamics Research.</li>
+          <li><span class="when">May 13, 2026</span>Preprint: <em>SPIN — Structural LLM Planning via Iterative Navigation</em> (<a href="https://arxiv.org/abs/2605.14051">arXiv:2605.14051</a>).</li>
+          <li><span class="when">Feb. 2026</span>Began research on Lipschitz bandits under the supervision of Chong Liu.</li>
+          <li><span class="when">Aug. 2025</span>Began an exchange at the University at Albany, SUNY.</li>
+          <li><span class="when">2025</span>Poster at AutoML 2025 (Object-Flow Machine Learning) and an oral talk at the RIKEN BDR Student Symposium 2025.</li>
+          <li><span class="when">Jul. 2024</span>Received the Keyence Foundation “Ganbare! Nihon no Daigakusei” student support grant.</li>
+        </ul>
+      </section>
+
+      <section class="section" id="education">
+        <h2>Education</h2>
+        <ul class="item-list">
+          <li><strong>Kwansei Gakuin University</strong>, B.Eng. in Computer Science, School of Engineering. <span class="meta">Apr. 2022 – Mar. 2027 (expected), Sanda, Hyogo, Japan. Research advisor: Akihiro Inokuchi.</span></li>
+          <li><strong>University at Albany, SUNY</strong>, Exchange Student, Department of Computer Science. <span class="meta">Aug. 2025 – May 2026, Albany, NY, USA. Research advisor: Chong Liu.</span></li>
+        </ul>
+      </section>
+
+      <section class="section" id="awards">
+        <h2>Awards</h2>
+        <ul class="item-list">
+          <li><strong>Gyomu Super Japan Dream Foundation Study Abroad Scholarship</strong>. <span class="meta">Aug. 2025 – Jul. 2026.</span></li>
+          <li><strong>Keyence Foundation “Ganbare! Nihon no Daigakusei” Student Support Grant</strong>. <span class="meta">Jul. 2024.</span></li>
+        </ul>
+      </section>
     </div>
-  </section>
 
-  <main class="content">
-    <section class="intro">
-      <img class="headshot" src="/assets/headshot.jpg" alt="Headshot of Yusuke Ozaki">
-      <div>
-        <p class="lead">I am an undergraduate student in Computer Science at Kwansei Gakuin University and a Research Part-timer II at the RIKEN Center for Biosystems Dynamics Research. I studied abroad in the Department of Computer Science at the University at Albany, SUNY, from August 2025 to May 2026.</p>
-        <p>My long-term goal is to create living organisms with arbitrary, desired functions. To pursue this vision, I am interested in laboratory automation, including automated experiment execution and automated experimental design/planning. My current research focuses on protocol-aware active learning and preference modeling using Bayesian optimization.</p>
-        <p><strong>Research interests:</strong> Bayesian Optimization, Active Learning, Graph Neural Networks (GNNs), AI for Science / Lab Automation, Single-cell omics &amp; GRN inference, Lipschitz Bandits, Structured LLM Planning</p>
-        <p><strong>Hobbies:</strong> Brazilian Jiu-Jitsu, reading books.</p>
-        <div class="button-row">
-          <a class="button" href="/cv/">View CV</a>
-          <a class="button secondary" href="https://github.com/ozatamago">GitHub</a>
-          <a class="button secondary" href="mailto:ozatamago40@gmail.com">Email</a>
-          <a class="button secondary" href="https://jp.linkedin.com/in/yusuke-ozaki-6643882a6">LinkedIn</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>News</h2>
-      <ul class="news-list">
-        <li><span class="when">Jun. 16, 2026</span>Started a Research Part-timer II appointment at the RIKEN Center for Biosystems Dynamics Research.</li>
-        <li><span class="when">May 13, 2026</span>Preprint: <em>SPIN — Structural LLM Planning via Iterative Navigation</em> (<a href="https://arxiv.org/abs/2605.14051">arXiv:2605.14051</a>).</li>
-        <li><span class="when">Feb. 2026</span>Began research on Lipschitz bandits under the supervision of Chong Liu.</li>
-        <li><span class="when">Aug. 2025</span>Began an exchange at the University at Albany, SUNY.</li>
-        <li><span class="when">2025</span>Poster at AutoML 2025 (Object-Flow Machine Learning) and an oral talk at the RIKEN BDR Student Symposium 2025.</li>
-        <li><span class="when">Jul. 2024</span>Received the Keyence Foundation “Ganbare! Nihon no Daigakusei” student support grant.</li>
+    <aside class="about-side">
+      <img class="headshot" src="/assets/headshot.jpg" alt="Photo of Yusuke Ozaki">
+      <h2 class="side-title">Links</h2>
+      <ul class="link-list">
+        <li><a href="mailto:ozatamago40@gmail.com">Email</a></li>
+        <li><a href="https://github.com/ozatamago">GitHub</a></li>
+        <li><a href="https://jp.linkedin.com/in/yusuke-ozaki-6643882a6">LinkedIn</a></li>
+        <li><a href="/assets/cv.pdf?v=20261104b">CV (PDF)</a></li>
+        <li><a href="/slides/">Slides &amp; artifacts</a></li>
       </ul>
-    </section>
-
-    <section class="section">
-      <h2>Featured</h2>
-      <ul class="item-list">
-        <li><strong>SPIN: Structural LLM Planning via Iterative Navigation for Industrial Tasks.</strong> <span class="meta"><strong>Yusuke Ozaki</strong>, Dhaval Patel. arXiv preprint arXiv:2605.14051 [cs.AI], 2026.</span> <span class="meta"><a href="https://arxiv.org/abs/2605.14051">arXiv</a> &middot; <a href="https://arxiv.org/pdf/2605.14051">PDF</a> &middot; <a href="/slides/viewer.html?id=spin-showcase">Visual summary</a></span></li>
-      </ul>
-    </section>
+    </aside>
   </main>
-
-  <script src="/assets/interactions.js?v=11" defer></script>
 </body>
 </html>

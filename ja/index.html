@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>尾崎 勇介 (Yusuke Ozaki) — 個人サイト | コンピュータサイエンス研究</title>
-  <meta name="description" content="関西学院大学の学部生・理化学研究所BDRの研究パートタイマーII、尾崎勇介の個人サイト。ベイズ最適化、リプシッツ・バンディット、LLMの構造化計画、AI for Science。" />
+  <title>尾崎 勇介 (Yusuke Ozaki)</title>
+  <meta name="description" content="関西学院大学の学部生・理化学研究所BDRの研究パートタイマーII、尾崎勇介の個人サイト。自律実験のためのベイズ最適化、バンディット、能動学習。" />
   <meta name="author" content="Yusuke Ozaki" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://ozatamago.github.io/ja/" />
@@ -13,14 +13,14 @@
   <link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/" />
   <link rel="icon" href="/assets/headshot.jpg" />
   <meta property="og:type" content="profile" />
-  <meta property="og:title" content="尾崎 勇介 (Yusuke Ozaki) — 個人サイト | コンピュータサイエンス研究" />
-  <meta property="og:description" content="関西学院大学の学部生・理化学研究所BDRの研究パートタイマーII、尾崎勇介の個人サイト。ベイズ最適化、リプシッツ・バンディット、LLMの構造化計画、AI for Science。" />
+  <meta property="og:title" content="尾崎 勇介 (Yusuke Ozaki)" />
+  <meta property="og:description" content="関西学院大学の学部生・理化学研究所BDRの研究パートタイマーII、尾崎勇介の個人サイト。自律実験のためのベイズ最適化、バンディット、能動学習。" />
   <meta property="og:url" content="https://ozatamago.github.io/ja/" />
   <meta property="og:image" content="https://ozatamago.github.io/assets/headshot.jpg" />
   <meta property="og:locale" content="ja_JP" />
   <meta property="og:locale:alternate" content="en_US" />
   <meta name="twitter:card" content="summary" />
-  <link rel="stylesheet" href="/assets/styles.css?v=11" />
+  <link rel="stylesheet" href="/assets/styles.css?v=20" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -32,12 +32,11 @@
     "jobTitle": "Undergraduate Student and Research Part-timer II",
     "knowsAbout": [
       "Bayesian Optimization",
+      "Bandits",
       "Active Learning",
-      "Graph Neural Networks",
-      "AI for Science",
+      "Self-Driving Laboratories",
       "Laboratory Automation",
-      "Single-cell omics",
-      "Lipschitz Bandits",
+      "Graph Neural Networks",
       "Structured LLM Planning"
     ],
     "alumniOf": [
@@ -63,20 +62,13 @@
   }
   </script>
 </head>
-<body data-interaction="boids">
+<body>
   <header class="site-header">
-    <a class="brand" href="/ja/">尾崎 勇介</a>
     <nav class="nav" aria-label="メインナビゲーション">
-      <a class="active" href="/ja/">Home</a>
-      <a href="/ja/experience/">職歴</a>
-      <a href="/ja/education/">学歴</a>
-      <a href="/ja/research/">研究</a>
+      <a class="active" href="/ja/">プロフィール</a>
+      <a href="/ja/research/">研究経歴</a>
       <a href="/ja/publications/">論文</a>
-      <a href="/ja/projects/">Projects</a>
-      <a href="/ja/awards/">受賞</a>
-      <a href="/ja/slides/">発表資料</a>
       <a href="/ja/cv/">CV</a>
-      <a href="/ja/blog/">ブログ</a>
       <span class="lang-switch" role="group" aria-label="Language / 言語">
         <a href="/">EN</a>
         <a class="active" aria-current="page" href="/ja/">日本語</a>
@@ -84,50 +76,66 @@
     </nav>
   </header>
 
-  <section class="hero">
-    <div>
-      <h1>Yusuke Ozaki</h1>
-      <div class="hero-line"></div>
+  <main class="content about">
+    <div class="about-main">
+      <p class="lead">関西学院大学 工学部 情報工学課程の学部生です。理化学研究所 生命機能科学研究センター（BDR）バイオコンピューティング研究チーム（チームディレクター：高橋 恒一）の研究パートタイマーIIとして研究に取り組んでおり、理研 TRIP事業本部 科学研究基盤モデル開発プログラム（AGIS）にも所属しています。2025年8月から2026年5月まで University at Albany, SUNY のコンピュータサイエンス学科に交換留学し、現在も Chong Liu 先生と研究を続けています。</p>
+      <p>長期的には、任意の望ましい機能を持つ生物を設計・創出できる技術に関心があります。そのために、実験の自動実行や実験計画の自動化を含むラボオートメーションを研究しています。</p>
+      <p>研究以外では、ブラジリアン柔術と読書が趣味です。</p>
+
+      <section class="section" id="interests">
+        <h2>研究関心</h2>
+        <p>自律実験（self-driving laboratory）のためのベイズ最適化、バンディット、能動学習を研究しています。最近のテーマ：</p>
+        <ol class="topic-list">
+          <li><a href="/ja/publications/#ofml">実験プロトコルの操作レベル代理モデル</a></li>
+          <li><a href="/ja/publications/#protocolucb">実験プロトコルのベイズ最適化</a></li>
+          <li><a href="/ja/publications/#lipschitz">リプシッツ・バンディット</a></li>
+          <li><a href="/ja/publications/#spin">LLMエージェントの構造的プランニング</a></li>
+        </ol>
+        <p>論文と発表の一覧は<a href="/ja/publications/">論文</a>、その背景にある研究は<a href="/ja/research/">研究経歴</a>にまとめています。</p>
+      </section>
+
+      <section class="section" id="news">
+        <h2>News</h2>
+        <ul class="news-list">
+          <li><span class="when">2026年</span>ワークショップ論文 <em>Bayesian Optimization of Protocols</em> が NeurIPS 2026 Workshop on AI for Drug Discovery（AI4DD）に採択。</li>
+          <li><span class="when">2026年8月</span>第66回 生物物理若手の会 夏の学校（SPIRAL）でオブジェクトフロー機械学習についてポスター発表。</li>
+          <li><span class="when">2026年6月16日</span>理化学研究所 生命機能科学研究センターで研究パートタイマーIIとして勤務を開始。</li>
+          <li><span class="when">2026年5月13日</span>プレプリント: <em>SPIN — Structural LLM Planning via Iterative Navigation</em>（<a href="https://arxiv.org/abs/2605.14051">arXiv:2605.14051</a>）を公開。</li>
+          <li><span class="when">2026年2月</span>Chong Liu先生の指導の下、リプシッツ連続性に基づくバンディット問題の解析を開始。</li>
+          <li><span class="when">2025年8月</span>University at Albany, SUNY への交換留学を開始。</li>
+          <li><span class="when">2025年</span>AutoML 2025 でポスター発表（Object-Flow Machine Learning）、RIKEN BDR Student Symposium 2025 で口頭発表。</li>
+          <li><span class="when">2024年7月</span>キーエンス財団「がんばれ！日本の大学生」応援給付金に採択。</li>
+        </ul>
+      </section>
+
+      <section class="section" id="education">
+        <h2>学歴</h2>
+        <ul class="item-list">
+          <li><strong>関西学院大学</strong> 工学部 情報工学課程 学士（工学）。<span class="meta">2022年4月 – 2027年3月（卒業見込み）、兵庫県三田市。研究指導教員：猪口 明博 教授。</span></li>
+          <li><strong>University at Albany, SUNY</strong> コンピュータサイエンス学科、交換留学生。<span class="meta">2025年8月 – 2026年5月、米国ニューヨーク州オールバニ。研究指導教員：Chong Liu 助教。</span></li>
+        </ul>
+      </section>
+
+      <section class="section" id="awards">
+        <h2>受賞・奨学金</h2>
+        <ul class="item-list">
+          <li><strong>業務スーパージャパンドリーム財団 派遣留学奨学生</strong>。<span class="meta">2025年8月 – 2026年7月。</span></li>
+          <li><strong>キーエンス財団「がんばれ！日本の大学生」応援給付金</strong>。<span class="meta">2024年7月。</span></li>
+        </ul>
+      </section>
     </div>
-  </section>
 
-  <main class="content">
-    <section class="intro">
-      <img class="headshot" src="/assets/headshot.jpg" alt="尾崎勇介の顔写真">
-      <div>
-        <p class="lead">尾崎勇介です。関西学院大学 工学部 情報工学課程の学部生で、理化学研究所 生命機能科学研究センターの研究パートタイマーIIとして研究に取り組んでいます。2025年8月から2026年5月まで、University at Albany, SUNY の Department of Computer Science に交換留学しました。</p>
-        <p>長期的には、任意の望ましい機能を持つ生物を設計・創出できる技術に関心があります。そのために、実験の自動実行や実験計画の自動化を含むラボオートメーション、そしてベイズ最適化を用いた protocol-aware active learning と preference modeling を研究しています。</p>
-        <p><strong>研究関心：</strong> ベイズ最適化、能動学習、グラフニューラルネットワーク、AI for Science、ラボオートメーション、シングルセルオミクス、遺伝子制御ネットワーク推定、リプシッツ・バンディット、LLMの構造化計画</p>
-        <p><strong>趣味：</strong> ブラジリアン柔術、読書。</p>
-        <div class="button-row">
-          <a class="button" href="/ja/cv/">CVを見る</a>
-          <a class="button secondary" href="https://github.com/ozatamago">GitHub</a>
-          <a class="button secondary" href="mailto:ozatamago40@gmail.com">Email</a>
-          <a class="button secondary" href="https://jp.linkedin.com/in/yusuke-ozaki-6643882a6">LinkedIn</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>News</h2>
-      <ul class="news-list">
-        <li><span class="when">2026年6月16日</span>理化学研究所 生命機能科学研究センターで研究パートタイマーIIとして勤務を開始。</li>
-        <li><span class="when">2026年5月13日</span>プレプリント: <em>SPIN — Structural LLM Planning via Iterative Navigation</em>（<a href="https://arxiv.org/abs/2605.14051">arXiv:2605.14051</a>）を公開。</li>
-        <li><span class="when">2026年2月</span>Chong Liu先生の指導の下、リプシッツ連続性に基づくバンディット問題の解析を開始。</li>
-        <li><span class="when">2025年8月</span>University at Albany, SUNY への交換留学を開始。</li>
-        <li><span class="when">2025年</span>AutoML 2025 でポスター発表（Object-Flow Machine Learning）、RIKEN BDR Student Symposium 2025 で口頭発表。</li>
-        <li><span class="when">2024年7月</span>キーエンス財団「がんばれ！日本の大学生」応援給付金に採択。</li>
+    <aside class="about-side">
+      <img class="headshot" src="/assets/headshot.jpg" alt="尾崎勇介の写真">
+      <h2 class="side-title">リンク</h2>
+      <ul class="link-list">
+        <li><a href="mailto:ozatamago40@gmail.com">Email</a></li>
+        <li><a href="https://github.com/ozatamago">GitHub</a></li>
+        <li><a href="https://jp.linkedin.com/in/yusuke-ozaki-6643882a6">LinkedIn</a></li>
+        <li><a href="/assets/cv.pdf?v=20261104b">CV（PDF）</a></li>
+        <li><a href="/ja/slides/">発表資料</a></li>
       </ul>
-    </section>
-
-    <section class="section">
-      <h2>主要論文</h2>
-      <ul class="item-list">
-        <li><strong>SPIN: Structural LLM Planning via Iterative Navigation for Industrial Tasks.</strong> <span class="meta"><strong>尾崎 勇介</strong>, Dhaval Patel. arXiv preprint arXiv:2605.14051 [cs.AI], 2026年.</span> <span class="meta"><a href="https://arxiv.org/abs/2605.14051">arXiv</a> &middot; <a href="https://arxiv.org/pdf/2605.14051">PDF</a> &middot; <a href="/slides/viewer.html?id=spin-showcase">ビジュアル要約</a></span></li>
-      </ul>
-    </section>
+    </aside>
   </main>
-
-  <script src="/assets/interactions.js?v=11" defer></script>
 </body>
 </html>

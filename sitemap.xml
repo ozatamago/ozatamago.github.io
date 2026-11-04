@@ -13,30 +13,6 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/"/>
   </url>
   <url>
-    <loc>https://ozatamago.github.io/experience/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://ozatamago.github.io/experience/"/>
-    <xhtml:link rel="alternate" hreflang="ja" href="https://ozatamago.github.io/ja/experience/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/experience/"/>
-  </url>
-  <url>
-    <loc>https://ozatamago.github.io/ja/experience/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://ozatamago.github.io/experience/"/>
-    <xhtml:link rel="alternate" hreflang="ja" href="https://ozatamago.github.io/ja/experience/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/experience/"/>
-  </url>
-  <url>
-    <loc>https://ozatamago.github.io/education/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://ozatamago.github.io/education/"/>
-    <xhtml:link rel="alternate" hreflang="ja" href="https://ozatamago.github.io/ja/education/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/education/"/>
-  </url>
-  <url>
-    <loc>https://ozatamago.github.io/ja/education/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://ozatamago.github.io/education/"/>
-    <xhtml:link rel="alternate" hreflang="ja" href="https://ozatamago.github.io/ja/education/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/education/"/>
-  </url>
-  <url>
     <loc>https://ozatamago.github.io/research/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://ozatamago.github.io/research/"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://ozatamago.github.io/ja/research/"/>
@@ -61,45 +37,21 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/publications/"/>
   </url>
   <url>
-    <loc>https://ozatamago.github.io/projects/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://ozatamago.github.io/projects/"/>
-    <xhtml:link rel="alternate" hreflang="ja" href="https://ozatamago.github.io/ja/projects/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/projects/"/>
-  </url>
-  <url>
-    <loc>https://ozatamago.github.io/ja/projects/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://ozatamago.github.io/projects/"/>
-    <xhtml:link rel="alternate" hreflang="ja" href="https://ozatamago.github.io/ja/projects/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/projects/"/>
-  </url>
-  <url>
-    <loc>https://ozatamago.github.io/awards/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://ozatamago.github.io/awards/"/>
-    <xhtml:link rel="alternate" hreflang="ja" href="https://ozatamago.github.io/ja/awards/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/awards/"/>
-  </url>
-  <url>
-    <loc>https://ozatamago.github.io/ja/awards/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://ozatamago.github.io/awards/"/>
-    <xhtml:link rel="alternate" hreflang="ja" href="https://ozatamago.github.io/ja/awards/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/awards/"/>
-  </url>
-  <url>
     <loc>https://ozatamago.github.io/cv/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ozatamago.github.io/cv/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://ozatamago.github.io/ja/cv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/cv/"/>
+  </url>
+  <url>
+    <loc>https://ozatamago.github.io/ja/cv/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ozatamago.github.io/cv/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://ozatamago.github.io/ja/cv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/cv/"/>
   </url>
   <url>
     <loc>https://ozatamago.github.io/slides/</loc>
   </url>
   <url>
-    <loc>https://ozatamago.github.io/blog/</loc>
-  </url>
-  <url>
-    <loc>https://ozatamago.github.io/ja/cv/</loc>
-  </url>
-  <url>
     <loc>https://ozatamago.github.io/ja/slides/</loc>
-  </url>
-  <url>
-    <loc>https://ozatamago.github.io/ja/blog/</loc>
   </url>
 </urlset>

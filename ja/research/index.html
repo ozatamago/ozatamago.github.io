@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>研究 — 尾崎 勇介</title>
-  <meta name="description" content="尾崎勇介の研究。ベイズ最適化、リプシッツ・バンディット、LLMの構造化計画、ラボオートメーション、シングルセルオミクス。" />
+  <title>研究経歴 — 尾崎 勇介</title>
+  <meta name="description" content="尾崎勇介の研究経歴。理研BDR、University at Albany, SUNY、関西学院大学、IBM、大阪大学。" />
   <meta name="author" content="Yusuke Ozaki" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://ozatamago.github.io/ja/research/" />
@@ -13,29 +13,23 @@
   <link rel="alternate" hreflang="x-default" href="https://ozatamago.github.io/research/" />
   <link rel="icon" href="/assets/headshot.jpg" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="研究 — 尾崎 勇介" />
-  <meta property="og:description" content="尾崎勇介の研究。ベイズ最適化、リプシッツ・バンディット、LLMの構造化計画、ラボオートメーション、シングルセルオミクス。" />
+  <meta property="og:title" content="研究経歴 — 尾崎 勇介" />
+  <meta property="og:description" content="尾崎勇介の研究経歴。理研BDR、University at Albany, SUNY、関西学院大学、IBM、大阪大学。" />
   <meta property="og:url" content="https://ozatamago.github.io/ja/research/" />
   <meta property="og:image" content="https://ozatamago.github.io/assets/headshot.jpg" />
   <meta property="og:locale" content="ja_JP" />
   <meta property="og:locale:alternate" content="en_US" />
   <meta name="twitter:card" content="summary" />
-  <link rel="stylesheet" href="/assets/styles.css?v=11" />
+  <link rel="stylesheet" href="/assets/styles.css?v=20" />
+  <link rel="stylesheet" href="/assets/katex/katex.min.css?v=0.16.11" />
 </head>
-<body data-interaction="reaction-diffusion">
+<body>
   <header class="site-header">
-    <a class="brand" href="/ja/">尾崎 勇介</a>
     <nav class="nav" aria-label="メインナビゲーション">
-      <a href="/ja/">Home</a>
-      <a href="/ja/experience/">職歴</a>
-      <a href="/ja/education/">学歴</a>
-      <a class="active" href="/ja/research/">研究</a>
+      <a href="/ja/">プロフィール</a>
+      <a class="active" href="/ja/research/">研究経歴</a>
       <a href="/ja/publications/">論文</a>
-      <a href="/ja/projects/">Projects</a>
-      <a href="/ja/awards/">受賞</a>
-      <a href="/ja/slides/">発表資料</a>
       <a href="/ja/cv/">CV</a>
-      <a href="/ja/blog/">ブログ</a>
       <span class="lang-switch" role="group" aria-label="Language / 言語">
         <a href="/research/">EN</a>
         <a class="active" aria-current="page" href="/ja/research/">日本語</a>
@@ -44,17 +38,105 @@
   </header>
 
   <main class="content">
-    <h1 class="page-title">研究</h1>
+    <h1 class="page-title">研究経歴</h1>
     <div class="page-line"></div>
+    <section class="entry">
+      <div class="entry-head"><h2>実験プロトコルに基づく予測・能動学習・ベイズ最適化：OFML／ProtocolBO・ProtocolUCB</h2><span class="entry-when">2024年6月 – 2025年8月、2026年6月 – 現在</span></div>
+      <div class="entry-sub"><em>理化学研究所 生命機能科学研究センター（BDR）バイオコンピューティング研究チーム（チームディレクター：高橋 恒一）、共同研究者：海津 一成</em><span>兵庫県神戸市</span></div>
+      <p class="entry-note">研究室で開発された Object-Flow Programming Language で記述された実験プロトコルと実験条件から、実験結果を予測する機械学習システムの開発に取り組んだ。具体的な手法の着想・設計から、理論解析、実装、数値実験、実機実験、論文執筆までを担当した。研究パートタイマーII。2026年6月から理研 TRIP事業本部 科学研究基盤モデル開発プログラム（AGIS）にも所属。</p>
       <ul class="item-list">
-        <li><strong>リプシッツ・バンディット:</strong> Chong Liu先生の指導の下、リプシッツ連続性を利用したバンディット問題の解析に取り組んでいます。</li>
-        <li><strong>LLMの構造化計画:</strong> Dhaval Patel氏（IBM）との共同研究として、産業タスク向けの構造化計画手法SPINを研究しています。</li>
-        <li><strong>AI for bioengineering and biology:</strong> 分子・細胞システムに対するグラフニューラルネットワーク、遺伝子制御ネットワーク推定、シングルセルオミクス解析に関心があります。</li>
-        <li><strong>Protocol-aware active learning:</strong> 科学実験を自律的に進めるベイズ最適化フレームワークと、実験条件を効率よく探索するためのラボオートメーション指向の機械学習を研究しています。</li>
-        <li><strong>発表:</strong> AutoML 2025 での Object-Flow Machine Learning に関するポスター発表、RIKEN BDR Student Symposium 2025 での口頭発表、Spring School for Theoretical Biology 2025 でのポスター発表。</li>
+        <li><strong>操作単位の代理モデルの提案・実装。</strong>実験プロトコルを型付き有向非巡回グラフとして表現し、操作の種類ごとに共有する代理モデルを合成する OFML を提案した <a class="pub-ref" href="/ja/publications/#ofml">[R1]</a>。ニューラルネットワークで実装し、中間状態の教師データを用いずに最終測定結果から学習することで、操作を組み替えた未観測プロトコルの結果を予測する仕組みを開発した。</li>
+        <li><strong>理論解析と数値実験。</strong>所定の仮定の下で、積分分散削減による能動学習での事後平均の一様収束 <a class="pub-ref" href="/ja/publications/#ofml">[R1]</a> と、ProtocolUCB の推奨解の大域的最適解集合への収束 <a class="pub-ref" href="/ja/publications/#protocolucb">[W1]</a> を証明した。未観測プロトコルへの予測条件も解析し、合成プロトコルを用いた数値実験で、モデル共有と実験選択について予測誤差・平均プロトコル別単純リグレットを比較評価した。</li>
+        <li><strong>実機との接続と学習ループの実証。</strong>OFML の操作単位の代理モデルを実機の操作モジュールに対応づけ、Tecan Fluent による色水実験と接続した。実験の実行、測定結果の取得、モデル更新を繰り返す学習ループを動作させ、操作単位のモデル化と実機の操作モジュールとの対応を利用して、実験と学習を連携できることを実証した <a class="pub-ref" href="/ja/publications/#ofml">[R1]</a>。</li>
       </ul>
-  </main>
+    </section>
 
-  <script src="/assets/interactions.js?v=11" defer></script>
+    <section class="entry">
+      <div class="entry-head"><h2>リプシッツ・バンディットの累積リグレット解析</h2><span class="entry-when">2026年2月 – 現在</span></div>
+      <div class="entry-sub"><em>University at Albany, SUNY コンピュータサイエンス学科（指導教員：Chong Liu）</em><span>米国ニューヨーク州オールバニ</span></div>
+      <ul class="item-list">
+        <li><strong>研究の動機と手法の提案。</strong>古典的な Piyavskii–Shubert 法を累積リグレットの観点から検討し、観測雑音によって関数値の上界が保証されなくなる問題に着目した。近傍の観測から推定した信頼区間を Lipschitz 連続性に基づいて空間全体へ伝播させる統計的補正を導入し、雑音に対応する LiP-UCB を提案した <a class="pub-ref" href="/ja/publications/#lipschitz">[R2]</a>。</li>
+        <li><strong>累積リグレット解析と下界の再検討。</strong>雑音なしでは、一次元で時間長 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi></mrow><annotation encoding="application/x-tex">T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span></span></span></span> に依存しない上界 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>L</mi></mrow><annotation encoding="application/x-tex">2L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">2</span><span class="mord mathnormal">L</span></span></span></span>、<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mo>≥</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">d\ge2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8304em;vertical-align:-0.136em;"></span><span class="mord mathnormal">d</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span> で上界 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><msqrt><mi>d</mi></msqrt><mtext> </mtext><mi>L</mi><mtext> </mtext><msup><mi>T</mi><mrow><mn>1</mn><mo>−</mo><mn>1</mn><mi mathvariant="normal">/</mi><mi>d</mi></mrow></msup></mrow><annotation encoding="application/x-tex">3\sqrt{d}\,L\,T^{1-1/d}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.1078em;"></span><span class="mord">3</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9322em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal">d</span></span></span><span style="top:-2.8922em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1078em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">L</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.888em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span><span class="mbin mtight">−</span><span class="mord mtight">1/</span><span class="mord mathnormal mtight">d</span></span></span></span></span></span></span></span></span></span></span></span> を証明した。雑音ありでは期待累積リグレットが下界と対数因子を除いて一致することを示した。また、既存の下界証明の問題を指摘し、ガウス雑音下の下界を導き直した <a class="pub-ref" href="/ja/publications/#lipschitz">[R2]</a>。</li>
+        <li><strong>数値実験による検証。</strong>一次元の雑音なし設定で、観測回数に伴う累積リグレットの推移を評価し、Piyavskii–Shubert 法の累積リグレットが理論上界 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>L</mi></mrow><annotation encoding="application/x-tex">2L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">2</span><span class="mord mathnormal">L</span></span></span></span> 以下に収まることを確認した。雑音ありでは LiP-UCB を既存のミニマックス最適手法と比較し、検証した設定で比肩する性能を示した <a class="pub-ref" href="/ja/publications/#lipschitz">[R2]</a>。</li>
+      </ul>
+    </section>
+
+    <section class="entry">
+      <div class="entry-head"><h2>SPIN：大規模言語モデルを用いた計画生成</h2><span class="entry-when">2025年8月 – 2026年5月</span></div>
+      <div class="entry-sub"><em>University at Albany, SUNY × IBM（共同研究者：Dhaval Patel、IBM）</em><span>米国ニューヨーク州オールバニ</span></div>
+      <ul class="item-list">
+        <li><strong>開発チームの運営と共同研究。</strong>IBM 連携の Capstone プロジェクトで学生開発チームを率い、共同研究へと発展させた。約1年間にわたり、産業資産運用向けの大規模言語モデルエージェントと、その実行・評価基盤を研究・開発した。プロンプト設計、実行履歴の記録、計画の構造検証と自動評価を含むシステムを構築した。</li>
+        <li><strong>研究の動機と手法の開発。</strong>産業用途では外部ツールの呼び出しが運用コストを支配しうる点に着目し、冗長な実行と計画の構造的不備を抑える SPIN を開発した。計画を有向非巡回グラフとして検証・修正し、途中までの計画の予測結果を評価して、回答に十分と判断した段階で実行を停止する仕組みを構築した <a class="pub-ref" href="/ja/publications/#spin">[R3]</a>。</li>
+        <li><strong>数値実験による評価。</strong>AssetOpsBench の261シナリオで既存構成と比較し、1実行あたりの平均ツール呼び出し回数を11.81回から6.82回へ約42%削減した。MCP-Bench の18課題でも2種類の言語モデルで評価し、計画の有効性、ツール選択、依存関係の把握に関する評価指標の改善を確認した <a class="pub-ref" href="/ja/publications/#spin">[R3]</a>。</li>
+      </ul>
+    </section>
+
+    <section class="entry">
+      <div class="entry-head"><h2>実験自動化と実験基盤の開発</h2><span class="entry-when">2026年6月 – 現在</span></div>
+      <div class="entry-sub"><em>理化学研究所 生命機能科学研究センター（BDR）バイオコンピューティング研究チーム（チームディレクター：高橋 恒一）</em><span>兵庫県神戸市</span></div>
+      <ul class="item-list">
+        <li><strong>課題設定とシステムの設計。</strong>装置固有の GUI 操作や手順設定への習熟が必要な点を課題と捉え、実験系・計算系の研究者の操作負担と設定ミスを減らすことを目指した。実験の目的や条件をチャットで伝えると、エージェントが装置上で実行可能な手順へ変換するシステムを構想し、開発方針を定めた。</li>
+        <li><strong>制御ソフトウェアの解析と実行環境の構築。</strong>FluentControl の装置定義・操作スクリプトと Maholo の制御ソフトウェアについて、参照箇所や確認事項をエージェントに指示し、実機の配置・器具情報と照合しながら解析を進めた。操作仕様・通信方式・実行条件を整理し、SiLA 2 コネクタ（<a href="https://github.com/ozatamago/tecan-fluent">tecan-fluent</a>、<a href="https://github.com/ozatamago/inheco-odtc">inheco-odtc</a>）と実行スクリプトの開発を主導して、実験ごとの GUI での手順作成を介さず、エージェントが人の承認の下で手順の作成・実行・状態確認を行える環境を構築した。Fluent では、分注アーム、グリッパー、デッキカメラ・状態管理、Inheco ODTC サーマルサイクラー、Infinite 200 PRO プレートリーダー、BioShake シェーカーに対応した。</li>
+        <li><strong>実機検証の設計・実施と手順の改善。</strong>デモの目的・実験条件・人とエージェントの役割分担を定め、人の監督下での実機検証を主導した。Fluent では水の分注・搬送・30サイクルの温度制御を、Maholo では分注・シール・撹拌などの9工程を4つのプロトコルで検証した。エージェントが失敗した場合は、装置状態と実行ログに基づいて原因を調べて手順を修正し、PCR 後の停止命令の失敗で ODTC 内に残ったプレートについては、エージェントに回収手順を作成させ取り出させた。</li>
+        <li><strong>関連機器の制御と実験自動化への展開。</strong>Franka Research 3 の状態取得、Desk を介した操作、カメラ撮影に対応する SiLA 2 コネクタを開発した。現在は、構築した装置制御基盤を用いて、Fluent 上での大腸菌の形質転換の自動化に取り組んでいる。</li>
+      </ul>
+    </section>
+
+    <section class="entry">
+      <div class="entry-head"><h2>量子計算によるガウス過程ベイズ最適化の計算量の検討</h2><span class="entry-when">2026年6月 – 現在</span></div>
+      <div class="entry-sub"><em>University at Albany, SUNY コンピュータサイエンス学科（指導教員：Chong Liu）、共同研究者：Chaowen Guan（シンシナティ大学）</em><span>米国ニューヨーク州オールバニ</span></div>
+      <ul class="item-list">
+        <li>量子特異値変換（QSVT）や量子線形システム解法（QLS）を用いて、GP-UCB の獲得関数を近似的に最大化し、古典的な線形代数計算より計算量を減らせるかを検討している。</li>
+      </ul>
+    </section>
+
+    <section class="entry">
+      <div class="entry-head"><h2>選好に基づくベイズ最適化</h2><span class="entry-when">2025年5月 – 2026年1月</span></div>
+      <div class="entry-sub"><em>University at Albany, SUNY コンピュータサイエンス学科（指導教員：Chong Liu）</em><span>米国ニューヨーク州オールバニ</span></div>
+      <ul class="item-list">
+        <li>Generalized Preference Model を用いたベイズ最適化を研究し、学習した埋め込みとガウス過程モデルを組み合わせたときのリグレット上界と識別可能性を解析。</li>
+      </ul>
+    </section>
+
+    <section class="entry">
+      <div class="entry-head"><h2>疎なグラフ構造を学習するグラフニューラルネットワーク</h2><span class="entry-when">2024年5月 – 2025年4月</span></div>
+      <div class="entry-sub"><em>関西学院大学 猪口研究室（指導教員：猪口 明博 教授）</em><span>兵庫県三田市</span></div>
+      <ul class="item-list">
+        <li>畳み込みに用いるエッジ数を減らすため、タスクに応じた疎な隣接構造を層ごとに学習するグラフニューラルネットワークを設計（方策勾配で学習するアクター・クリティック型のエッジ選択モジュールを含む。<a href="https://github.com/ozatamago/MEG">MEG</a>）。</li>
+      </ul>
+    </section>
+
+    <section class="entry">
+      <div class="entry-head"><h2>単一細胞オミクスからの遺伝子制御ネットワーク推定</h2><span class="entry-when">2025年2月 – 2025年8月</span></div>
+      <div class="entry-sub"><em>大阪大学 ヒューマン・メタバース疾患研究拠点（PRIMe）谷内江研究室（PI：谷内江 望 教授）</em><span>大阪府</span></div>
+      <p class="entry-note">リサーチアシスタント。</p>
+      <ul class="item-list">
+        <li><strong>遺伝子制御ネットワーク推定に向けたデータ解析。</strong>RNA 発現とクロマチンアクセシビリティを統合した遺伝子制御ネットワーク推定を目指し、既存手法を調査した。10x Genomics の胎生18日マウス脳 Multiome データを前処理し、同一核で対応する両測定を用いて、制御関係の仮説検証と発現予測モデルの学習・評価に用いるデータを整備した。</li>
+        <li><strong>既存知見に基づくモデル化の検討。</strong>クロマチンアクセシビリティと遺伝子発現の関係に関する文献を調査し、同程度のアクセシビリティでも発現の増加・減少の両局面が生じうることを整理した。既存研究の知見を踏まえ、アクセシビリティ単独で発現状態や変化の方向を説明する際の仮定と限界を検討した。</li>
+        <li><strong>発現予測モデルの実装と探索的評価。</strong>ゲノム全体のクロマチンアクセシビリティと遺伝子発現情報から、単一遺伝子の細胞ごとの発現量を予測する課題に取り組んだ。ニューラルネットワークと Transformer による予測モデルを実装し、学習・予測実験を通じて、両測定の情報を用いた発現予測の可能性を探索的に検討した。</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>ソフトウェア</h2>
+      <ul class="item-list">
+        <li><a href="https://github.com/ozatamago/tecan-fluent"><strong>tecan-fluent</strong></a>: Tecan Fluent 780（アーム、グリッパー、デッキカメラ、サーマルサイクラー、プレートリーダー、シェーカー）の SiLA 2 コネクタ。UniteLabs CDK で構築。</li>
+        <li><a href="https://github.com/ozatamago/inheco-odtc"><strong>inheco-odtc</strong></a>: Fluent に組み込まれた Inheco ODTC 96 サーマルサイクラーの SiLA 2 コネクタ。</li>
+        <li><a href="https://github.com/ozatamago/cx_bayes_al"><strong>cx_bayes_al</strong></a>: コストを考慮したベイズ能動学習の大域的一致性に関する Lean 4 での形式化と実験。</li>
+        <li><a href="https://github.com/ozatamago/MEG"><strong>MEG</strong></a>: Minimal Edges Generator：疎な隣接構造を学習するグラフニューラルネットワーク。</li>
+      </ul>
+    </section>
+  </main>
 </body>
 </html>
