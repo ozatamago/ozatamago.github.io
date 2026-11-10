@@ -22,7 +22,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE = "https://ozatamago.github.io"
 ASSET_VER = "21"  # bump when assets/styles.css changes (cache-busting)
 KATEX_VER = "0.16.11"  # KaTeX version vendored in assets/katex/ (tools/package.json)
-CV_PDF = "/assets/cv.pdf?v=20261104c"  # bump the date when assets/cv.pdf is replaced
+CV_PDF = "/assets/cv.pdf?v=20261110"  # bump the date when assets/cv.pdf is replaced
 
 NAME = {"en": "Yusuke Ozaki", "ja": "尾崎 勇介"}
 NAV_LABEL = {"en": "Main navigation", "ja": "メインナビゲーション"}
