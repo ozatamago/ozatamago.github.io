@@ -27,7 +27,7 @@ LOCKED = "/slides/viewer.html?k=data/772029a167d0876756b091db.enc"  # password-p
 
 # ---- deadline table (checked on official pages 2026-11-10; times to confirm in portals) ----
 # from: which recommenders each school asks for (T, I, L); "I?" = only if a 3rd letter is accepted.
-TBD = {"ja": "（時刻確認中）", "en": " (time to be confirmed)"}
+TBD = {"ja": "（時刻の記載なし）", "en": " (no time stated)"}
 ROWS = [
     dict(school=("NYU Tandon 生体医工学 PhD（Jef Boeke）",
                  "NYU Tandon, Biomedical Engineering PhD (Jef Boeke)"),
